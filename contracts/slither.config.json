@@ -1,0 +1,10 @@
+{
+  "detectors_to_exclude": "missing-zero-check,initialize-target,tx-origin,assembly,reentrancy-events,unused-return,naming-convention,timestamp",
+  "disable_color": false,
+  "filter_paths": "(lib/|node_modules/|upgradeability/|mocks/|modules/|Resolver.sol)",
+  "solc_remaps": [
+    "ds-test/=lib/forge-std/lib/ds-test/src/",
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/=node_modules/@openzeppelin/"
+  ]
+}
