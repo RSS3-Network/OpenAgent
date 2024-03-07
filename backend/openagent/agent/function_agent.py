@@ -38,7 +38,6 @@ def get_agent(session_id: str) -> AgentExecutor:
     llm = ChatOpenAI(
         openai_api_base=settings.API_BASE,
         temperature=0.3,
-        model="gpt-3.5-turbo-1106",
         streaming=True,
     )
     tools = [
