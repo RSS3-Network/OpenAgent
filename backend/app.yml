@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  copilot:
+    container_name: copilot
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    command: 'python -u main.py'
+
+  chainlit:
+    container_name: chainlit
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    command: 'chainlit run /app/copilot/llmops/chainlit_app.py -w -h'
