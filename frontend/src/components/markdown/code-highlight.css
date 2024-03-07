@@ -1,0 +1,7 @@
+pre {
+	code {
+		background: inherit !important;
+		font-size: inherit !important;
+		color: inherit !important;
+	}
+}

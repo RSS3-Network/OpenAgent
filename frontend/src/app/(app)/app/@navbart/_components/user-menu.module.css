@@ -1,0 +1,13 @@
+.user-button {
+	/* border-radius: var(--mantine-radius-md); */
+	transition: all 0.2s ease;
+	&:hover {
+		background: var(--mantine-primary-color-light-hover);
+	}
+	&:focus-visible {
+		background: var(--mantine-primary-color-light);
+	}
+	&:active {
+		background: var(--mantine-primary-color-light);
+	}
+}
