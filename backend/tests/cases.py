@@ -1,7 +1,7 @@
 import asyncio
 import time
 
-from copilot.agent.function_agent import get_agent
+from openagent.agent.function_agent import get_agent
 
 question_list = [
     # "show some active users",  # account query

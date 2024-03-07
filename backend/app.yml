@@ -1,13 +1,13 @@
-version: '3.4'
+version: "3.4"
 services:
-  copilot:
-    container_name: copilot
+  openagent:
+    container_name: OpenAgent
     build:
-        context: .
-        dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8001:8001"
-    command: 'python -u main.py'
+    command: "python -u main.py"
 
   chainlit:
     container_name: chainlit
@@ -16,4 +16,4 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    command: 'chainlit run /app/copilot/llmops/chainlit_app.py -w -h'
+    command: "chainlit run /app/openagent/llmops/chainlit_app.py -w -h"

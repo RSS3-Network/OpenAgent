@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "copilot"
+name = "OpenAgent"
 version = "0.1.0"
 description = ""
-authors = ["Thomas <wxy_000000@qq.com>"]
+authors = ["RSS3 Network <contact@rss3.io>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
