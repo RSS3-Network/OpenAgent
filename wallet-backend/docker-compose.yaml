@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  dev-db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: nest
+    volumes:
+      - wallet-api-dev-db-data:/var/lib/postgresql/data
+    networks:
+      - wallet-api
+networks:
+  wallet-api:
+
+volumes:
+  wallet-api-dev-db-data:
