@@ -1,3 +1,3 @@
-# OpenAgent
+# Open Agent
 
-The Web3 AI Agent Solution
+Open Agent is a framework for building AI applications leveraging the power of blockchain.
