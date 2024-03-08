@@ -1,6 +1,6 @@
-# Open Agent
+# OpenAgent
 
-Open Agent is a framework for building AI applications leveraging the power of blockchains and RSS3 Network.
+OpenAgent is a framework for building AI applications leveraging the power of blockchains and RSS3 Network.
 
 The framework consists of 4 main components:
 
