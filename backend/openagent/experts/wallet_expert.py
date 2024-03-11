@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional, Any
 
 import aiohttp
 
@@ -8,40 +8,37 @@ from langchain.callbacks.manager import (
 )
 from langchain.tools import BaseTool
 from loguru import logger
-from pydantic import BaseModel, Field
 
+from openagent.agent.ctx_var import chat_req_ctx
 from openagent.conf.env import settings
 
 
-class ParamSchema(BaseModel):
-    query_type: str = Field(description="""query type, fixed to "popular".""")
-
-
-class AccountTool(BaseTool):
-    name = "account"
-    description = """Use this tool to query active users/accounts information. \
+class WalletExpert(BaseTool):
+    name = "wallet"
+    description = """Use this tool to query wallet information. for example: \
+"what is my wallet balance", "what is my wallet address" and etc. \
 """
-    args_schema: Type[ParamSchema] = ParamSchema
 
     def _run(
         self,
-        query_type: str,
+        *args: Any,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
         self,
-        query_type: str,
+        *args: Any,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
-        return await fetch_account(query_type)
+        return await fetch_wallet()
 
 
-async def fetch_account(query_type: str):
-    host = settings.RSS3_AI_API
-
-    url = f"""{host}/m1/v2/accounts?action={query_type}&network=ethereum&limit=10"""
+async def fetch_wallet():
+    host = settings.EXECUTOR_API
+    req_ctx = chat_req_ctx.get()
+    user_id = req_ctx.user_id
+    url = f"""{host}/executors/{user_id}"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")

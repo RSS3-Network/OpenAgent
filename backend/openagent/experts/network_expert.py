@@ -14,42 +14,43 @@ from openagent.conf.env import settings
 
 
 class ParamSchema(BaseModel):
-    address: str = Field(
-        description="""wallet address or blockchain domain name,\
-hint: vitalik's address is vitalik.eth"""
+    query_type: str = Field(
+        description="""query type, option: block_height,\
+gas_price."""
     )
-    platform: str = Field(
-        description="platform filter, default is '', option: lens, mirror, uniswap.",
-        default="",
+    network: str = Field(
+        description="blockchain network, option: arbitrum,\
+binance_smart_chain, ethereum, polygon"
     )
 
 
-class FeedTool(BaseTool):
-    name = "feed"
-    description = """Use this tool to get the activities of a wallet address or \
-blockchain domain name on a platform, and know what this address has done or doing recently."""
+class NetworkExpert(BaseTool):
+    name = "network"
+    description = """use this tool to query a blockchain network overview \
+data about block_height, gas_price.\n\
+"""
     args_schema: Type[ParamSchema] = ParamSchema
 
     def _run(
         self,
-        address: str,
-        platform: str = "",
+        query_type: str,
+        network: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
         self,
-        address: str,
-        platform: str = "",
+        query_type: str,
+        network: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
-        return await fetch_feeds(address, platform)
+        return await fetch_network(query_type, network)
 
 
-async def fetch_feeds(address: str, platform: str):
+async def fetch_network(query_type: str, network: str):
     host = settings.RSS3_AI_API
-    url = f"""{host}/m1/v2/feeds?platform={platform}&limit=5&address={address}"""
+    url = f"""{host}/m1/v2/networks?action={query_type}&network={network}&limit=10"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")

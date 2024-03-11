@@ -28,7 +28,7 @@ class ParamSchema(BaseModel):
     )
 
 
-class CollectionTool(BaseTool):
+class CollectionExpert(BaseTool):
     name = "collection"
     description = """Use this tool to get some information about the NFT collection"""
     args_schema: Type[ParamSchema] = ParamSchema

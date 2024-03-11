@@ -34,7 +34,7 @@ like: "0.1", "1", "10" and etc. Default is "1"."""
     )
 
 
-class SwapTool(BaseTool):
+class SwapExpert(BaseTool):
     name = "swap"
     description = """Use this tool to extract structured information from the user's query,
 whenever the query is about swap or buy some cryptocurrencies.\n

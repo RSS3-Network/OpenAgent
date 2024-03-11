@@ -48,7 +48,7 @@ like: "pending", "editing" or "running". Default is "pending", when user edit th
     )
 
 
-class TransferTool(BaseTool):
+class TransferExpert(BaseTool):
     name = "transfer"
     description = """Use this tool to extract structured information from the user's query,
 whenever the query is about a transfer or sending cryptocurrencies to someone.
