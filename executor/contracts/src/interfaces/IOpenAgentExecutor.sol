@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.18;
 
-interface IOpenAgentWallet {
+interface IOpenAgentExecutor {
     struct Call {
         address target;
         bytes callData;

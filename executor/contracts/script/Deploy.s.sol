@@ -4,7 +4,7 @@ pragma solidity 0.8.18;
 
 import {Deployer} from "./Deployer.sol";
 import {DeployConfig} from "./DeployConfig.s.sol";
-import {OpenAgentWalletManager} from "../src/OpenAgentWalletManager.sol";
+import {OpenAgentExecutorManager} from "../src/OpenAgentExecutorManager.sol";
 import {console2 as console} from "forge-std/console2.sol";
 import {TransparentUpgradeableProxy} from "../src/upgradeability/TransparentUpgradeableProxy.sol";
 
@@ -57,7 +57,7 @@ contract Deploy is Deployer {
 
     /// @notice Deploy all of the proxies
     function deployProxies() public {
-        deployProxy("OpenAgentWalletManager");
+        deployProxy("OpenAgentExecutorManager");
     }
 
     /// @notice Deploy all of the logic contracts
@@ -85,19 +85,19 @@ contract Deploy is Deployer {
     }
 
     function deployManager() public broadcast returns (address addr_) {
-        OpenAgentWalletManager manager = new OpenAgentWalletManager();
+        OpenAgentExecutorManager manager = new OpenAgentExecutorManager();
 
         // check states
         require(!manager.hasRole(DEFAULT_ADMIN_ROLE, cfg.manager()), "admin role error");
 
-        save("OpenAgentWalletManager", address(manager));
-        console.log("OpenAgentWalletManager deployed at %s", address(manager));
+        save("OpenAgentExecutorManager", address(manager));
+        console.log("OpenAgentExecutorManager deployed at %s", address(manager));
         addr_ = address(manager);
     }
 
     function initializeManager() public broadcast {
-        OpenAgentWalletManager managerProxy = OpenAgentWalletManager(
-            mustGetAddress("OpenAgentWalletManagerProxy")
+        OpenAgentExecutorManager managerProxy = OpenAgentExecutorManager(
+            mustGetAddress("OpenAgentExecutorManagerProxy")
         );
 
         managerProxy.initialize(cfg.manager());

@@ -2,18 +2,18 @@
 pragma solidity 0.8.18;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/IOpenAgentWallet.sol";
+import "./interfaces/IOpenAgentExecutor.sol";
 
-contract OpenAgentWallet is IOpenAgentWallet, Ownable {
-    /// @inheritdoc IOpenAgentWallet
+contract OpenAgentExecutor is IOpenAgentExecutor, Ownable {
+    /// @inheritdoc IOpenAgentExecutor
     // solhint-disable-next-line no-empty-blocks
     receive() external payable override {}
 
-    /// @inheritdoc IOpenAgentWallet
+    /// @inheritdoc IOpenAgentExecutor
     // solhint-disable-next-line no-empty-blocks
     fallback() external payable override {}
 
-    /// @inheritdoc IOpenAgentWallet
+    /// @inheritdoc IOpenAgentExecutor
     function aggregate(
         Call[] calldata calls
     ) public payable override onlyOwner returns (uint256 blockNumber, bytes[] memory returnData) {
@@ -33,7 +33,7 @@ contract OpenAgentWallet is IOpenAgentWallet, Ownable {
         }
     }
 
-    /// @inheritdoc IOpenAgentWallet
+    /// @inheritdoc IOpenAgentExecutor
     function withdraw(address payable to, uint256 amount) public override onlyOwner {
         (bool success, ) = to.call{value: amount}("");
         require(success, "withdraw failed");

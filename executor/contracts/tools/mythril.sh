@@ -13,7 +13,7 @@ fi
 
 echo '
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "OpenAgentWalletManager: "
-myth -v4 analyze src/OpenAgentWalletManager.sol --solc-json mythril.config.json --solv 0.8.20 --max-depth 10 --execution-timeout 900  --solver-timeout 900 &&
+echo "OpenAgentExecutorManager: "
+myth -v4 analyze src/OpenAgentExecutorManager.sol --solc-json mythril.config.json --solv 0.8.20 --max-depth 10 --execution-timeout 900  --solver-timeout 900 &&
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" ' |
 docker run --rm -v "$PWD":/project -i --workdir=/project --entrypoint=sh ${platform} mythril/myth
