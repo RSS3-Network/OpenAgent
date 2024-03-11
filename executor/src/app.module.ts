@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { WalletController } from './wallet/wallet.controller';
-import { WalletService } from './wallet/wallet.service';
+import { ExecutorController } from './executor/executor.controller';
+import { ExecutorService } from './executor/executor.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { createPublicClient, http, createWalletClient, Hex } from 'viem';
@@ -14,15 +14,15 @@ import { sepolia } from 'viem/chains';
     }),
     PrismaModule,
   ],
-  controllers: [WalletController],
+  controllers: [ExecutorController],
   providers: [
-    WalletService,
+    ExecutorService,
     {
       provide: 'PublicClient',
       useFactory: (configService: ConfigService) => {
         const publicClient = createPublicClient({
           chain: sepolia,
-          transport: http(configService.get('OPENAGENT_WALLET_RPC_URL')),
+          transport: http(configService.get('OPENAGENT_EXECUTOR_RPC_URL')),
         });
 
         return publicClient;
@@ -30,20 +30,20 @@ import { sepolia } from 'viem/chains';
       inject: [ConfigService],
     },
     {
-      provide: 'WalletClient',
+      provide: 'ExecutorClient',
       useFactory: (configService: ConfigService) => {
         // Local Account
         const account = privateKeyToAccount(
-          configService.get<Hex>('OPENAGENT_WALLET_PRIVATE_KEY'),
+          configService.get<Hex>('OPENAGENT_EXECUTOR_PRIVATE_KEY'),
         );
 
-        const walletClient = createWalletClient({
+        const executorClient = createWalletClient({
           account,
           chain: sepolia,
-          transport: http(configService.get('OPENAGENT_WALLET_RPC_URL')),
+          transport: http(configService.get('OPENAGENT_EXECUTOR_RPC_URL')),
         });
 
-        return walletClient;
+        return executorClient;
       },
       inject: [ConfigService],
     },
@@ -52,7 +52,7 @@ import { sepolia } from 'viem/chains';
       useFactory: (configService: ConfigService) => {
         // Local Account
         const account = privateKeyToAccount(
-          configService.get<Hex>('OPENAGENT_WALLET_PRIVATE_KEY'),
+          configService.get<Hex>('OPENAGENT_EXECUTOR_PRIVATE_KEY'),
         );
 
         return account;
@@ -63,7 +63,9 @@ import { sepolia } from 'viem/chains';
       provide: 'ContractAddress',
       useFactory: (configService: ConfigService) => {
         // Local Account
-        const account = configService.get('OPENAGENT_WALLET_CONTRACT_ADDRESS');
+        const account = configService.get(
+          'OPENAGENT_EXECUTOR_CONTRACT_ADDRESS',
+        );
 
         return account;
       },
