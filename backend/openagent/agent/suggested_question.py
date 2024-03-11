@@ -34,11 +34,10 @@ Suggested Questions:
     )
 
     model = ChatOpenAI(openai_api_base=settings.API_BASE, temperature=0.5)
-    chain = LLMChain(llm=model, prompt=prompt)
+    interpreter = LLMChain(llm=model, prompt=prompt)
     logger.info(f"start to generate suggested questions based on history: {history}")
-    output = await chain.arun(
+    output = await interpreter.arun(
         history=history,
-        callbacks=[monitoring_cb],
         metadata={"agentName": "openagent-chainlit", "userId": user_id},
     )
     logger.info(f"suggested questions generated: {output}")
