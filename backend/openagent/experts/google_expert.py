@@ -21,7 +21,7 @@ class SearchSchema(BaseModel):
     )
 
 
-class GoogleTool(BaseTool):
+class GoogleExpert(BaseTool):
     name = "google-search"
     description = "useful for when you need to answer questions\
 about current events, this tool's priority is lower than other tool."

@@ -15,49 +15,54 @@ from openagent.conf.env import settings
 
 class ParamSchema(BaseModel):
     query_type: str = Field(
-        description="""query type, option: "market_cap", "token_price", \
-"token_volume", "token_supply", "popular_tokens"."""
-    )
-    token_name: str = Field(
-        description="""token name. default is "eth". option: "wbtc", "eth", \
-"usdt", "usdc", "bnb" and etc.""",
-        default="",
+        description="""query type, default is 'all'. \
+option: "social", "governance", "donation", "collectible", "exchange", \
+"defi_tvl", "defi_lst", "defi_dex_total", "defi_stable_coin", "defi_derivative"."""
     )
 
 
-class TokenTool(BaseTool):
-    name = "token"
-    description = """Use this tool to query cryptocurrency information.\n\
+class DappExpert(BaseTool):
+    name = "dapp"
+    description = """Use this tool to query dapp or defi projects information. \
 """
     args_schema: Type[ParamSchema] = ParamSchema
 
     def _run(
         self,
         query_type: str,
-        token_name: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
         self,
-        query_type: str = "",
-        token_name: str = "",
+        query_type: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
-        return await fetch_token(query_type, token_name)
+        return await fetch_dapp(query_type)
 
 
-async def fetch_token(query_type: str, token_name: str):
+async def fetch_dapp(query_type: str):
     host = settings.RSS3_AI_API
-    if query_type == "popular_tokens":
-        url = f"""{host}/m1/v2/tokens?limit=10&network=ethereum"""
-    else:
-        url = f"""{host}/m1/v2/tokens?action={query_type}&address={token_name}&network=ethereum"""
+    dapp_prefix = "dapps"
+    defi_prefix = "defi"
+    suffix = "&beginTime=2022-01-01&endTime=2023-08-01"
+    is_defi = query_type in {
+        "defi_tvl",
+        "defi_lst",
+        "defi_dex_total",
+        "defi_stable_coin",
+        "defi_derivative",
+    }
+
+    prefix = defi_prefix if is_defi else dapp_prefix
+
+    url = f"""{host}/m1/v2/{prefix}?action={query_type}&network=ethereum&limit=10{suffix}"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")
         async with session.get(url, headers=headers) as resp:
             result = await resp.text()
-            result += "\nThe monetary unit is USD.\n"
+            result += "\nAdd a one-sentence short introduction to each item, \
+but do not display the URL.\n"
             return result

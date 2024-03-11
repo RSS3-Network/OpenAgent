@@ -8,16 +8,16 @@ from toolz import memoize
 from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
 from openagent.agent.system_prompt import SYSTEM_PROMPT
-from openagent.experts.feed_tool import FeedTool
-from openagent.experts.google_tool import GoogleTool
-from openagent.experts.network_tool import NetworkTool
-from openagent.experts.collection_tool import CollectionTool
-from openagent.experts.token_tool import TokenTool
-from openagent.experts.dapp_tool import DappTool
-from openagent.experts.account_tool import AccountTool
-from openagent.experts.swap_tool import SwapTool
-from openagent.experts.transfer_tool import TransferTool
-from openagent.experts.wallet_tool import WalletTool
+from openagent.experts.feed_expert import FeedExpert
+from openagent.experts.google_expert import GoogleExpert
+from openagent.experts.network_expert import NetworkExpert
+from openagent.experts.collection_expert import CollectionExpert
+from openagent.experts.token_expert import TokenExpert
+from openagent.experts.dapp_expert import DappExpert
+from openagent.experts.account_expert import AccountExpert
+from openagent.experts.swap_expert import SwapExpert
+from openagent.experts.transfer_expert import TransferExpert
+from openagent.experts.wallet_expert import WalletExpert
 from openagent.conf.env import settings
 
 init_cache()
@@ -41,16 +41,16 @@ def get_agent(session_id: str) -> AgentExecutor:
         streaming=True,
     )
     tools = [
-        GoogleTool(),
-        NetworkTool(),
-        FeedTool(),
-        CollectionTool(),
-        TokenTool(),
-        DappTool(),
-        AccountTool(),
-        SwapTool(),
-        TransferTool(),
-        WalletTool(),
+        GoogleExpert(),
+        NetworkExpert(),
+        FeedExpert(),
+        CollectionExpert(),
+        TokenExpert(),
+        DappExpert(),
+        AccountExpert(),
+        SwapExpert(),
+        TransferExpert(),
+        WalletExpert(),
     ]
     return initialize_agent(
         tools,
