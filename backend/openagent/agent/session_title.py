@@ -12,7 +12,7 @@ load_dotenv()
 
 
 async def agen_session_title(
-    user_id: str, session_id: str, history: str, monitoring_cb
+    user_id: str, session_id: str, history: str
 ) -> list[str]:
     prompt = PromptTemplate(
         template="""
@@ -27,11 +27,10 @@ Session Title:
     )
 
     model = ChatOpenAI(openai_api_base=settings.API_BASE, temperature=0.5)
-    chain = LLMChain(llm=model, prompt=prompt)
+    interpreter = LLMChain(llm=model, prompt=prompt)
     logger.info(f"start to generate session title based on history: {history}")
-    output = await chain.arun(
+    output = await interpreter.arun(
         history=history,
-        callbacks=[monitoring_cb],
         metadata={"agentName": "openagent-chainlit", "userId": user_id},
     )
     output = output.strip("'").strip('"')

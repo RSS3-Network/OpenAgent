@@ -8,16 +8,16 @@ from toolz import memoize
 from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
 from openagent.agent.system_prompt import SYSTEM_PROMPT
-from openagent.tool.feed_tool import FeedTool
-from openagent.tool.google_tool import GoogleTool
-from openagent.tool.network_tool import NetworkTool
-from openagent.tool.collection_tool import CollectionTool
-from openagent.tool.token_tool import TokenTool
-from openagent.tool.dapp_tool import DappTool
-from openagent.tool.account_tool import AccountTool
-from openagent.tool.swap_tool import SwapTool
-from openagent.tool.transfer_tool import TransferTool
-from openagent.tool.wallet_tool import WalletTool
+from openagent.experts.feed_tool import FeedTool
+from openagent.experts.google_tool import GoogleTool
+from openagent.experts.network_tool import NetworkTool
+from openagent.experts.collection_tool import CollectionTool
+from openagent.experts.token_tool import TokenTool
+from openagent.experts.dapp_tool import DappTool
+from openagent.experts.account_tool import AccountTool
+from openagent.experts.swap_tool import SwapTool
+from openagent.experts.transfer_tool import TransferTool
+from openagent.experts.wallet_tool import WalletTool
 from openagent.conf.env import settings
 
 init_cache()
@@ -35,7 +35,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     memory = ConversationBufferMemory(
         memory_key="memory", return_messages=True, chat_memory=message_history
     )
-    llm = ChatOpenAI(
+    interpreter = ChatOpenAI(
         openai_api_base=settings.API_BASE,
         temperature=0.3,
         streaming=True,
@@ -54,7 +54,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     ]
     return initialize_agent(
         tools,
-        llm,
+        interpreter,
         agent=AgentType.OPENAI_FUNCTIONS,
         verbose=True,
         agent_kwargs=agent_kwargs,

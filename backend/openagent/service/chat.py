@@ -3,7 +3,6 @@ import uuid
 from typing import AsyncIterable
 
 
-from langchain.callbacks import LLMonitorCallbackHandler
 from sqlalchemy.exc import NoResultFound
 
 from openagent.agent.ctx_var import resp_msg_id, chat_req_ctx
@@ -19,14 +18,14 @@ from openagent.dto.chat_resp import ChatResp, ChatRespType
 
 
 async def arun_agent(
-    req: ChatReq, stream_cb: StreamCallbackHandler, resp_msg_id0, monitoring_cb
+    req: ChatReq, stream_cb: StreamCallbackHandler, resp_msg_id0
 ):
     agent = get_agent(req.session_id)
     resp_msg_id.set(resp_msg_id0)
     chat_req_ctx.set(req)
     return await agent.arun(
         req.body,
-        callbacks=[stream_cb, monitoring_cb],
+        callbacks=[stream_cb],
         metadata={
             "agentName": "openagent-backend",
             "userId": req.user_id,
@@ -44,22 +43,21 @@ async def answer(req: ChatReq) -> AsyncIterable[str]:
         return
 
     stream_cb = StreamCallbackHandler()
-    monitoring_cb = LLMonitorCallbackHandler()
 
     resp_msg_id0 = str(uuid.uuid4())
 
     chat_task = asyncio.create_task(
-        arun_agent(req, stream_cb, resp_msg_id0, monitoring_cb)
+        arun_agent(req, stream_cb, resp_msg_id0)
     )
 
     suggested_questions_task = asyncio.create_task(
-        agen_suggested_questions(req.user_id, req.body, monitoring_cb)
+        agen_suggested_questions(req.user_id, req.body)
     )
 
     session_title_task = None
     if create_session:
         session_title_task = asyncio.create_task(
-            agen_session_title(req.user_id, req.session_id, req.body, monitoring_cb)
+            agen_session_title(req.user_id, req.session_id, req.body)
         )
 
     try:

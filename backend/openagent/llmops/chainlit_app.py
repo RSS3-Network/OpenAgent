@@ -3,7 +3,6 @@ from random import random
 
 import chainlit as cl
 from chainlit import Message
-from langchain.callbacks import LLMonitorCallbackHandler
 from loguru import logger
 
 from openagent.agent.ctx_var import resp_msg_id, chat_req_ctx
@@ -11,7 +10,6 @@ from openagent.agent.function_agent import get_agent
 from openagent.agent.stream_callback import StreamCallbackHandler
 from openagent.dto.chat_req import ChatReq
 
-monitoring_cb = LLMonitorCallbackHandler()
 
 session_id = None
 
@@ -51,7 +49,6 @@ async def main(message):
         callbacks=[
             cl.AsyncLangchainCallbackHandler(),
             StreamCallbackHandler(),
-            monitoring_cb,
         ],
         metadata={"agentName": "openagent-chainlit", "userId": session_id},
     )

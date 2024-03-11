@@ -10,7 +10,7 @@ load_dotenv()
 
 
 async def agen_suggested_questions(
-    user_id: str, history: str, monitoring_cb
+    user_id: str, history: str
 ) -> list[str]:
     prompt = PromptTemplate(
         template="""

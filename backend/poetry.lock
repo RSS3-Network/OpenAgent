@@ -938,20 +938,6 @@ files = [
 ]
 
 [[package]]
-name = "llmonitor"
-version = "0.0.11"
-description = "Observability and monitoring for AI apps"
-optional = false
-python-versions = ">=3.8.0,<4.0.0"
-files = [
-    {file = "llmonitor-0.0.11-py3-none-any.whl", hash = "sha256:ea2328bae2fe6cb09daf5f192543ac4aa6ad8c29d3efb722558d2a80e88c5a58"},
-    {file = "llmonitor-0.0.11.tar.gz", hash = "sha256:0e8047ed466b581ae5af6b1f687048242d701f1a66c0f9daafc2440770d40fde"},
-]
-
-[package.dependencies]
-requests = ">=2.31.0,<3.0.0"
-
-[[package]]
 name = "loguru"
 version = "0.7.2"
 description = "Python logging made (stupidly) simple"
@@ -2573,4 +2559,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "1d933ab34adcb4968a6ec5a1344d7bd354da617b9a4b0dec4d52a502cfeb52d1"
+content-hash = "497a8e47f0ac3e04ab82604c937204fcc0982ecc332026df93604561118ddde8"
