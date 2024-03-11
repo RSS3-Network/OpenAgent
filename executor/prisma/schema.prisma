@@ -10,29 +10,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model WalletUser {
+model ExecutorUser {
   id     Int    @id @default(autoincrement())
   userId String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  wallet    Wallet[]
+  executor    Executor[]
 
-  @@map("wallet_users")
+  @@map("executor_users")
 }
 
-model Wallet {
+model Executor {
   id        Int      @id @default(autoincrement())
-  walletId  Int      @unique
+  executorId  Int      @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   address String @unique
 
-  walletUserId Int
-  walletUser   WalletUser @relation(fields: [walletUserId], references: [id])
+  executorUserId Int
+  executorUser   ExecutorUser @relation(fields: [executorUserId], references: [id])
 
-  @@map("wallets")
+  @@map("executors")
 }
 
 model TxStatus {
