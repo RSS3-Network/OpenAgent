@@ -23,8 +23,8 @@ fi
 file=$(mktemp /tmp/crossbell-bridge-slither-check.XXXXX) || exit 2
 
 # slither-check
-echo "OpenAgentWalletManager: " >"$file"
-slither-check-upgradeability . OpenAgentWalletManager \
+echo "OpenAgentExecutorManager: " >"$file"
+slither-check-upgradeability . OpenAgentExecutorManager \
 --proxy-filename . \
 --proxy-name TransparentUpgradeableProxy \
 --compile-force-framework 'foundry' \

@@ -7,22 +7,22 @@ import {Test} from "forge-std/Test.sol";
 // import {console2 as console} from "forge-std/console2.sol";
 import {Utils} from "./helpers/Utils.sol";
 import {
-    OpenAgentWalletManager__InValidUserId,
-    OpenAgentWalletManager__InValidWalletId,
-    OpenAgentWalletManager__NoRoleToCreateWallet
+    OpenAgentExecutorManager__InValidUserId,
+    OpenAgentExecutorManager__InValidExecutorId,
+    OpenAgentExecutorManager__NoRoleToCreateExecutor
 } from "../src/Error.sol";
-import {OpenAgentWalletManager} from "../src/OpenAgentWalletManager.sol";
-import {OpenAgentWallet} from "../src/OpenAgentWallet.sol";
+import {OpenAgentExecutorManager} from "../src/OpenAgentExecutorManager.sol";
+import {OpenAgentExecutor} from "../src/OpenAgentExecutor.sol";
 import {TransparentUpgradeableProxy} from "../src/upgradeability/TransparentUpgradeableProxy.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-contract OpenAgentWalletManagerTest is CommonTest {
+contract OpenAgentExecutorManagerTest is CommonTest {
     // events
-    /// @notice Emitted when a wallet is created.
-    event WalletCreated(
+    /// @notice Emitted when a executor is created.
+    event ExecutorCreated(
         uint256 indexed userId,
-        uint256 indexed walletId,
-        address indexed walletAddr
+        uint256 indexed executorId,
+        address indexed executorAddr
     );
     /// @notice Emitted when tokens are deposited.
     event TokensDeposited(address indexed to, uint256 indexed amount, address token);
@@ -41,7 +41,7 @@ contract OpenAgentWalletManagerTest is CommonTest {
         address token
     );
 
-    /// @notice Emitted when a wallet is created.
+    /// @notice Emitted when a executor is created.
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
     function setUp() public {
@@ -60,13 +60,13 @@ contract OpenAgentWalletManagerTest is CommonTest {
     }
 
     function testInitialize() public {
-        OpenAgentWalletManager managerImpl = new OpenAgentWalletManager();
+        OpenAgentExecutorManager managerImpl = new OpenAgentExecutorManager();
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
             address(managerImpl),
             proxyAdmin,
             ""
         );
-        OpenAgentWalletManager(payable(address(proxy))).initialize(admin);
+        OpenAgentExecutorManager(payable(address(proxy))).initialize(admin);
 
         bytes32 v = vm.load(address(proxy), bytes32(uint256(3)));
 
@@ -75,7 +75,7 @@ contract OpenAgentWalletManagerTest is CommonTest {
     }
 
     function testInitializeFail() public {
-        OpenAgentWalletManager newImpl = new OpenAgentWalletManager();
+        OpenAgentExecutorManager newImpl = new OpenAgentExecutorManager();
         // upgrade
         vm.prank(proxyAdmin);
         TransparentUpgradeableProxy(payable(address(_manager))).upgradeTo(address(newImpl));
@@ -95,31 +95,31 @@ contract OpenAgentWalletManagerTest is CommonTest {
         assertEq(admin.balance, 0);
     }
 
-    function testCreateWallet(uint256 userId) public {
+    function testCreateExecutor(uint256 userId) public {
         vm.assume(userId > 0 && userId < 1000);
 
-        // create wallet
+        // create executor
         expectEmit();
         emit OwnershipTransferred(address(0), address(_manager));
-        emit WalletCreated(userId, 1, address(0xffD4505B3452Dc22f8473616d50503bA9E1710Ac));
+        emit ExecutorCreated(userId, 1, address(0xffD4505B3452Dc22f8473616d50503bA9E1710Ac));
         vm.prank(admin);
-        (, address walletAddr) = _manager.createWallet(userId);
+        (, address executorAddr) = _manager.createExecutor(userId);
 
-        // check wallet index
-        assertEq(_manager.getWalletIndex(), 1);
-        assertEq(_manager.getWalletAddr(userId, 1), walletAddr);
+        // check executor index
+        assertEq(_manager.getExecutorIndex(), 1);
+        assertEq(_manager.getExecutorAddr(userId, 1), executorAddr);
     }
 
     function testDeposit(uint256 userId, uint256 amount) public {
         vm.assume(userId > 0 && userId < 1000);
         vm.assume(amount > 10 && amount < 1000);
         vm.prank(admin);
-        (, address walletAddr) = _manager.createWallet(userId);
+        (, address executorAddr) = _manager.createExecutor(userId);
 
         // deposit
         vm.deal(address(_manager), 1 ether);
         vm.expectEmit();
-        emit TokensDeposited(walletAddr, amount, address(0));
+        emit TokensDeposited(executorAddr, amount, address(0));
         vm.prank(admin);
         _manager.deposit(userId, 1, address(0), amount);
 
@@ -134,10 +134,10 @@ contract OpenAgentWalletManagerTest is CommonTest {
         vm.assume(userId > 0 && userId < 1000);
         vm.assume(amount > 10 && amount < 1000);
         vm.prank(admin);
-        (, address walletAddr) = _manager.createWallet(userId);
+        (, address executorAddr) = _manager.createExecutor(userId);
 
-        // fund wallet
-        vm.deal(walletAddr, amount);
+        // fund executor
+        vm.deal(executorAddr, amount);
 
         // check balance before withdraw
         uint256 nativeBalanceBefore = _manager.getNativeTokenBalance(userId, 1);
@@ -156,17 +156,17 @@ contract OpenAgentWalletManagerTest is CommonTest {
         vm.assume(userId > 0 && userId < 1000);
         vm.assume(amount > 10 && amount < 1000);
         vm.prank(admin);
-        (, address walletAddr1) = _manager.createWallet(userId);
+        (, address executorAddr1) = _manager.createExecutor(userId);
 
-        // fund wallet
-        vm.deal(walletAddr1, amount);
+        // fund executor
+        vm.deal(executorAddr1, amount);
 
         // check balance before withdraw
         uint256 nativeBalanceBefore = _manager.getNativeTokenBalance(userId, 1);
         assertEq(nativeBalanceBefore, amount);
 
         vm.prank(admin);
-        _manager.createWallet(userId);
+        _manager.createExecutor(userId);
 
         // transfer native token
         vm.deal(address(_manager), 1 ether);
@@ -184,23 +184,23 @@ contract OpenAgentWalletManagerTest is CommonTest {
         vm.assume(userId > 0 && userId < 1000);
         vm.assume(amount > 10 && amount < 1000);
         vm.prank(admin);
-        (, address walletAddr1) = _manager.createWallet(userId);
+        (, address executorAddr1) = _manager.createExecutor(userId);
 
-        // fund wallet
-        token.transfer(walletAddr1, amount);
+        // fund executor
+        token.transfer(executorAddr1, amount);
 
         // check balance before
-        uint256 erc20Balance = token.balanceOf(walletAddr1);
+        uint256 erc20Balance = token.balanceOf(executorAddr1);
         assertEq(erc20Balance, amount);
 
         vm.prank(admin);
-        (, address walletAddr2) = _manager.createWallet(userId);
+        (, address executorAddr2) = _manager.createExecutor(userId);
 
         vm.prank(admin);
         _manager.transfer(userId, 1, userId, 2, address(token), amount);
 
-        uint256 erc20BalanceAddr1 = token.balanceOf(walletAddr1);
-        uint256 erc20BalanceAddr2 = token.balanceOf(walletAddr2);
+        uint256 erc20BalanceAddr1 = token.balanceOf(executorAddr1);
+        uint256 erc20BalanceAddr2 = token.balanceOf(executorAddr2);
 
         assertEq(erc20BalanceAddr1, 0);
         assertEq(erc20BalanceAddr2, amount);
@@ -210,76 +210,76 @@ contract OpenAgentWalletManagerTest is CommonTest {
         vm.assume(userId > 0 && userId < 1000);
         vm.assume(amount > 10 && amount < 1000);
         vm.prank(admin);
-        (, address walletAddr1) = _manager.createWallet(userId);
+        (, address executorAddr1) = _manager.createExecutor(userId);
 
-        // fund wallet
-        token.transfer(walletAddr1, amount);
+        // fund executor
+        token.transfer(executorAddr1, amount);
 
         // check balance before
-        uint256 erc20Balance = token.balanceOf(walletAddr1);
+        uint256 erc20Balance = token.balanceOf(executorAddr1);
         assertEq(erc20Balance, amount);
 
         vm.prank(admin);
         _manager.withdraw(userId, 1, payable(address(bob)), address(token), amount);
 
-        uint256 erc20BalanceAddr1 = token.balanceOf(walletAddr1);
+        uint256 erc20BalanceAddr1 = token.balanceOf(executorAddr1);
         uint256 erc20BalanceAddr2 = token.balanceOf(bob);
 
         assertEq(erc20BalanceAddr1, 0);
         assertEq(erc20BalanceAddr2, amount);
     }
 
-    function testCreateMultipleWallet4SingleUser(uint256 userId) public {
+    function testCreateMultipleExecutor4SingleUser(uint256 userId) public {
         vm.assume(userId > 0 && userId < 1000);
 
-        // create wallet
+        // create executor
         expectEmit();
         emit OwnershipTransferred(address(0), address(_manager));
-        emit WalletCreated(userId, 1, address(0xffD4505B3452Dc22f8473616d50503bA9E1710Ac));
+        emit ExecutorCreated(userId, 1, address(0xffD4505B3452Dc22f8473616d50503bA9E1710Ac));
         vm.prank(admin);
-        (, address walletAddr1) = _manager.createWallet(userId);
-        // check wallet index
-        assertEq(_manager.getWalletIndex(), 1);
-        assertEq(_manager.getWalletAddr(userId, 1), walletAddr1);
+        (, address executorAddr1) = _manager.createExecutor(userId);
+        // check executor index
+        assertEq(_manager.getExecutorIndex(), 1);
+        assertEq(_manager.getExecutorAddr(userId, 1), executorAddr1);
 
         expectEmit();
         emit OwnershipTransferred(address(0), address(_manager));
-        emit WalletCreated(userId, 2, address(0x8d2C17FAd02B7bb64139109c6533b7C2b9CADb81));
+        emit ExecutorCreated(userId, 2, address(0x8d2C17FAd02B7bb64139109c6533b7C2b9CADb81));
         vm.prank(admin);
-        (, address walletAddr2) = _manager.createWallet(userId);
+        (, address executorAddr2) = _manager.createExecutor(userId);
 
-        // check wallet index
-        assertEq(_manager.getWalletIndex(), 2);
-        assertEq(_manager.getWalletAddr(userId, 2), walletAddr2);
+        // check executor index
+        assertEq(_manager.getExecutorIndex(), 2);
+        assertEq(_manager.getExecutorAddr(userId, 2), executorAddr2);
     }
 
-    function testCreateWalletFailed(uint256 userId) public {
-        // Case 1: no role to invoke `createWallet`
+    function testCreateExecutorFailed(uint256 userId) public {
+        // Case 1: no role to invoke `createExecutor`
         vm.assume(userId > 0 && userId < 1000);
-        // create wallet
+        // create executor
         vm.expectRevert(
             abi.encodeWithSelector(
-                OpenAgentWalletManager__NoRoleToCreateWallet.selector,
+                OpenAgentExecutorManager__NoRoleToCreateExecutor.selector,
                 address(alice)
             )
         );
         vm.prank(alice);
-        _manager.createWallet(userId);
+        _manager.createExecutor(userId);
 
-        // check wallet index
-        assertEq(_manager.getWalletIndex(), 0);
+        // check executor index
+        assertEq(_manager.getExecutorIndex(), 0);
 
         // Case 2: userId is 0
         userId = 0;
-        // create wallet
+        // create executor
         vm.expectRevert(
-            abi.encodeWithSelector(OpenAgentWalletManager__InValidUserId.selector, userId)
+            abi.encodeWithSelector(OpenAgentExecutorManager__InValidUserId.selector, userId)
         );
         vm.prank(admin);
-        _manager.createWallet(userId);
+        _manager.createExecutor(userId);
 
-        // check wallet index
-        assertEq(_manager.getWalletIndex(), 0);
+        // check executor index
+        assertEq(_manager.getExecutorIndex(), 0);
     }
 
     function testGrantRole() public {

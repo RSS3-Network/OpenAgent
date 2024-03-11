@@ -3,10 +3,10 @@
 pragma solidity 0.8.18;
 
 /// @dev Invalid User Id
-error OpenAgentWalletManager__InValidUserId(uint256 userId);
+error OpenAgentExecutorManager__InValidUserId(uint256 userId);
 
-/// @dev Invalid Wallet Id
-error OpenAgentWalletManager__InValidWalletId(uint256 walletId);
+/// @dev Invalid Executor Id
+error OpenAgentExecutorManager__InValidExecutorId(uint256 executorId);
 
-/// @dev No Role To Create Wallet
-error OpenAgentWalletManager__NoRoleToCreateWallet(address sender);
+/// @dev No Role To Create Executor
+error OpenAgentExecutorManager__NoRoleToCreateExecutor(address sender);

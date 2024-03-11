@@ -3,7 +3,7 @@
 pragma solidity 0.8.18;
 
 import {OpenAgentToken} from "../../src/mocks/OpenAgentToken.sol";
-import {OpenAgentWalletManager} from "../../src/OpenAgentWalletManager.sol";
+import {OpenAgentExecutorManager} from "../../src/OpenAgentExecutorManager.sol";
 import {
     TransparentUpgradeableProxy
 } from "../../src/upgradeability/TransparentUpgradeableProxy.sol";
@@ -11,7 +11,7 @@ import {Utils} from "./Utils.sol";
 
 contract CommonTest is Utils {
     OpenAgentToken public token;
-    OpenAgentWalletManager internal _manager;
+    OpenAgentExecutorManager internal _manager;
 
     address public constant proxyAdmin = address(0x777);
     address public constant admin = address(0x999999999999999999999999999999);
@@ -43,13 +43,13 @@ contract CommonTest is Utils {
     function _deployContracts() internal {
         // deploy token
         token = new OpenAgentToken();
-        // deploy and init OpenAgentWalletManager contract
-        OpenAgentWalletManager managerImpl = new OpenAgentWalletManager();
+        // deploy and init OpenAgentExecutorManager contract
+        OpenAgentExecutorManager managerImpl = new OpenAgentExecutorManager();
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
             address(managerImpl),
             proxyAdmin,
             abi.encodeWithSignature("initialize(address)", admin)
         );
-        _manager = OpenAgentWalletManager(payable(address(proxy)));
+        _manager = OpenAgentExecutorManager(payable(address(proxy)));
     }
 }
