@@ -27,9 +27,9 @@ Session Title:
     )
 
     model = ChatOpenAI(openai_api_base=settings.API_BASE, temperature=0.5)
-    chain = LLMChain(llm=model, prompt=prompt)
+    interpreter = LLMChain(llm=model, prompt=prompt)
     logger.info(f"start to generate session title based on history: {history}")
-    output = await chain.arun(
+    output = await interpreter.arun(
         history=history,
         metadata={"agentName": "openagent-chainlit", "userId": user_id},
     )

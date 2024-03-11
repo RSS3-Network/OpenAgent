@@ -35,7 +35,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     memory = ConversationBufferMemory(
         memory_key="memory", return_messages=True, chat_memory=message_history
     )
-    llm = ChatOpenAI(
+    interpreter = ChatOpenAI(
         openai_api_base=settings.API_BASE,
         temperature=0.3,
         streaming=True,
@@ -54,7 +54,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     ]
     return initialize_agent(
         tools,
-        llm,
+        interpreter,
         agent=AgentType.OPENAI_FUNCTIONS,
         verbose=True,
         agent_kwargs=agent_kwargs,
