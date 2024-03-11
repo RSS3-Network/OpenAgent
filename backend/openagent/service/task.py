@@ -18,7 +18,7 @@ from openagent.dto.task import (
     build_task_dto,
     ConfirmTransferDTO,
 )
-from openagent.tool import get_token_by_address
+from openagent.experts import get_token_by_address
 
 
 async def cancel_task(user_id: str, task_id: str):
