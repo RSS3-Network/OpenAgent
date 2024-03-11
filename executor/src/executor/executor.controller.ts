@@ -29,7 +29,7 @@ import {
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ExecutorInfoDto } from './dto';
 
-@Controller('wallets')
+@Controller('executors')
 export class ExecutorController {
   constructor(private executorService: ExecutorService) {}
 
@@ -57,12 +57,12 @@ export class ExecutorController {
     description: 'The executor has been successfully queried.',
     type: ExecutorInfoDto,
   })
-  @Get(':userId/:walletId')
+  @Get(':userId/:executorId')
   getExecutor(
     @Param('userId') userId: string,
-    @Param('walletId') walletId: number,
+    @Param('executorId') executorId: number,
   ): Promise<ResponseDto> {
-    return this.executorService.getExecutorInfo(userId, walletId);
+    return this.executorService.getExecutorInfo(userId, executorId);
   }
 
   @ApiCreatedResponse({
