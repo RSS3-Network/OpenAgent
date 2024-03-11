@@ -35,10 +35,10 @@ class WalletTool(BaseTool):
 
 
 async def fetch_wallet():
-    host = settings.WALLET_API
+    host = settings.EXECUTOR_API
     req_ctx = chat_req_ctx.get()
     user_id = req_ctx.user_id
-    url = f"""{host}/wallets/{user_id}"""
+    url = f"""{host}/executors/{user_id}"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")

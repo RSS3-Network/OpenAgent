@@ -19,6 +19,7 @@ from openagent.dto.task import (
     ConfirmTransferDTO,
 )
 from openagent.experts import get_token_by_address
+from openagent.conf.env import settings
 
 
 async def cancel_task(user_id: str, task_id: str):
@@ -79,7 +80,7 @@ async def save_task(req, task, hash0):
         body_json = json.loads(body)
 
         body_json["user_id"] = req.user_id
-        body_json["wallet_id"] = req.wallet_id
+        body_json["executor_id"] = req.executor_id
         body_json["to_address"] = req.to_address
         body_json["amount"] = req.amount
         body_json["token_address"] = req.token_address
@@ -99,19 +100,19 @@ async def save_task(req, task, hash0):
 
 async def do_transfer(req, tx_id):
     user_id = req.user_id
-    wallet_id = req.wallet_id
+    executor_id = req.executor_id
     to_address = req.to_address
     amount = req.amount
     token_address = req.token_address
     token = await get_token_by_address(token_address)
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "https://wallet-api.dev.copilot.xyz/wallets/withdraw",
+            f"{settings.EXECUTOR_API}/executors/withdraw",
             headers={"Content-Type": "application/json"},
             json={
                 "txId": tx_id,
                 "userId": user_id,
-                "walletId": wallet_id,
+                "executorId": executor_id,
                 "toAddress": to_address,
                 "amount": amount,
                 "tokenAddress": token_address,
@@ -197,7 +198,7 @@ async def do_check_task_status():
 async def get_task_status(tx_id: str):
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "https://wallet-api.dev.copilot.xyz/wallets/tx/status",
+            f"{settings.EXECUTOR_API}/executors/tx/status",
             json={"txId": tx_id},
         ) as resp:
             resp_json = await resp.json()

@@ -9,7 +9,7 @@ load_dotenv()
 class Settings(BaseSettings):
     API_BASE: str = Field(..., env="API_BASE")
     RSS3_AI_API: str = Field(..., env="RSS3_AI_API")
-    WALLET_API: str = Field(..., env="WALLET_API")
+    EXECUTOR_API: str = Field(..., env="EXECUTOR_API")
     POSTGRES_SERVER: str = Field(..., env="POSTGRES_SERVER")
     POSTGRES_USER: str = Field(..., env="POSTGRES_USER")
     POSTGRES_PASSWORD: str = Field(..., env="POSTGRES_PASSWORD")
