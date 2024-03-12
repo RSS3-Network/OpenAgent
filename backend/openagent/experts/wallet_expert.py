@@ -13,8 +13,8 @@ from openagent.agent.ctx_var import chat_req_ctx
 from openagent.conf.env import settings
 
 
-class WalletExpert(BaseTool):
-    name = "wallet"
+class ExecutorExpert(BaseTool):
+    name = "executor"
     description = """Use this tool to query wallet information. for example: \
 "what is my wallet balance", "what is my wallet address" and etc. \
 """
@@ -31,10 +31,10 @@ class WalletExpert(BaseTool):
         *args: Any,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
-        return await fetch_wallet()
+        return await fetch_executor()
 
 
-async def fetch_wallet():
+async def fetch_executor():
     host = settings.EXECUTOR_API
     req_ctx = chat_req_ctx.get()
     user_id = req_ctx.user_id

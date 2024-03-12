@@ -123,7 +123,7 @@ class StreamCallbackHandler(AsyncCallbackHandler):
             "feed",
             "dapp",
             "account",
-            "wallet",
+            "executor",
         ]:
             return True
         return False
