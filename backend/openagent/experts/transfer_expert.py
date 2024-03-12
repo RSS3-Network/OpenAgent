@@ -89,7 +89,7 @@ A transfer indicates an action of sending an amount of token to an address or a 
             confirm_transfer_dto = ConfirmTransferDTO(
                 user_id=chat_req.user_id,
                 task_id=self.last_task_id,
-                wallet_id=1,
+                executor_id=1,
                 to_address=transfer.to_address,
                 amount=transfer.amount,
                 token_address=transfer.token_address,
@@ -129,7 +129,7 @@ async def save_new_task(transfer):
             body=TransferDTO(
                 user_id=chat_req.user_id,
                 task_id=transfer.task_id,
-                wallet_id=-1,
+                executor_id=-1,
                 to_address=transfer.to_address,
                 amount=transfer.amount,
                 token_address=transfer.token_address,
