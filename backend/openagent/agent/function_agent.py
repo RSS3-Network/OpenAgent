@@ -17,7 +17,7 @@ from openagent.experts.dapp_expert import DappExpert
 from openagent.experts.account_expert import AccountExpert
 from openagent.experts.swap_expert import SwapExpert
 from openagent.experts.transfer_expert import TransferExpert
-from openagent.experts.wallet_expert import WalletExpert
+from openagent.experts.executor_expert import ExecutorExpert
 from openagent.conf.env import settings
 
 init_cache()
@@ -50,7 +50,7 @@ def get_agent(session_id: str) -> AgentExecutor:
         AccountExpert(),
         SwapExpert(),
         TransferExpert(),
-        WalletExpert(),
+        ExecutorExpert(),
     ]
     return initialize_agent(
         tools,
