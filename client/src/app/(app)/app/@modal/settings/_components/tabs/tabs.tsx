@@ -9,8 +9,8 @@ export const tabs = [
 	},
 	{
 		icon: <IconWallet size="1rem" stroke={1.5} />,
-		id: "wallets",
-		label: "Wallets",
+		id: "executors",
+		label: "Executors",
 	},
 ] as const satisfies ReadonlyArray<{
 	icon: ReactNode;

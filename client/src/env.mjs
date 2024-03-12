@@ -12,7 +12,7 @@ export const env = createEnv({
 	},
 	server: {
 		API_AI_URL: z.string().url(),
-		API_WALLET_URL: z.string().url(),
+		API_EXECUTOR_URL: z.string().url(),
 		AUTH_DISCORD_CLIENT_ID: z.string().min(1),
 		AUTH_DISCORD_CLIENT_SECRET: z.string().min(1),
 		AUTH_GMAIL_PASS: z.string().min(1),

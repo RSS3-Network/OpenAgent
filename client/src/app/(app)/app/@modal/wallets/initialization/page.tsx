@@ -12,14 +12,14 @@ import { PageModal } from "../../_components/page-modal";
 const Confetti = dynamic(() => import("react-confetti"));
 
 export default function Page() {
-	const { data: wallets, isPending } = api.wallet.wallets.useQuery();
+	const { data: executors, isPending } = api.executor.executors.useQuery();
 	const utils = api.useUtils();
 
 	const [showConfetti, setShowConfetti] = useState(false);
 
-	const walletCreate = api.wallet.walletCreate.useMutation({
+	const executorCreate = api.executor.executorCreate.useMutation({
 		async onSuccess() {
-			await utils.wallet.wallets.invalidate();
+			await utils.executor.executors.invalidate();
 			setShowConfetti(true);
 		},
 	});
@@ -37,24 +37,24 @@ export default function Page() {
 		};
 	}, [showConfetti]);
 
-	const hasWallets = wallets && wallets.length > 0;
-	const shouldLoadingBtn = isPending || walletCreate.isPending;
+	const hasExecutors = executors && executors.length > 0;
+	const shouldLoadingBtn = isPending || executorCreate.isPending;
 
-	const renderCreateWalletScreen = () => {
+	const renderCreateExecutorScreen = () => {
 		return (
 			<>
 				<Text fw="bold" my="xs">
 					🚀 Welcome to your very own{" "}
 					<Text fw="bolder" span variant="gradient">
-						OpenAgent Wallet
+						OpenAgent Executor
 					</Text>
 					! 🌟
 				</Text>
 
 				<Text my="xs">
-					OpenAgent Wallet is an{" "}
+					OpenAgent Executor is an{" "}
 					<Text fw="bold" span>
-						Account Abstraction (AA) Smart Contract Wallet
+						Account Abstraction (AA) Smart Contract Executor
 					</Text>{" "}
 					that is a smarter, more secure, and more convenient way to interact
 					with the blockchain. Together with OpenAgent&apos;s AI power, you can
@@ -64,7 +64,7 @@ export default function Page() {
 				<Anchor
 					c="dimmed"
 					component={Link}
-					href="/help/wallet"
+					href="/help/executor"
 					my="xs"
 					size="xs"
 					target="_blank"
@@ -72,22 +72,22 @@ export default function Page() {
 					Know more about the detail.
 				</Anchor>
 
-				{hasWallets && (
+				{hasExecutors && (
 					<Text c="red">
-						You already have a OpenAgent Wallet. So you can&apos;t create
+						You already have a OpenAgent Executor. So you can&apos;t create
 						another for now.
 					</Text>
 				)}
 
 				<Flex justify="flex-end">
 					<Button
-						disabled={hasWallets}
+						disabled={hasExecutors}
 						loading={shouldLoadingBtn}
 						onClick={() => {
-							walletCreate.mutate();
+							executorCreate.mutate();
 						}}
 					>
-						✨ Create Wallet
+						✨ Create Executor
 					</Button>
 				</Flex>
 			</>
@@ -95,7 +95,7 @@ export default function Page() {
 	};
 
 	const renderSuccessScreen = ({ close }: { close: () => void }) => {
-		const wallet = wallets?.[0];
+		const executor = executors?.[0];
 		return (
 			<>
 				<Text fw="bold" my="xs">
@@ -103,15 +103,15 @@ export default function Page() {
 				</Text>
 
 				<Text my="xs">
-					You have successfully created your OpenAgent Wallet. You can now start
-					interacting with the blockchain with AI power!
+					You have successfully created your OpenAgent Executor. You can now
+					start interacting with the blockchain with AI power!
 				</Text>
 
-				{wallet && (
+				{executor && (
 					<Text my="xs" size="xs">
 						Address:{" "}
 						<Text ff="monospace" fw="bold" span>
-							{wallet.walletAddress}
+							{executor.executorAddress}
 						</Text>
 					</Text>
 				)}
@@ -140,11 +140,11 @@ export default function Page() {
 				withCloseButton
 			>
 				{({ close }) => {
-					if (walletCreate.isSuccess) {
+					if (executorCreate.isSuccess) {
 						return renderSuccessScreen({ close });
 					}
 
-					return renderCreateWalletScreen();
+					return renderCreateExecutorScreen();
 				}}
 			</PageModal>
 

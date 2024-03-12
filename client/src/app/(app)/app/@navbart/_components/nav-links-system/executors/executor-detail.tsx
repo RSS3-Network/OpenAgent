@@ -2,17 +2,17 @@
 
 import { ActionIconCopy } from "@/components/action-icons/copy";
 import { ActionIconExternalLink } from "@/components/action-icons/external-link";
-import { TokenBalance } from "@/components/wallets/token-balance";
-import { WalletAddressAvatar } from "@/components/wallets/wallet-address-avatar";
-import { WalletAddressDisplay } from "@/components/wallets/wallet-address-display";
+import { ExecutorAddressAvatar } from "@/components/executor/executor-address-avatar";
+import { ExecutorAddressDisplay } from "@/components/executor/executor-address-display";
+import { TokenBalance } from "@/components/executor/token-balance";
 import { api } from "@/lib/trpc/client";
 import { Group, Skeleton, Stack, Text, rem } from "@mantine/core";
 import { Suspense } from "react";
 
-function WalletDetailWithSuspense({ walletId }: { walletId: number }) {
-	const [wallet] = api.wallet.wallet.useSuspenseQuery({ walletId });
+function ExecutorDetailWithSuspense({ executorId }: { executorId: number }) {
+	const [executor] = api.executor.executor.useSuspenseQuery({ executorId });
 
-	if (!wallet) {
+	if (!executor) {
 		return <>NOT FOUND</>;
 	}
 
@@ -21,14 +21,14 @@ function WalletDetailWithSuspense({ walletId }: { walletId: number }) {
 			<div>
 				<Text fw="bold">Address</Text>
 				<Group gap="xs">
-					<WalletAddressAvatar
+					<ExecutorAddressAvatar
+						executorAddress={executor.executorAddress}
 						size={rem(16)}
-						walletAddress={wallet.walletAddress}
 					/>
-					<WalletAddressDisplay walletAddress={wallet.walletAddress} />
-					<ActionIconCopy value={wallet.walletAddress} />
+					<ExecutorAddressDisplay executorAddress={executor.executorAddress} />
+					<ActionIconCopy value={executor.executorAddress} />
 					<ActionIconExternalLink
-						href={`https://hoot.it/${wallet.walletAddress}`}
+						href={`https://hoot.it/${executor.executorAddress}`}
 						label="View on Hoot.it"
 					/>
 				</Group>
@@ -36,7 +36,7 @@ function WalletDetailWithSuspense({ walletId }: { walletId: number }) {
 
 			<div>
 				<Text fw="bold">Balance</Text>
-				{wallet.balance.map((token) => (
+				{executor.balance.map((token) => (
 					<TokenBalance
 						address={token.tokenAddress}
 						balance={token.tokenBalance}
@@ -51,14 +51,14 @@ function WalletDetailWithSuspense({ walletId }: { walletId: number }) {
 		</Stack>
 	);
 }
-function WalletDetailSkeleton() {
+function ExecutorDetailSkeleton() {
 	return <Skeleton h={50} />;
 }
 
-export function WalletDetail({ walletId }: { walletId: number }) {
+export function ExecutorDetail({ executorId }: { executorId: number }) {
 	return (
-		<Suspense fallback={<WalletDetailSkeleton />}>
-			<WalletDetailWithSuspense walletId={walletId} />
+		<Suspense fallback={<ExecutorDetailSkeleton />}>
+			<ExecutorDetailWithSuspense executorId={executorId} />
 		</Suspense>
 	);
 }

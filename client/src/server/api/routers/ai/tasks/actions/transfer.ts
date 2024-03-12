@@ -13,7 +13,7 @@ export const transferApi = protectedProcedure
 				taskId: string([uuid()]),
 				toAddress: string([]),
 				tokenAddress: string([]),
-				walletId: number(),
+				executorId: number(),
 			})
 		)
 	)
@@ -28,7 +28,7 @@ export const transferApi = protectedProcedure
 					to_address: input.toAddress,
 					token_address: input.tokenAddress,
 					user_id: user_id,
-					wallet_id: input.walletId,
+					executor_id: input.executorId,
 				}),
 				method: "POST",
 				path: `/tasks/confirm_transfer`,

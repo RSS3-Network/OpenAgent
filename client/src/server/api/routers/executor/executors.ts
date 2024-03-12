@@ -3,21 +3,18 @@ import { TRPCError } from "@trpc/server";
 
 import { pool } from "./pool";
 
-export const walletCreateApi = protectedProcedure.mutation(async ({ ctx }) => {
+export const executorsApi = protectedProcedure.query(async ({ ctx }) => {
 	const userId = ctx.session?.user.id;
 
 	const res = await pool
 		.request({
-			body: JSON.stringify({
-				userId,
-			}),
-			headers: {
-				"Content-Type": "application/json",
-			},
-			method: "POST",
-			path: `/wallets`,
+			method: "GET",
+			path: `/executors/${userId}`,
 		})
-		.then((res) => res.body.json() as Promise<WalletListItem>)
+		.then(async (res) => {
+			const result = (await res.body.json()) as any;
+			return result?.data?.items as Promise<ExecutorDetail[]>;
+		})
 		.catch((err) => {
 			console.error(err);
 			throw new TRPCError({

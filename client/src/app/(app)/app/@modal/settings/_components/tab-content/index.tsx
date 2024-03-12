@@ -7,15 +7,15 @@ import { type TabId } from "../tabs/tabs";
 const AppearanceSection = dynamic(() => import("./appearance"), {
 	loading: LoadingSection,
 });
-const WalletsSection = dynamic(() => import("./wallets"), {
+const ExecutorsSection = dynamic(() => import("./executors"), {
 	loading: LoadingSection,
 });
 
 export function TabContent({ currentTabId }: { currentTabId: TabId }) {
 	if (currentTabId === "appearance") {
 		return <AppearanceSection />;
-	} else if (currentTabId === "wallets") {
-		return <WalletsSection />;
+	} else if (currentTabId === "executors") {
+		return <ExecutorsSection />;
 	}
 }
 
