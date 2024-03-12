@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 class TransferDTO(BaseModel):
     user_id: str = Field(description="user id", example="clnx2bsgi000008l68gxi8q72")
     task_id: str = Field(description="task id", example="1")
-    wallet_id: int = Field(description="wallet id", example=1)
+    executor_id: int = Field(description="executor id", example=1)
     to_address: str = Field(
         description="address to transfer",
         example="0xFcf62726dbf3a9C2765f138111AA04Bf50bD67D6",
@@ -26,7 +26,7 @@ class TransferDTO(BaseModel):
 class ConfirmTransferDTO(BaseModel):
     user_id: str = Field(description="user id", example="clnx2bsgi000008l68gxi8q72")
     task_id: str = Field(description="task id", example="1")
-    wallet_id: int = Field(description="wallet id", example=1)
+    executor_id: int = Field(description="executor id", example=1)
     to_address: str = Field(
         description="address to transfer",
         example="0xFcf62726dbf3a9C2765f138111AA04Bf50bD67D6",
@@ -44,7 +44,7 @@ class CancelTransferDTO(BaseModel):
 
 
 class TransferQueryDTO(BaseModel):
-    wallet_id: int = Field(description="wallet id", example=1)
+    executor_id: int = Field(description="executor id", example=1)
     to_address: str = Field(
         description="address to transfer",
         example="0xFcf62726dbf3a9C2765f138111AA04Bf50bD67D6",
