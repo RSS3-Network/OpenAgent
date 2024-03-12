@@ -1,7 +1,7 @@
 import {
-	WalletAddressDisplay,
-	WalletAddressFromIdDisplay,
-} from "@/components/wallets/wallet-address-display";
+	ExecutorAddressDisplay,
+	ExecutorAddressFromIdDisplay,
+} from "@/components/executor/executor-address-display";
 import { Group, Image, Text, rem } from "@mantine/core";
 
 import { Label } from "./basics/label";
@@ -16,11 +16,11 @@ export function TaskListItemContentTransfer({
 		<>
 			<Group>
 				<Label>From</Label>
-				<WalletAddressFromIdDisplay walletId={task.body.wallet_id} />
+				<ExecutorAddressFromIdDisplay executorId={task.body.executor_id} />
 			</Group>
 			<Group>
 				<Label>To</Label>
-				<WalletAddressDisplay walletAddress={task.body.to_address} />
+				<ExecutorAddressDisplay executorAddress={task.body.to_address} />
 			</Group>
 			<Group>
 				<Label>Amount</Label>

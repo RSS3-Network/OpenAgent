@@ -152,7 +152,7 @@ type AiSessionMessageToolType =
 	| "network"
 	| "token"
 	| "transfer"
-	| "wallet";
+	| "executor";
 
 type AiSessionMessageToolInputBody<
 	T extends AiSessionMessageToolType = AiSessionMessageToolType
@@ -183,7 +183,7 @@ type AiSessionMessageToolOutputBody_Type_Content_Mapping = {
 	network: AiSessionMessageToolOutputBody_Network;
 	token: AiSessionMessageToolOutputBody_Token;
 	transfer: AiSessionMessageToolOutputBody_Transfer;
-	wallet: AiSessionMessageToolOutputBody_Wallet;
+	executor: AiSessionMessageToolOutputBody_Executor;
 };
 
 /**
@@ -396,9 +396,9 @@ interface AiSessionMessageToolOutputBody_Error {
 	};
 }
 
-interface AiSessionMessageToolOutputBody_Wallet {
+interface AiSessionMessageToolOutputBody_Executor {
 	data: {
-		items: WalletDetail[];
+		items: ExecutorDetail[];
 	};
 }
 

@@ -1,11 +1,11 @@
-type WalletList = WalletListItem[];
-interface WalletListItem {
+type ExecutorList = ExecutorListItem[];
+interface ExecutorListItem {
 	createTime: string;
-	walletAddress: `0x${string}`;
-	walletId: number;
+	executorAddress: `0x${string}`;
+	executorId: number;
 }
 
-interface WalletDetail {
+interface ExecutorDetail {
 	balance: {
 		tokenAddress: `0x${string}`;
 		/** in wei */
@@ -18,6 +18,6 @@ interface WalletDetail {
 		tokenSymbol: string;
 	}[];
 	createTime: string;
-	walletAddress: `0x${string}`;
-	walletId: number;
+	executorAddress: `0x${string}`;
+	executorId: number;
 }

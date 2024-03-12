@@ -39,7 +39,7 @@ interface AiTaskItemBody_Transfer {
 	to_address: `${string}.eth` | `0x${string}`;
 	token: string;
 	token_address: `0x${string}`;
-	wallet_id: number;
+	executor_id: number;
 }
 
 type AiTaskItemList = AiTaskItem[];

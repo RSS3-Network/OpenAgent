@@ -33,8 +33,8 @@ const ToolChunkNetwork = dynamic(() =>
 const ToolChunkToken = dynamic(() =>
 	import("./token").then((mod) => mod.ToolChunkToken)
 );
-const ToolChunkWallet = dynamic(() =>
-	import("./wallet").then((mod) => mod.ToolChunkWallet)
+const ToolChunkExecutor = dynamic(() =>
+	import("./executor").then((mod) => mod.ToolChunkExecutor)
 );
 const ToolChunkTransfer = dynamic(() =>
 	import("./tasks/transfer").then((mod) => mod.ToolChunkTransfer)
@@ -123,8 +123,8 @@ function ToolChunkBody({
 		return <ToolChunkToken body={chunk.body.output} />;
 	}
 
-	if (isChunkToolTypeOf(chunk, "wallet")) {
-		return <ToolChunkWallet body={chunk.body.output} />;
+	if (isChunkToolTypeOf(chunk, "executor")) {
+		return <ToolChunkExecutor body={chunk.body.output} />;
 	}
 
 	if (isChunkToolTypeOf(chunk, "transfer")) {

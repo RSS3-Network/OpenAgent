@@ -9,7 +9,7 @@ import { PageModal } from "../../_components/page-modal";
 
 export function OnboardingModal() {
 	const utils = api.useUtils();
-	const walletCreate = api.wallet.walletCreate.useMutation();
+	const executorCreate = api.executor.executorCreate.useMutation();
 
 	return (
 		<PageModal closeOnClickOutside={false}>
@@ -29,30 +29,30 @@ export function OnboardingModal() {
 						Let&apos;s get started by setting up your first{" "}
 						<IconWallet className="align-middle" size="1rem" />
 						<Text fw={700} span>
-							wallet
+							executor
 						</Text>{" "}
 						with a simple click.
 					</Text>
 
 					<Button
 						fullWidth
-						loading={walletCreate.isPending}
+						loading={executorCreate.isPending}
 						mt="md"
 						onClick={() =>
-							walletCreate.mutate(undefined, {
+							executorCreate.mutate(undefined, {
 								onSuccess: async () => {
-									await utils.wallet.wallets.invalidate();
+									await utils.executor.executors.invalidate();
 									close();
 								},
 							})
 						}
 						size="md"
 					>
-						Create Wallet
+						Create Executor
 					</Button>
 
 					<Button
-						disabled={walletCreate.isPending}
+						disabled={executorCreate.isPending}
 						fullWidth
 						mt="sm"
 						onClick={() => close()}
@@ -63,7 +63,7 @@ export function OnboardingModal() {
 					</Button>
 
 					<Text my="sm" size="xs">
-						*You can always create a wallet later in the settings page.
+						*You can always create a executor later in the settings page.
 					</Text>
 				</>
 			)}

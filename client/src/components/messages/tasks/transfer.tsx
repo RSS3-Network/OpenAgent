@@ -24,7 +24,7 @@ import { Suspense, useEffect } from "react";
 import { type Input, number, object, string, union } from "valibot";
 
 import { TaskLoading } from "./basics/task-loading";
-import { WalletSelector } from "./basics/wallet-selector";
+import { ExecutorSelector } from "./basics/executor-selector";
 
 const schema = object({
 	amount: string(),
@@ -32,7 +32,7 @@ const schema = object({
 		[string([ethAddress()]), string([ethName()])],
 		"Must be a valid Ethereum address or ENS name."
 	),
-	walletId: number(),
+	executorId: number(),
 });
 
 type FormData = Input<typeof schema>;
@@ -53,7 +53,7 @@ function ToolChunkTransferWithSuspense({
 			},
 		}
 	);
-	const [wallets] = api.wallet.wallets.useSuspenseQuery();
+	const [executors] = api.executor.executors.useSuspenseQuery();
 	const setCurrentIdleTask = useSetAtom(currentIdleTaskAtom);
 
 	useEffect(() => {
@@ -72,18 +72,19 @@ function ToolChunkTransferWithSuspense({
 		initialValues: {
 			amount: body.amount,
 			toAddress: body.to_address,
-			walletId: wallets && wallets.length > 0 ? wallets[0].walletId : 0,
+			executorId:
+				executors && executors.length > 0 ? executors[0].executorId : 0,
 		},
 		validate: valibotResolver(schema),
 	});
 
 	useEffect(() => {
-		if (wallets && wallets.length > 0 && form.values.walletId === 0) {
-			form.setFieldValue("walletId", wallets[0].walletId);
+		if (executors && executors.length > 0 && form.values.executorId === 0) {
+			form.setFieldValue("executorId", executors[0].executorId);
 			form.resetDirty();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [wallets]);
+	}, [executors]);
 
 	const utils = api.useUtils();
 
@@ -138,16 +139,16 @@ function ToolChunkTransferWithSuspense({
 		task.status === "done" ||
 		task.status === "failed"
 	) {
-		const fromWallet = wallets.find(
-			(wallet) => wallet.walletId === task.body.wallet_id
+		const fromExecutor = executors.find(
+			(executor) => executor.executorId === task.body.executor_id
 		);
 
 		return (
 			<>
 				<Text fw="bold">From</Text>
 				<Text>
-					{fromWallet?.walletAddress &&
-						truncateAddress(fromWallet?.walletAddress)}
+					{fromExecutor?.executorAddress &&
+						truncateAddress(fromExecutor?.executorAddress)}
 				</Text>
 
 				<Text fw="bold">To</Text>
@@ -203,14 +204,14 @@ function ToolChunkTransferWithSuspense({
 						taskId: body.task_id,
 						toAddress: values.toAddress,
 						tokenAddress: body.token_address,
-						walletId: values.walletId,
+						executorId: values.executorId,
 					});
 				})}
 			>
-				<WalletSelector
+				<ExecutorSelector
 					label="From"
 					withAsterisk
-					{...form.getInputProps("walletId")}
+					{...form.getInputProps("executorId")}
 					disabled={transfer.isPending}
 				/>
 

@@ -8,6 +8,7 @@
 		"start": "next start",
 		"analyze": "ANALYZE=true next build",
 		"lint": "next lint --fix",
+		"typecheck": "tsc --noEmit",
 		"prisma:migrate:dev": "prisma migrate dev",
 		"prisma:migrate:deploy": "dotenv -c production -- npx prisma migrate deploy --preview-feature",
 		"prisma:migrate:status": "prisma migrate status --preview-feature",

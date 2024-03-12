@@ -1,18 +1,18 @@
 import { Image } from "@mantine/core";
 
-export function WalletAddressAvatar({
+export function ExecutorAddressAvatar({
 	size = 32,
-	walletAddress,
+	executorAddress,
 }: {
 	size?: number | string;
-	walletAddress: `${string}.eth` | `0x${string}`;
+	executorAddress: `${string}.eth` | `0x${string}`;
 }) {
 	return (
 		<Image
 			alt="avatar"
 			h={size}
 			radius="xs"
-			src={`https://cdn.stamp.fyi/avatar/${walletAddress}`}
+			src={`https://cdn.stamp.fyi/avatar/${executorAddress}`}
 			w={size}
 		/>
 	);

@@ -64,7 +64,7 @@ The backend API is used to fetch data from server. The following environment var
 
 ```bash
 API_AI_URL="https://YOUR_API_AI_URL"
-API_WALLET_URL="https://YOUR_API_WALLET_URL"
+API_EXECUTOR_URL="https://YOUR_API_EXECUTOR_URL"
 ```
 
 ### 4. Run the Development Server

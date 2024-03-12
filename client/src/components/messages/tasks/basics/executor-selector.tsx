@@ -18,27 +18,27 @@ import {
 import Link from "next/link";
 import { Suspense, useState } from "react";
 
-interface WalletSelectorProps extends InputBaseProps {
+interface ExecutorSelectorProps extends InputBaseProps {
 	onChange?: (value: number | undefined) => void;
 	value?: number;
 }
 
-export function WalletSelectorWithSuspense({
+export function ExecutorSelectorWithSuspense({
 	onChange,
 	value,
 	...props
-}: WalletSelectorProps) {
-	const [wallets] = api.wallet.wallets.useSuspenseQuery();
+}: ExecutorSelectorProps) {
+	const [executors] = api.executor.executors.useSuspenseQuery();
 
 	const combobox = useCombobox();
 
-	const Options = wallets.map((item) => (
-		<ComboboxOption key={item.walletId} value={String(item.walletId)}>
-			{truncateAddress(item.walletAddress)}
+	const Options = executors.map((item) => (
+		<ComboboxOption key={item.executorId} value={String(item.executorId)}>
+			{truncateAddress(item.executorAddress)}
 		</ComboboxOption>
 	));
 
-	const selectedWallet = wallets.find((item) => item.walletId === value);
+	const selectedExecutor = executors.find((item) => item.executorId === value);
 
 	return (
 		<Combobox
@@ -58,10 +58,10 @@ export function WalletSelectorWithSuspense({
 					type="button"
 					{...props}
 				>
-					{selectedWallet?.walletAddress ? (
-						truncateAddress(selectedWallet.walletAddress)
+					{selectedExecutor?.executorAddress ? (
+						truncateAddress(selectedExecutor.executorAddress)
 					) : (
-						<InputPlaceholder>Pick a wallet</InputPlaceholder>
+						<InputPlaceholder>Pick a executor</InputPlaceholder>
 					)}
 				</InputBase>
 			</ComboboxTarget>
@@ -72,12 +72,12 @@ export function WalletSelectorWithSuspense({
 						<ComboboxEmpty>
 							<Button
 								component={Link}
-								href="/app/wallets/initialization"
+								href="/app/executors/initialization"
 								onClick={() => combobox.closeDropdown()}
 								scroll={false}
 								variant="subtle"
 							>
-								Create Wallet
+								Create Executor
 							</Button>
 						</ComboboxEmpty>
 					) : (
@@ -89,7 +89,7 @@ export function WalletSelectorWithSuspense({
 	);
 }
 
-export function WalletSelectorLoading({ label }: { label: React.ReactNode }) {
+export function ExecutorSelectorLoading({ label }: { label: React.ReactNode }) {
 	return (
 		<InputBase
 			component="button"
@@ -105,10 +105,10 @@ export function WalletSelectorLoading({ label }: { label: React.ReactNode }) {
 	);
 }
 
-export function WalletSelector(props: WalletSelectorProps) {
+export function ExecutorSelector(props: ExecutorSelectorProps) {
 	return (
-		<Suspense fallback={<WalletSelectorLoading label={props.label} />}>
-			<WalletSelectorWithSuspense {...props} />
+		<Suspense fallback={<ExecutorSelectorLoading label={props.label} />}>
+			<ExecutorSelectorWithSuspense {...props} />
 		</Suspense>
 	);
 }

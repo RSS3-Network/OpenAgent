@@ -6,9 +6,9 @@ import { OnboardingModal } from "./_component/onboarding-modal";
 export default async function Page() {
 	// check if the user has already completed the onboarding
 	// if yes, redirect to the dashboard
-	const wallets = await api.wallet.wallets.query();
+	const executors = await api.executor.executors.query();
 
-	if (wallets.length > 0) {
+	if (executors.length > 0) {
 		redirect("/app");
 	}
 

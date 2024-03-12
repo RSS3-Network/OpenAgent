@@ -12,24 +12,24 @@ import { IconWallet } from "@tabler/icons-react";
 import { useAtom } from "jotai/react";
 import { atom } from "jotai/vanilla";
 
-import { WalletsDropdown } from "./wallets-dropdown";
+import { ExecutorsDropdown } from "./executors-dropdown";
 
-const walletDropdownOpenedAtom = atom(false);
+const executorDropdownOpenedAtom = atom(false);
 
-export function useWalletDropdownOpened() {
-	const [walletDropdownOpened, setWalletDropdownOpened] = useAtom(
-		walletDropdownOpenedAtom
+export function useExecutorDropdownOpened() {
+	const [executorDropdownOpened, setExecutorDropdownOpened] = useAtom(
+		executorDropdownOpenedAtom
 	);
 
 	return {
-		setWalletDropdownOpened,
-		walletDropdownOpened,
+		executorDropdownOpened,
+		setExecutorDropdownOpened,
 	};
 }
 
-export function Wallets() {
-	const { setWalletDropdownOpened, walletDropdownOpened } =
-		useWalletDropdownOpened();
+export function Executors() {
+	const { executorDropdownOpened, setExecutorDropdownOpened } =
+		useExecutorDropdownOpened();
 
 	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
@@ -37,21 +37,21 @@ export function Wallets() {
 		<Popover
 			closeOnClickOutside
 			offset={0}
-			onClose={() => setWalletDropdownOpened(false)}
-			opened={walletDropdownOpened}
+			onClose={() => setExecutorDropdownOpened(false)}
+			opened={executorDropdownOpened}
 			position={isMobile ? "bottom" : "right-start"}
 			width={"target"}
 		>
 			<PopoverTarget>
 				<NavLink
-					active={walletDropdownOpened}
-					label="Wallets"
+					active={executorDropdownOpened}
+					label="Executors"
 					leftSection={<IconWallet size="1rem" stroke={1.5} />}
-					onClick={() => setWalletDropdownOpened(!walletDropdownOpened)}
+					onClick={() => setExecutorDropdownOpened(!executorDropdownOpened)}
 				/>
 			</PopoverTarget>
 			<PopoverDropdown>
-				<WalletsDropdown />
+				<ExecutorsDropdown />
 			</PopoverDropdown>
 		</Popover>
 	);

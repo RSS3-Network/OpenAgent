@@ -5,26 +5,26 @@ import { minValue, number, object } from "valibot";
 
 import { pool } from "./pool";
 
-export const walletApi = protectedProcedure
+export const executorApi = protectedProcedure
 	.input(
 		wrap(
 			object({
-				walletId: number([minValue(1)]),
+				executorId: number([minValue(1)]),
 			})
 		)
 	)
 	.query(async ({ ctx, input }) => {
 		const userId = ctx.session?.user.id;
-		const { walletId } = input;
+		const { executorId } = input;
 
 		const res = await pool
 			.request({
 				method: "GET",
-				path: `/wallets/${userId}/${walletId}`,
+				path: `/executors/${userId}/${executorId}`,
 			})
 			.then(async (res) => {
 				const result = (await res.body.json()) as any;
-				return result?.data?.items?.[0] as Promise<WalletDetail>;
+				return result?.data?.items?.[0] as Promise<ExecutorDetail>;
 			})
 			.catch((err) => {
 				console.error(err);

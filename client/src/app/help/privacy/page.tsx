@@ -58,10 +58,10 @@ export default function Page() {
 			<li>
 				We<!-- -->
 				<span><b>do not</b></span>
-				<!-- -->require a wallet connection, all essential features function
+				<!-- -->require a executor connection, all essential features function
 				without interacting with a blockchain.
 				<p>
-					When a wallet connection is required, a clear notice will be provided
+					When a executor connection is required, a clear notice will be provided
 					to notify you of the scope of such operation.
 				</p>
 			</li>
@@ -112,9 +112,9 @@ export default function Page() {
 					</p>
 					<p>
 						We collect information that you voluntarily provide to us directly,
-						such as when you connect your wallet, provide your decentralized
+						such as when you connect your executor, provide your decentralized
 						identifier, or communicate with us. This may include details such as
-						your wallet address, decentralized identifier, email address, and
+						your executor address, decentralized identifier, email address, and
 						other contact information that you choose to share with us.
 					</p>
 				</div>
@@ -143,7 +143,7 @@ export default function Page() {
 					</p>
 					<p>
 						A clear notice will be displayed when certain Services require
-						additional information, such as your wallet address or other
+						additional information, such as your executor address or other
 						details, to function properly.
 					</p>
 				</div>
