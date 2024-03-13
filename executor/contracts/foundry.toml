@@ -1,0 +1,32 @@
+# Foundry Configuration File
+# Default definitions: https://github.com/gakonst/foundry/blob/b7917fa8491aedda4dd6db53fbb206ea233cd531/config/src/lib.rs#L782
+# See more config options at: https://github.com/gakonst/foundry/tree/master/config
+
+# The Default Profile
+[profile.default]
+# Sets the concrete solc version to use
+# This overrides the `auto_detect_solc` value
+solc_version = '0.8.18'
+auto_detect_solc = false
+
+# use EVM version `London` for Crossbell
+evm_version = 'london'
+
+# Increase optimizer_runs
+optimizer = true
+optimizer_runs = 200
+
+# Fuzz more than the default 256
+fuzz_runs = 1_000
+libs = ["node_modules", "lib"]
+
+fs_permissions = [
+    { access='read-write', path='./deployments/' },
+    { access='read', path='./deploy-config/' },
+    { access='read', path='./broadcast/' },
+    { access='read', path = './out/' },
+]
+
+# Extreme Fuzzing CI Profile :P
+[profile.ci]
+fuzz_runs = 1_000

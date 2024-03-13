@@ -1,0 +1,11 @@
+.question-card {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	transition: background-color 0.2s ease-in-out;
+	cursor: pointer;
+	&:hover {
+		background-color: var(--mantine-primary-color-light-hover);
+	}
+}

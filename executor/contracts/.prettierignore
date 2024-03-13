@@ -1,0 +1,10 @@
+artifacts
+cache
+node_modules
+typechain
+build
+coverage
+out
+lib
+assets
+.next

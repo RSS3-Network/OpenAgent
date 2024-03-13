@@ -1,0 +1,28 @@
+{
+    "name": "open-agent-contracts",
+    "license": "MIT",
+    "version": "2.1.1",
+    "devDependencies": {
+        "@openzeppelin/contracts": "4.9.3",
+        "dotenv": "^16.0.0",
+        "husky": "^8.0.3",
+        "lint-staged": "^14.0.0",
+        "prettier": "^3.0.3",
+        "prettier-plugin-solidity": "^1.1.3",
+        "solhint": "^3.4.0",
+        "ts-node": "^10.9.1",
+        "typechain": "^5.1.2",
+        "typescript": "^5.0.0"
+    },
+    "scripts": {
+        "setup": "make clean && make build",
+        "sync": "make install",
+        "test": "make test",
+        "snapshot": "make snapshot",
+        "lint": "make lint",
+        "solhint": "make solhint",
+        "upgradeable": "make upgradeable",
+        "mythril": "make mythril",
+        "storage-layout": "make storage-layout"
+    }
+}

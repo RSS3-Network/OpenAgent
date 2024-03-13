@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "OpenAgent"
+version = "0.1.0"
+description = ""
+authors = ["RSS3 Network <contact@rss3.io>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.100.0"
+python-dotenv = "^1.0.0"
+uvicorn = "^0.23.1"
+sse-starlette = "^1.6.5"
+loguru = "^0.7.0"
+toolz = "^0.12.0"
+python-redis-lock = "^4.0.0"
+tiktoken = "^0.5.1"
+google-search-results = "^2.4.2"
+psycopg = "^3.1.12"
+aiohttp = "^3.8.6"
+chainlit = "^0.7.1"
+langchain = "^0.0.310"
+openai = "^0.28.1"
+pydantic-settings = "^2.0.3"
+gptcache = "^0.1.42"
+asyncpg = "^0.28.0"
+sqlalchemy = "^2.0.22"
+psycopg2 = "^2.9.9"
+websockets = "^12.0"
+aiocache = "^0.12.2"
+pytz = "^2023.3.post1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

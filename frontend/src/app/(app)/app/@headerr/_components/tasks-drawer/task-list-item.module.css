@@ -1,0 +1,39 @@
+.task-list-item {
+	cursor: pointer;
+
+	transition: background-color 0.1s ease-in-out;
+	&:hover {
+		background-color: var(--mantine-color-gray-light);
+	}
+}
+
+.task-status-icon {
+	width: var(--mantine-font-size-sm);
+	height: var(--mantine-font-size-sm);
+
+	&[data-status="canceled"] {
+		color: var(--mantine-color-gray);
+	}
+	&[data-status="done"] {
+		color: var(--mantine-color-green-filled);
+	}
+	&[data-status="failed"] {
+		color: var(--mantine-color-red-filled);
+	}
+	&[data-status="idle"] {
+		color: var(--mantine-color-gray);
+	}
+	&[data-status="pending"] {
+		color: var(--mantine-color-yellow-filled);
+	}
+	&[data-status="running"] {
+		color: var(--mantine-color-blue-filled);
+		animation: spin 1s linear infinite;
+	}
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
