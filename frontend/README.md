@@ -63,7 +63,7 @@ These environment variables are used in the `prisma/schema.prisma` file to conne
 The backend API is used to fetch data from server. The following environment variables are required to connect to the backend API.
 
 ```bash
-API_AI_URL="https://YOUR_API_AI_URL"
+BACKEND_URL="https://YOUR_BACKEND_URL"
 API_EXECUTOR_URL="https://YOUR_API_EXECUTOR_URL"
 ```
 
