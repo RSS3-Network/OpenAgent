@@ -36,4 +36,4 @@ python main.py
 
 ## Environment Variables
 
-[.env.example](./.env.example) contains the environment variables required for the application to run.
+[.env.example](./.env.example) contains the environment variables required.

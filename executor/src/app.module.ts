@@ -22,7 +22,7 @@ import { sepolia } from 'viem/chains';
       useFactory: (configService: ConfigService) => {
         const publicClient = createPublicClient({
           chain: sepolia,
-          transport: http(configService.get('OPENAGENT_EXECUTOR_RPC_URL')),
+          transport: http(configService.get('EXECUTOR_RPC_URL')),
         });
 
         return publicClient;
@@ -34,13 +34,13 @@ import { sepolia } from 'viem/chains';
       useFactory: (configService: ConfigService) => {
         // Local Account
         const account = privateKeyToAccount(
-          configService.get<Hex>('OPENAGENT_EXECUTOR_PRIVATE_KEY'),
+          configService.get<Hex>('EXECUTOR_PRIVATE_KEY'),
         );
 
         const executorClient = createWalletClient({
           account,
           chain: sepolia,
-          transport: http(configService.get('OPENAGENT_EXECUTOR_RPC_URL')),
+          transport: http(configService.get('EXECUTOR_RPC_URL')),
         });
 
         return executorClient;
@@ -52,7 +52,7 @@ import { sepolia } from 'viem/chains';
       useFactory: (configService: ConfigService) => {
         // Local Account
         const account = privateKeyToAccount(
-          configService.get<Hex>('OPENAGENT_EXECUTOR_PRIVATE_KEY'),
+          configService.get<Hex>('EXECUTOR_PRIVATE_KEY'),
         );
 
         return account;
@@ -64,7 +64,7 @@ import { sepolia } from 'viem/chains';
       useFactory: (configService: ConfigService) => {
         // Local Account
         const account = configService.get(
-          'OPENAGENT_EXECUTOR_CONTRACT_ADDRESS',
+          'EXECUTOR_CONTRACT_ADDRESS',
         );
 
         return account;
