@@ -36,10 +36,12 @@ def get_agent(session_id: str) -> AgentExecutor:
         memory_key="memory", return_messages=True, chat_memory=message_history
     )
     interpreter = ChatOpenAI(
-        openai_api_base=settings.API_BASE,
+        # the endpoint of your local LLM API
+        openai_api_base=settings.LLM_API_BASE,
         temperature=0.3,
         streaming=True,
     )
+    # load Exports as tools for the agent
     tools = [
         GoogleExpert(),
         NetworkExpert(),
@@ -55,6 +57,8 @@ def get_agent(session_id: str) -> AgentExecutor:
     return initialize_agent(
         tools,
         interpreter,
+        # AgentType.OPENAI_FUNCTIONS is tested to be the most performant
+        # thus local LLM must be conformed to this type
         agent=AgentType.OPENAI_FUNCTIONS,
         verbose=True,
         agent_kwargs=agent_kwargs,
@@ -63,6 +67,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     )
 
 
+# this function is used to get the chat history of a session from Postgres
 def get_msg_history(session_id):
     return PostgresChatMessageHistory(
         session_id=session_id,

@@ -7,7 +7,7 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
-    API_BASE: str = Field(..., env="API_BASE")
+    LLM_API_BASE: str = Field(..., env="LLM_API_BASE")
     RSS3_AI_API: str = Field(..., env="RSS3_AI_API")
     EXECUTOR_API: str = Field(..., env="EXECUTOR_API")
     POSTGRES_SERVER: str = Field(..., env="POSTGRES_SERVER")

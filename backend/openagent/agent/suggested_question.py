@@ -9,9 +9,8 @@ from openagent.conf.env import settings
 load_dotenv()
 
 
-async def agen_suggested_questions(
-    user_id: str, history: str
-) -> list[str]:
+# This function is used to generate suggested questions based on the user's chat history.
+async def agen_suggested_questions(user_id: str, history: str) -> list[str]:
     prompt = PromptTemplate(
         template="""
 Based on the following user chat history, \
@@ -33,7 +32,7 @@ Suggested Questions:
         input_variables=["history"],
     )
 
-    model = ChatOpenAI(openai_api_base=settings.API_BASE, temperature=0.5)
+    model = ChatOpenAI(openai_api_base=settings.LLM_API_BASE, temperature=0.5)
     interpreter = LLMChain(llm=model, prompt=prompt)
     logger.info(f"start to generate suggested questions based on history: {history}")
     output = await interpreter.arun(

@@ -11,9 +11,8 @@ from openagent.conf.env import settings
 load_dotenv()
 
 
-async def agen_session_title(
-    user_id: str, session_id: str, history: str
-) -> list[str]:
+# This function is used to generate a session title based on the user's chat history.
+async def agen_session_title(user_id: str, session_id: str, history: str) -> list[str]:
     prompt = PromptTemplate(
         template="""
 Based on the following user chat history, generate a session title. \
@@ -26,7 +25,7 @@ Session Title:
         input_variables=["history"],
     )
 
-    model = ChatOpenAI(openai_api_base=settings.API_BASE, temperature=0.5)
+    model = ChatOpenAI(openai_api_base=settings.LLM_API_BASE, temperature=0.5)
     interpreter = LLMChain(llm=model, prompt=prompt)
     logger.info(f"start to generate session title based on history: {history}")
     output = await interpreter.arun(
