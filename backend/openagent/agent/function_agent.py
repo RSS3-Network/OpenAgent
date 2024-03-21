@@ -8,17 +8,17 @@ from toolz import memoize
 from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
 from openagent.agent.system_prompt import SYSTEM_PROMPT
+from openagent.conf.env import settings
+from openagent.experts.account_expert import AccountExpert
+from openagent.experts.collection_expert import CollectionExpert
+from openagent.experts.dapp_expert import DappExpert
+from openagent.experts.executor_expert import ExecutorExpert
 from openagent.experts.feed_expert import FeedExpert
 from openagent.experts.google_expert import GoogleExpert
 from openagent.experts.network_expert import NetworkExpert
-from openagent.experts.collection_expert import CollectionExpert
-from openagent.experts.token_expert import TokenExpert
-from openagent.experts.dapp_expert import DappExpert
-from openagent.experts.account_expert import AccountExpert
 from openagent.experts.swap_expert import SwapExpert
+from openagent.experts.token_expert import TokenExpert
 from openagent.experts.transfer_expert import TransferExpert
-from openagent.experts.executor_expert import ExecutorExpert
-from openagent.conf.env import settings
 
 init_cache()
 

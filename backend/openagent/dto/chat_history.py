@@ -3,10 +3,10 @@ from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel
+from toolz.curried import groupby
 
 from openagent.dto.chat_req import ChatReqType
 from openagent.dto.chat_resp import ChatRespType
-from toolz.curried import groupby
 
 
 class ChatSession(BaseModel):  # type: ignore

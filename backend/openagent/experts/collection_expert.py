@@ -1,7 +1,7 @@
+import json
 from typing import Optional, Type
 
 import aiohttp
-import json
 from langchain.callbacks.manager import (
     CallbackManagerForToolRun,
     AsyncCallbackManagerForToolRun,
@@ -65,9 +65,9 @@ async def fetch_collections(query_type: str, nft_name: str):
             info = await resp.text()
             data = json.loads(info)
             for item in data.get("data", {}).get("items", []):
-                item[
-                    "nft_collection_website"
-                ] = "https://etherscan.io/token/" + item.get("nft_collection_addr", "")
+                item["nft_collection_website"] = (
+                    "https://etherscan.io/token/" + item.get("nft_collection_addr", "")
+                )
                 keys_to_remove = [k for k, v in item.items() if v == 0 or v == ""]
                 for key in keys_to_remove:
                     item.pop(key, None)

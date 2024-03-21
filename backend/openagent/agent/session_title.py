@@ -4,9 +4,9 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from loguru import logger
 
+from openagent.conf.env import settings
 from openagent.db.database import DBSession
 from openagent.db.models import ChatSession
-from openagent.conf.env import settings
 
 load_dotenv()
 

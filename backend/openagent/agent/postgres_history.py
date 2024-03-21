@@ -6,10 +6,10 @@ from langchain.schema import (
     BaseChatMessageHistory,
 )
 from langchain.schema.messages import BaseMessage, messages_from_dict
+from toolz.curried import compose_left, map, filter
 
 from openagent.db.database import DBSession
 from openagent.db.models import ChatHistory
-from toolz.curried import compose_left, map, filter
 
 logger = logging.getLogger(__name__)
 

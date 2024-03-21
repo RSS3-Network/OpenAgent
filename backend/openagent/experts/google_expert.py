@@ -1,7 +1,6 @@
 from typing import Optional, Type
 
 from langchain import SerpAPIWrapper
-
 from langchain.callbacks.manager import (
     CallbackManagerForToolRun,
     AsyncCallbackManagerForToolRun,

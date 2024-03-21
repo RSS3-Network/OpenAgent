@@ -2,7 +2,6 @@ import uuid
 from datetime import datetime
 from typing import Optional, Type
 
-
 from langchain.callbacks.manager import (
     CallbackManagerForToolRun,
     AsyncCallbackManagerForToolRun,
@@ -15,11 +14,11 @@ from openagent.db.database import DBSession
 from openagent.db.models import Task
 from openagent.dto.mutation import Transfer
 from openagent.dto.task import TaskStatus, TaskType, TransferDTO, ConfirmTransferDTO
-from openagent.router.task import confirm_transfer
 from openagent.experts import (
     get_token_data_by_key,
     select_best_token,
 )
+from openagent.router.task import confirm_transfer
 
 
 class ParamSchema(BaseModel):

@@ -4,8 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
-from openagent.router.onboarding import onboarding_router
 from openagent.router.chat import chat_router
+from openagent.router.onboarding import onboarding_router
 from openagent.router.session import session_router
 from openagent.router.task import task_router
 from openagent.service.task import check_task_status

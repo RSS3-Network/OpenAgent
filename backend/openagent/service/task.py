@@ -10,6 +10,7 @@ from loguru import logger
 from sqlalchemy.sql.operators import and_
 from starlette.websockets import WebSocket
 
+from openagent.conf.env import settings
 from openagent.db.database import DBSession
 from openagent.db.models import Task
 from openagent.dto.task import (
@@ -19,7 +20,6 @@ from openagent.dto.task import (
     ConfirmTransferDTO,
 )
 from openagent.experts import get_token_by_address
-from openagent.conf.env import settings
 
 
 async def cancel_task(user_id: str, task_id: str):

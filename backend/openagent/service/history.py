@@ -2,14 +2,13 @@ from datetime import datetime
 
 from sqlalchemy import desc
 from sqlalchemy.sql.operators import and_
+from toolz.curried import map, compose_left
 
 from openagent.db.database import DBSession
 from openagent.db.models import ChatHistory, ChatSession
+from openagent.dto.chat_history import ChatHistory as ChatHistoryDto
 from openagent.dto.chat_history import ChatMessage as ChatMessageDto
 from openagent.dto.chat_history import ChatSession as ChatSessionDto
-from openagent.dto.chat_history import ChatHistory as ChatHistoryDto
-from toolz.curried import map, compose_left
-
 from openagent.dto.session import SessionTreeNodeDTOType, SessionTab
 
 
