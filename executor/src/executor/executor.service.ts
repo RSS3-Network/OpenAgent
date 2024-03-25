@@ -121,7 +121,7 @@ export class ExecutorService {
     });
 
     if (!executorUser) {
-      throw new BadRequestException('not valid user');
+      throw new BadRequestException('not a valid user');
     }
 
     const executor = await this.prisma.executor.findUnique({
@@ -131,11 +131,11 @@ export class ExecutorService {
     });
 
     if (!executor) {
-      throw new BadRequestException('not valid executor');
+      throw new BadRequestException('not a valid executor');
     }
 
     if (executorUser.id != executor.executorUserId) {
-      throw new ForbiddenException('this executor is not belong to this user');
+      throw new ForbiddenException('this executor does not belong to this user');
     }
 
     const executorBalance = await this.getExecutorBalance(executor.address);
@@ -254,7 +254,7 @@ export class ExecutorService {
     });
 
     if (!executorUser) {
-      throw new BadRequestException('not valid user');
+      throw new BadRequestException('not a valid user');
     }
 
     const executor = await this.prisma.executor.findUnique({
@@ -264,11 +264,11 @@ export class ExecutorService {
     });
 
     if (!executor) {
-      throw new BadRequestException('not valid executor');
+      throw new BadRequestException('not a valid executor');
     }
 
     if (executorUser.id != executor.executorUserId) {
-      throw new ForbiddenException('this executor is not belong to this user');
+      throw new ForbiddenException('this executor does not belong to this user');
     }
 
     const { request } = await this.publicClient.simulateContract({
@@ -313,7 +313,7 @@ export class ExecutorService {
     });
 
     if (txStatus) {
-      throw new BadRequestException('txId already exist');
+      throw new BadRequestException('txId already exists');
     }
 
     const executorUser = await this.prisma.executorUser.findUnique({
@@ -323,7 +323,7 @@ export class ExecutorService {
     });
 
     if (!executorUser) {
-      throw new BadRequestException('not valid user');
+      throw new BadRequestException('not a valid user');
     }
 
     const executor = await this.prisma.executor.findUnique({
@@ -333,11 +333,11 @@ export class ExecutorService {
     });
 
     if (!executor) {
-      throw new BadRequestException('not valid executor');
+      throw new BadRequestException('not a valid executor');
     }
 
     if (executorUser.id != executor.executorUserId) {
-      throw new ForbiddenException('this executor is not belong to this user');
+      throw new ForbiddenException('this executor does not belong to this user');
     }
 
     let toAddr = dto.toAddress;
@@ -361,7 +361,7 @@ export class ExecutorService {
           if (ethereumEntries.length > 0) {
             toAddr = ethereumEntries[0].address;
           } else {
-            throw new BadRequestException('not valid to address');
+            throw new BadRequestException('not a valid `to` address');
           }
         })
         .catch((error) => {
@@ -412,7 +412,7 @@ export class ExecutorService {
     } catch (e) {
       throw new InternalServerErrorException(
         e.shortMessage,
-        'not sufficient balance',
+        'insufficient balance',
       );
     }
 
@@ -431,7 +431,7 @@ export class ExecutorService {
     });
 
     if (txStatus) {
-      throw new BadRequestException('txId already exist');
+      throw new BadRequestException('txId already exists');
     }
 
     // get from executor
@@ -442,7 +442,7 @@ export class ExecutorService {
     });
 
     if (!fromExecutorUser) {
-      throw new BadRequestException('not valid user');
+      throw new BadRequestException('not a valid user');
     }
 
     const fromExecutor = await this.prisma.executor.findUnique({
@@ -452,11 +452,11 @@ export class ExecutorService {
     });
 
     if (!fromExecutor) {
-      throw new BadRequestException('not valid executor');
+      throw new BadRequestException('not a valid executor');
     }
 
     if (fromExecutorUser.id != fromExecutor.executorUserId) {
-      throw new ForbiddenException('this executor is not belong to this user');
+      throw new ForbiddenException('this executor does not belong to this user');
     }
 
     // get to executor
@@ -467,7 +467,7 @@ export class ExecutorService {
     });
 
     if (!toExecutorUser) {
-      throw new BadRequestException('not valid user');
+      throw new BadRequestException('not a valid user');
     }
 
     const toExecutor = await this.prisma.executor.findUnique({
@@ -477,11 +477,11 @@ export class ExecutorService {
     });
 
     if (!toExecutor) {
-      throw new BadRequestException('not valid executor');
+      throw new BadRequestException('not a valid executor');
     }
 
     if (toExecutorUser.id != toExecutor.executorUserId) {
-      throw new ForbiddenException('this executor is not belong to this user');
+      throw new ForbiddenException('this executor does not belong to this user');
     }
 
     let amount: BigInt;
@@ -513,7 +513,7 @@ export class ExecutorService {
     } catch (e) {
       throw new InternalServerErrorException(
         e.shortMessage,
-        'not sufficient balance',
+        'insufficient balance',
       );
     }
 
@@ -547,7 +547,7 @@ export class ExecutorService {
     });
 
     if (!txStatus) {
-      throw new BadRequestException('invalid txId or tx not exist');
+      throw new BadRequestException('invalid txId or tx does not exist');
     }
 
     let transaction;
