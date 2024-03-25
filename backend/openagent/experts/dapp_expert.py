@@ -45,7 +45,6 @@ async def fetch_dapp(query_type: str):
     host = settings.RSS3_AI_API
     dapp_prefix = "dapps"
     defi_prefix = "defi"
-    suffix = "&beginTime=2022-01-01&endTime=2023-08-01"
     is_defi = query_type in {
         "defi_tvl",
         "defi_lst",
@@ -56,7 +55,7 @@ async def fetch_dapp(query_type: str):
 
     prefix = defi_prefix if is_defi else dapp_prefix
 
-    url = f"""{host}/m1/v2/{prefix}?action={query_type}&network=ethereum&limit=10{suffix}"""
+    url = f"""{host}/m1/v2/{prefix}?action={query_type}&network=ethereum&limit=10"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")
