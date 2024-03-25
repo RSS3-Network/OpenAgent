@@ -42,7 +42,7 @@ class DappExpert(BaseTool):
 
 
 async def fetch_dapp(query_type: str):
-    host = settings.RSS3_AI_API
+    host = settings.RSS3_AI_API_BASE
     dapp_prefix = "dapps"
     defi_prefix = "defi"
     is_defi = query_type in {

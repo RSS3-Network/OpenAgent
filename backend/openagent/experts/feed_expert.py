@@ -47,7 +47,7 @@ blockchain domain name on a platform, and know what this address has done or doi
 
 
 async def fetch_feeds(address: str, platform: str):
-    host = settings.RSS3_AI_API
+    host = settings.RSS3_AI_API_BASE
     url = f"""{host}/m1/v2/feeds?platform={platform}&limit=5&address={address}"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:

@@ -48,7 +48,7 @@ class TokenExpert(BaseTool):
 
 
 async def fetch_token(query_type: str, token_name: str):
-    host = settings.RSS3_AI_API
+    host = settings.RSS3_AI_API_BASE
     if query_type == "popular_tokens":
         url = f"""{host}/m1/v2/tokens?limit=10&network=ethereum"""
     else:

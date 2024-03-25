@@ -48,7 +48,7 @@ data about block_height, gas_price.\n\
 
 
 async def fetch_network(query_type: str, network: str):
-    host = settings.RSS3_AI_API
+    host = settings.RSS3_AI_API_BASE
     url = f"""{host}/m1/v2/networks?action={query_type}&network={network}&limit=10"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:

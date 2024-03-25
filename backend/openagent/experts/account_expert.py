@@ -38,7 +38,7 @@ class AccountExpert(BaseTool):
 
 
 async def fetch_account(query_type: str):
-    host = settings.RSS3_AI_API
+    host = settings.RSS3_AI_API_BASE
 
     url = f"""{host}/m1/v2/accounts?action={query_type}&network=ethereum&limit=10"""
     headers = {"Accept": "application/json"}

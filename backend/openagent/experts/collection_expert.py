@@ -51,7 +51,7 @@ class CollectionExpert(BaseTool):
 
 
 async def fetch_collections(query_type: str, nft_name: str):
-    host = settings.RSS3_AI_API
+    host = settings.RSS3_AI_API_BASE
     if query_type == "popular_nfts":
         url = f"""{host}/m1/v2/collections?limit=10&network=ethereum&order=popular"""
     else:
