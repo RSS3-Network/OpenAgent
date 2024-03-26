@@ -53,8 +53,6 @@ A:""",
     return lst
 
 
-
-
 if __name__ == '__main__':
     import asyncio
     asyncio.run(agen_suggested_questions("123","eth price?"))
