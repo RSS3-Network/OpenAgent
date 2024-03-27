@@ -1,12 +1,14 @@
 import asyncio
 import time
 
+import langchain
+
 from openagent.agent.function_agent import get_agent
 
 question_list = [
-    "Hello?",
+    # "Hello?",
     "What is the price of ETH?",
-    "what did vitalik.eth do recently?",
+    # "what did vitalik.eth do recently?",
 ]
 
 
@@ -15,6 +17,7 @@ async def dummy(_):
 
 
 async def init():
+    # langchain.debug=True
     start = time.time()
     agent = get_agent("")
     for question in question_list:

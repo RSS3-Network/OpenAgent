@@ -49,9 +49,9 @@ like: "pending", "editing" or "running". Default is "pending", when user edit th
 
 class TransferExpert(BaseTool):
     name = "transfer"
-    description = """Use this tool to extract structured information from the user's query,
-whenever the query is about a transfer or sending cryptocurrencies to someone.
-A transfer indicates an action of sending an amount of token to an address or a blockchain domain.\n
+    description = """Use this tool to transfer cryptocurrencies. for example: \
+"transfer 1 ETH to 0x1234567890abcdef1234567890abcdef12345678", \
+"transfer 1 BTC to vitalk.eth" and etc. \
 """
     args_schema: Type[ParamSchema] = ParamSchema
     return_direct = False

@@ -14,8 +14,8 @@ from openagent.conf.env import settings
 
 class ParamSchema(BaseModel):
     query_type: str = Field(
-        description="""query type, option: "market_cap", "token_price", \
-"token_volume", "token_supply", "popular_tokens"."""
+        description="""query type, option: "token_price", "market_cap", \
+        "token_volume", "token_supply", "popular_tokens"."""
     )
     token_name: str = Field(
         description="""token name. default is "eth". option: "wbtc", "eth", \

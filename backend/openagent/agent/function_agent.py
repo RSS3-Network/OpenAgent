@@ -1,5 +1,5 @@
 from langchain.agents import AgentExecutor, initialize_agent, AgentType
-from langchain.chat_models import ChatOpenAI
+from langchain.chat_models import ChatOpenAI, ChatOllama
 from langchain.memory import ConversationBufferMemory, ChatMessageHistory
 from langchain.prompts import MessagesPlaceholder
 from langchain.schema import SystemMessage
@@ -29,18 +29,44 @@ def get_agent(session_id: str) -> AgentExecutor:
         get_msg_history(session_id) if session_id else ChatMessageHistory()
     )
     agent_kwargs = {
-        "system_message": SystemMessage(content=SYSTEM_PROMPT),
-        "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
+        "prefix": """
+Your designated name is RSS3 Node Assistant, developed by RSS3, \
+you have the capability to call upon tools to aid in answering questions.
+        """,
+        "format_instructions":"""
+
+When responding, you must exclusively use one of the following two formats:
+
+**Option 1:**
+If you're suggesting that the user utilizes a tool, format your response as a markdown code snippet according to this schema:
+
+```json
+{{{{
+    "action": string, // The action to be taken. Must be one of {tool_names}
+    "action_input": string  // The parameters for the action. MUST be JSON object
+}}}}
+```
+
+**Option #2:**
+If you're providing a direct response to the user, format your response as a markdown code snippet following this schema:
+
+```json
+{{{{
+    "action": "Final Answer", // Be careful to use the exact string "Final Answer" here， “final_answer” is not acceptable
+    "action_input": string // This should contain your response to the user, in human-readable language
+}}}}
+```
+
+""",
+        "suffix": """
+Here is the user's input (remember to respond with a markdown code snippet of a json \
+blob with a single action, and NOTHING else):""",
     }
     memory = ConversationBufferMemory(
         memory_key="memory", return_messages=True, chat_memory=message_history
     )
-    interpreter = ChatOpenAI(
-        # the endpoint of your local LLM API
-        openai_api_base=settings.LLM_API_BASE,
-        temperature=0.3,
-        streaming=True,
-    )
+    model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.MODEL_BASE_URL)
+
     # load Exports as tools for the agent
     tools = [
         GoogleExpert(),
@@ -51,15 +77,15 @@ def get_agent(session_id: str) -> AgentExecutor:
         DappExpert(),
         AccountExpert(),
         SwapExpert(),
-        TransferExpert(),
-        ExecutorExpert(),
+        # TransferExpert(),
+        # ExecutorExpert(),
     ]
     return initialize_agent(
         tools,
-        interpreter,
+        model,
         # AgentType.OPENAI_FUNCTIONS is tested to be the most performant
         # thus local LLM must be conformed to this type
-        agent=AgentType.OPENAI_FUNCTIONS,
+        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
         verbose=True,
         agent_kwargs=agent_kwargs,
         memory=memory,

@@ -25,18 +25,19 @@ class PostgresChatMessageHistory(BaseChatMessageHistory):
 
     @property
     def messages(self) -> List[BaseMessage]:  # type: ignore
-        with DBSession() as db_session:
-            histories = (
-                db_session.query(ChatHistory)
-                .filter(ChatHistory.session_id == self.session_id)
-                .all()
-            )
-            lst = compose_left(
-                map(compose_left(lambda x: x.message, json.loads)),
-                filter(lambda x: x["type"] in ["ai", "human"]),
-                list,
-            )(histories)
-            return messages_from_dict(lst)
+        return []
+        # with DBSession() as db_session:
+        #     histories = (
+        #         db_session.query(ChatHistory)
+        #         .filter(ChatHistory.session_id == self.session_id)
+        #         .all()
+        #     )
+        #     lst = compose_left(
+        #         map(compose_left(lambda x: x.message, json.loads)),
+        #         filter(lambda x: x["type"] in ["ai", "human"]),
+        #         list,
+        #     )(histories)
+        #     return messages_from_dict(lst)
 
     def add_message(self, message: BaseMessage) -> None:
         # saved by stream callback
