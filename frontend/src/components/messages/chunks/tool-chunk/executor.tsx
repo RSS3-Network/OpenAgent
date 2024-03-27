@@ -1,6 +1,6 @@
 import { ActionIconCopy } from "@/components/action-icons/copy";
-import { TokenBalance } from "@/components/executor/token-balance";
 import { ExecutorAddressAvatar } from "@/components/executor/executor-address-avatar";
+import { TokenBalance } from "@/components/executor/token-balance";
 import { Card, Group, Text, rem } from "@mantine/core";
 
 import { ActionIconExternalLink } from "../basics/action-icon";
@@ -30,8 +30,8 @@ function ExecutorCard({
 			<Text fw="bold">Executor</Text>
 			<Group wrap="nowrap">
 				<ExecutorAddressAvatar
-					size={rem(20)}
 					executorAddress={item.executorAddress}
+					size={rem(20)}
 				/>
 				<Address address={item.executorAddress} />
 				<ActionIconCopy value={item.executorAddress} />
@@ -43,13 +43,14 @@ function ExecutorCard({
 			<Text fw="bold">Tokens</Text>
 			{item.balance.map((token) => (
 				<TokenBalance
-					address={token.tokenAddress}
 					balance={token.tokenBalance}
 					decimals={token.tokenDecimal}
+					executorAddress={item.executorAddress}
 					imgUrl={token.tokenImageUrl}
 					key={token.tokenAddress}
 					name={token.tokenName}
 					symbol={token.tokenSymbol}
+					tokenAddress={token.tokenAddress}
 				/>
 			))}
 		</Card>

@@ -10,10 +10,10 @@ export const transferApi = protectedProcedure
 		wrap(
 			object({
 				amount: string(),
+				executorId: number(),
 				taskId: string([uuid()]),
 				toAddress: string([]),
 				tokenAddress: string([]),
-				executorId: number(),
 			})
 		)
 	)
@@ -24,11 +24,11 @@ export const transferApi = protectedProcedure
 			.request({
 				body: JSON.stringify({
 					amount: input.amount,
+					executor_id: input.executorId,
 					task_id: input.taskId,
 					to_address: input.toAddress,
 					token_address: input.tokenAddress,
 					user_id: user_id,
-					executor_id: input.executorId,
 				}),
 				method: "POST",
 				path: `/tasks/confirm_transfer`,

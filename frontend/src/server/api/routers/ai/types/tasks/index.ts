@@ -35,11 +35,11 @@ interface AiTaskItemBody_Transfer {
 	/** in eth */
 	amount: string;
 	decimals: number;
+	executor_id: number;
 	logoURI: string;
 	to_address: `${string}.eth` | `0x${string}`;
 	token: string;
 	token_address: `0x${string}`;
-	executor_id: number;
 }
 
 type AiTaskItemList = AiTaskItem[];

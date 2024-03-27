@@ -148,11 +148,11 @@ type AiSessionMessageToolType =
 	| "collection"
 	| "dapp"
 	| "defi"
+	| "executor"
 	| "feed"
 	| "network"
 	| "token"
-	| "transfer"
-	| "executor";
+	| "transfer";
 
 type AiSessionMessageToolInputBody<
 	T extends AiSessionMessageToolType = AiSessionMessageToolType
@@ -179,11 +179,11 @@ type AiSessionMessageToolOutputBody_Type_Content_Mapping = {
 	collection: AiSessionMessageToolOutputBody_Collection;
 	dapp: AiSessionMessageToolOutputBody_Dapp;
 	defi: AiSessionMessageToolOutputBody_Defi;
+	executor: AiSessionMessageToolOutputBody_Executor;
 	feed: AiSessionMessageToolOutputBody_Feed;
 	network: AiSessionMessageToolOutputBody_Network;
 	token: AiSessionMessageToolOutputBody_Token;
 	transfer: AiSessionMessageToolOutputBody_Transfer;
-	executor: AiSessionMessageToolOutputBody_Executor;
 };
 
 /**

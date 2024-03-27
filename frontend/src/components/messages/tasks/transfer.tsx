@@ -23,16 +23,16 @@ import { useSetAtom } from "jotai";
 import { Suspense, useEffect } from "react";
 import { type Input, number, object, string, union } from "valibot";
 
-import { TaskLoading } from "./basics/task-loading";
 import { ExecutorSelector } from "./basics/executor-selector";
+import { TaskLoading } from "./basics/task-loading";
 
 const schema = object({
 	amount: string(),
+	executorId: number(),
 	toAddress: union(
 		[string([ethAddress()]), string([ethName()])],
 		"Must be a valid Ethereum address or ENS name."
 	),
-	executorId: number(),
 });
 
 type FormData = Input<typeof schema>;
@@ -71,9 +71,9 @@ function ToolChunkTransferWithSuspense({
 	const form = useForm<FormData>({
 		initialValues: {
 			amount: body.amount,
-			toAddress: body.to_address,
 			executorId:
 				executors && executors.length > 0 ? executors[0].executorId : 0,
+			toAddress: body.to_address,
 		},
 		validate: valibotResolver(schema),
 	});
@@ -201,10 +201,10 @@ function ToolChunkTransferWithSuspense({
 					console.log({ values });
 					transfer.mutate({
 						amount: values.amount,
+						executorId: values.executorId,
 						taskId: body.task_id,
 						toAddress: values.toAddress,
 						tokenAddress: body.token_address,
-						executorId: values.executorId,
 					});
 				})}
 			>

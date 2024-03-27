@@ -1,11 +1,11 @@
 import { Image } from "@mantine/core";
 
 export function ExecutorAddressAvatar({
-	size = 32,
 	executorAddress,
+	size = 32,
 }: {
-	size?: number | string;
 	executorAddress: `${string}.eth` | `0x${string}`;
+	size?: number | string;
 }) {
 	return (
 		<Image

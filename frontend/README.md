@@ -67,6 +67,19 @@ BACKEND_URL="https://YOUR_BACKEND_URL"
 API_EXECUTOR_URL="https://YOUR_API_EXECUTOR_URL"
 ```
 
+#### 3.4 Wallet
+
+The wallet is used to sign transactions and interact with the blockchain. The following environment variables are required to connect to the wallet.
+
+```bash
+NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=
+NEXT_PUBLIC_CHAIN_ID=
+```
+
+Note: For `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`, every dApp that relies on WalletConnect now needs to obtain a projectId from [WalletConnect Cloud](https://cloud.walletconnect.com/sign-in). This is absolutely free and only takes a few minutes.
+
+For `NEXT_PUBLIC_CHAIN_ID`, you can refer to the [Chainlist](https://www.chainlist.org/) for the chain ID of the blockchain you want to connect to. For example, in production, it should be `1` for mainnet; and in development, it could be `11155111` for Sepolia testnet.
+
 ### 4. Run the Development Server
 
 Run the development server:
