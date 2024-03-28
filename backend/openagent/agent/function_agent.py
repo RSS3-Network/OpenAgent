@@ -33,7 +33,7 @@ def get_agent(session_id: str) -> AgentExecutor:
 Your designated name is RSS3 Node Assistant, developed by RSS3, \
 you have the capability to call upon tools to aid in answering questions.
         """,
-        "format_instructions":"""
+        "format_instructions": """
 
 When responding, you must exclusively use one of the following two formats:
 
@@ -43,7 +43,7 @@ If you're suggesting that the user utilizes a tool, format your response as a ma
 ```json
 {{{{
     "action": string, // The action to be taken. Must be one of {tool_names}
-    "action_input": string  // The parameters for the action. MUST be JSON object
+    "action_input": object  // The parameters for the action. MUST be JSON object
 }}}}
 ```
 
@@ -52,7 +52,7 @@ If you're providing a direct response to the user, format your response as a mar
 
 ```json
 {{{{
-    "action": "Final Answer", // Be careful to use the exact string "Final Answer" here， “final_answer” is not acceptable
+    "action": "Final Answer", // MUST be literal string "Final Answer", other forms are not acceptable
     "action_input": string // This should contain your response to the user, in human-readable language
 }}}}
 ```
@@ -69,14 +69,14 @@ blob with a single action, and NOTHING else):""",
 
     # load Exports as tools for the agent
     tools = [
-        GoogleExpert(),
+        # GoogleExpert(),
         NetworkExpert(),
         FeedExpert(),
         CollectionExpert(),
         TokenExpert(),
         DappExpert(),
         AccountExpert(),
-        SwapExpert(),
+        # SwapExpert(),
         # TransferExpert(),
         # ExecutorExpert(),
     ]

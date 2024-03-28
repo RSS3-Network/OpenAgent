@@ -35,8 +35,7 @@ like: "0.1", "1", "10" and etc. Default is "1"."""
 
 class SwapExpert(BaseTool):
     name = "swap"
-    description = """Use this tool to extract structured information from the user's query,
-whenever the query is about swap or buy some cryptocurrencies.\n
+    description = """Use this tool to swap cryptocurrencies.\n\
 """
     args_schema: Type[ParamSchema] = ParamSchema
 

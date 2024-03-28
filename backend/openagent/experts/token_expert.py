@@ -1,3 +1,4 @@
+import json
 from typing import Optional, Type
 
 import aiohttp
@@ -44,7 +45,12 @@ class TokenExpert(BaseTool):
         token_name: str = "",
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
-        return await fetch_token(query_type, token_name)
+        token_name = token_name.lower()
+        token_resp = await fetch_token(query_type, token_name)
+        if query_type == 'token_price':
+            token_price_ = json.loads(token_resp)['data']['items'][0]['token_price']
+            return f"The price of {token_name} is {token_price_}$"
+        return token_resp
 
 
 async def fetch_token(query_type: str, token_name: str):
@@ -58,5 +64,4 @@ async def fetch_token(query_type: str, token_name: str):
         logger.info(f"fetching {url}")
         async with session.get(url, headers=headers) as resp:
             result = await resp.text()
-            result += "\nThe monetary unit is USD.\n"
             return result
