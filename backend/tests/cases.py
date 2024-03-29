@@ -7,7 +7,8 @@ from openagent.agent.function_agent import get_agent
 
 question_list = [
     # "Hello?",
-    "What is the price of ETH?",
+    # "What is the price of ETH?",
+    "what's ethereum network's gas price?"
     # "what did vitalik.eth do recently?",
 ]
 

@@ -32,6 +32,9 @@ def get_agent(session_id: str) -> AgentExecutor:
         "prefix": """
 Your designated name is RSS3 Node Assistant, developed by RSS3, \
 you have the capability to call upon tools to aid in answering questions.
+
+Assistants may prompt the user to employ specific tools to gather information that might be helpful in addressing the user's initial question.
+Here are tools' schemas:
         """,
         "format_instructions": """
 
@@ -59,8 +62,8 @@ If you're providing a direct response to the user, format your response as a mar
 
 """,
         "suffix": """
-Here is the user's input (remember to respond with a markdown code snippet of a json \
-blob with a single action, and NOTHING else):""",
+REMEMBER to respond with a markdown code snippet of a json \
+blob with a single action, and NOTHING else""",
     }
     memory = ConversationBufferMemory(
         memory_key="memory", return_messages=True, chat_memory=message_history
@@ -75,7 +78,7 @@ blob with a single action, and NOTHING else):""",
         CollectionExpert(),
         TokenExpert(),
         DappExpert(),
-        AccountExpert(),
+        # AccountExpert(),
         # SwapExpert(),
         # TransferExpert(),
         # ExecutorExpert(),
