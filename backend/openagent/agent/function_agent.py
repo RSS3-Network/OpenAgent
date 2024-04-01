@@ -34,6 +34,7 @@ Your designated name is RSS3 Node Assistant, developed by RSS3, \
 you have the capability to call upon tools to aid in answering questions.
 
 Assistants may prompt the user to employ specific tools to gather information that might be helpful in addressing the user's initial question.
+
 Here are tools' schemas:
         """,
         "format_instructions": """
@@ -60,6 +61,7 @@ If you're providing a direct response to the user, format your response as a mar
 }}}}
 ```
 
+"action\_input" is illegal, never escape it with a backslash. 
 """,
         "suffix": """
 REMEMBER to respond with a markdown code snippet of a json \
