@@ -9,15 +9,15 @@ poetry shell
 poetry install
 ```
 
-2. Setup the database
+2. Complete the environment variables
+
+Copy the .env.example file to .env.local and fill in the environment variables.
+
+3. Bring up the containers
 
 ```bash
 docker compose up -d
 ```
-
-3. Complete the environment variables
-
-Copy the .env.example file to .env.local and fill in the environment variables.
 
 4. Run the application
 
