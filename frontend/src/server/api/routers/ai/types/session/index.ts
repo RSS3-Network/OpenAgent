@@ -13,7 +13,7 @@ type AiSessionTree = AiSessionTreeItem[];
 type AiSessionTreeItemType = "folder" | "session";
 
 interface AiSessionTreeItem<
-	T extends AiSessionTreeItemType = AiSessionTreeItemType
+	T extends AiSessionTreeItemType = AiSessionTreeItemType,
 > {
 	children: AiSessionTreeItem[];
 	created_at: string;
@@ -67,18 +67,19 @@ type AiSessionMessageChunkForRoleAiType =
 	| "suggested_questions"
 	| "tool";
 type AiSessionMessageChunkForRoleAi<
-	T extends AiSessionMessageChunkForRoleAiType = AiSessionMessageChunkForRoleAiType
+	T extends
+		AiSessionMessageChunkForRoleAiType = AiSessionMessageChunkForRoleAiType,
 > = T extends "natural_language"
 	? AiSessionMessageNaturalLanguage
 	: T extends "session_id"
-	? AiSessionMessageSessionId
-	: T extends "session_title"
-	? AiSessionMessageSessionTitle
-	: T extends "suggested_questions"
-	? AiSessionMessageSuggestedQuestions
-	: T extends "tool"
-	? AiSessionMessageTool
-	: never;
+		? AiSessionMessageSessionId
+		: T extends "session_title"
+			? AiSessionMessageSessionTitle
+			: T extends "suggested_questions"
+				? AiSessionMessageSuggestedQuestions
+				: T extends "tool"
+					? AiSessionMessageTool
+					: never;
 
 type AiSessionMessageChunkForRoleHuman = AiSessionMessageNaturalLanguage;
 
@@ -103,7 +104,7 @@ interface AiSessionMessageSuggestedQuestions {
 }
 
 interface AiSessionMessageTool<
-	T extends AiSessionMessageToolType = AiSessionMessageToolType
+	T extends AiSessionMessageToolType = AiSessionMessageToolType,
 > {
 	block_id: string;
 	body: {
@@ -151,20 +152,16 @@ type AiSessionMessageToolType =
 	| "executor"
 	| "feed"
 	| "network"
+	| "swap"
 	| "token"
 	| "transfer";
 
 type AiSessionMessageToolInputBody<
-	T extends AiSessionMessageToolType = AiSessionMessageToolType
-> =
-	| {
-			network: string;
-			query_target: string;
-	  }
-	| object;
+	T extends AiSessionMessageToolType = AiSessionMessageToolType,
+> = AiSessionMessageToolInputBody_Type_Content_Mapping[T];
 
 type AiSessionMessageToolOutputBody<
-	T extends AiSessionMessageToolType = AiSessionMessageToolType
+	T extends AiSessionMessageToolType = AiSessionMessageToolType,
 > =
 	| AiSessionMessageToolOutputBody_Error
 	| (AiSessionMessageToolOutputBody_Type_Content_Mapping[T] & {
@@ -182,8 +179,35 @@ type AiSessionMessageToolOutputBody_Type_Content_Mapping = {
 	executor: AiSessionMessageToolOutputBody_Executor;
 	feed: AiSessionMessageToolOutputBody_Feed;
 	network: AiSessionMessageToolOutputBody_Network;
+	swap: never;
 	token: AiSessionMessageToolOutputBody_Token;
 	transfer: AiSessionMessageToolOutputBody_Transfer;
+};
+
+/**
+ * @private
+ */
+type AiSessionMessageToolInputBody_Default =
+	| {
+			network: string;
+			query_target: string;
+	  }
+	| object;
+
+/**
+ * @private
+ */
+type AiSessionMessageToolInputBody_Type_Content_Mapping = {
+	account: AiSessionMessageToolInputBody_Default;
+	collection: AiSessionMessageToolInputBody_Default;
+	dapp: AiSessionMessageToolInputBody_Default;
+	defi: AiSessionMessageToolInputBody_Default;
+	executor: AiSessionMessageToolInputBody_Default;
+	feed: AiSessionMessageToolInputBody_Default;
+	network: AiSessionMessageToolInputBody_Default;
+	swap: AiSessionMessageToolInputBody_Swap;
+	token: AiSessionMessageToolInputBody_Default;
+	transfer: AiSessionMessageToolInputBody_Default;
 };
 
 /**
@@ -423,4 +447,10 @@ interface AiSessionMessageToolOutputBody_Transfer {
 	 * @example "0x0000000000000000000000000000000000000000"
 	 */
 	token_address: string;
+}
+
+interface AiSessionMessageToolInputBody_Swap {
+	amount: string;
+	from_token: string;
+	to_token: string;
 }
