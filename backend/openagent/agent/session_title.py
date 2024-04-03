@@ -11,9 +11,7 @@ from openagent.conf.env import settings
 load_dotenv()
 
 
-async def agen_session_title(
-    user_id: str, session_id: str, history: str
-) -> list[str]:
+async def agen_session_title(user_id: str, session_id: str, history: str) -> list[str]:
     prompt = PromptTemplate(
         template="""
 Based on the following user chat history, generate a session title. \
@@ -25,7 +23,14 @@ Session Title:
     """,
         input_variables=["history"],
     )
-    model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.MODEL_BASE_URL)
+    if settings.MODEL_NAME.startswith("gpt"):
+        model = ChatOpenAI(
+            model=settings.MODEL_NAME,
+            openai_api_base=settings.LLM_API_BASE,
+            temperature=0.5,
+        )
+    else:
+        model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.LLM_API_BASE)
     interpreter = LLMChain(llm=model, prompt=prompt)
     logger.info(f"start to generate session title based on history: {history}")
     output = await interpreter.arun(
@@ -42,7 +47,8 @@ Session Title:
     return output
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     import asyncio
-    asyncio.run(agen_session_title("123","456","what's your name ?"))
+
+    asyncio.run(agen_session_title("123", "456", "what's your name ?"))

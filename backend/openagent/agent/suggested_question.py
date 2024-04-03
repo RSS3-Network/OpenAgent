@@ -2,7 +2,7 @@ import json
 
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
-from langchain.chat_models import ChatOpenAI,ChatOllama
+from langchain.chat_models import ChatOpenAI, ChatOllama
 from langchain.prompts import PromptTemplate
 from loguru import logger
 
@@ -11,9 +11,7 @@ from openagent.conf.env import settings
 load_dotenv()
 
 
-async def agen_suggested_questions(
-    user_id: str, history: str
-) -> list[str]:
+async def agen_suggested_questions(user_id: str, history: str) -> list[str]:
     prompt = PromptTemplate(
         template="""
 Suggest follow up questions based on the user chat history. 
@@ -39,8 +37,14 @@ Q:
 A:""",
         input_variables=["history"],
     )
-
-    model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.MODEL_BASE_URL)
+    if settings.MODEL_NAME.startswith("gpt"):
+        model = ChatOpenAI(
+            model=settings.MODEL_NAME,
+            openai_api_base=settings.LLM_API_BASE,
+            temperature=0.5,
+        )
+    else:
+        model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.LLM_API_BASE)
     interpreter = LLMChain(llm=model, prompt=prompt)
     logger.info(f"start to generate suggested questions based on history: {history}")
     output = await interpreter.arun(
@@ -53,6 +57,7 @@ A:""",
     return lst
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import asyncio
-    asyncio.run(agen_suggested_questions("123","eth price?"))
+
+    asyncio.run(agen_suggested_questions("123", "eth price?"))

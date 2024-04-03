@@ -7,7 +7,7 @@ from toolz import memoize
 
 from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
-from openagent.agent.system_prompt import SYSTEM_PROMPT
+from openagent.agent.system_prompt import SYSTEM_PROMPT, ollama_agent_kwargs
 from openagent.conf.env import settings
 from openagent.experts.account_expert import AccountExpert
 from openagent.experts.collection_expert import CollectionExpert
@@ -29,73 +29,56 @@ def get_agent(session_id: str) -> AgentExecutor:
         get_msg_history(session_id) if session_id else ChatMessageHistory()
     )
     agent_kwargs = {
-        "prefix": """
-Your designated name is RSS3 Node Assistant, developed by RSS3, \
-you have the capability to call upon tools to aid in answering questions.
-
-Assistants may prompt the user to employ specific tools to gather information that might be helpful in addressing the user's initial question.
-
-Here are tools' schemas:
-        """,
-        "format_instructions": """
-
-When responding, you must exclusively use one of the following two formats:
-
-**Option 1:**
-If you're suggesting that the user utilizes a tool, format your response as a markdown code snippet according to this schema:
-
-```json
-{{{{
-    "action": string, // The action to be taken. Must be one of {tool_names}
-    "action_input": object  // The parameters for the action. MUST be JSON object
-}}}}
-```
-
-**Option #2:**
-If you're providing a direct response to the user, format your response as a markdown code snippet following this schema:
-
-```json
-{{{{
-    "action": "Final Answer", // MUST be literal string "Final Answer", other forms are not acceptable
-    "action_input": string // This should contain your response to the user, in human-readable language
-}}}}
-```
-
-"action\_input" is illegal, never escape it with a backslash. 
-""",
-        "suffix": """
-REMEMBER to respond with a markdown code snippet of a json \
-blob with a single action, and NOTHING else""",
+        "system_message": SystemMessage(content=SYSTEM_PROMPT),
+        "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
     }
     memory = ConversationBufferMemory(
         memory_key="memory", return_messages=True, chat_memory=message_history
     )
-    model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.MODEL_BASE_URL)
-
     # load Exports as tools for the agent
-    tools = [
-        # GoogleExpert(),
+    experts = [
+        GoogleExpert(),
         NetworkExpert(),
         FeedExpert(),
         CollectionExpert(),
         TokenExpert(),
         DappExpert(),
-        # AccountExpert(),
-        # SwapExpert(),
-        # TransferExpert(),
-        # ExecutorExpert(),
+        AccountExpert(),
+        SwapExpert(),
+        TransferExpert(),
+        ExecutorExpert(),
     ]
-    return initialize_agent(
-        tools,
-        model,
-        # AgentType.OPENAI_FUNCTIONS is tested to be the most performant
-        # thus local LLM must be conformed to this type
-        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-        verbose=True,
-        agent_kwargs=agent_kwargs,
-        memory=memory,
-        handle_parsing_errors=True,
-    )
+
+    if settings.MODEL_NAME.startswith("gpt"):
+        interpreter = ChatOpenAI(
+            model=settings.MODEL_NAME,
+            openai_api_base=settings.LLM_API_BASE,
+            temperature=0.3,
+            streaming=True,
+        )
+        return initialize_agent(
+            experts,
+            interpreter,
+            agent=AgentType.OPENAI_FUNCTIONS,
+            verbose=True,
+            agent_kwargs=agent_kwargs,
+            memory=memory,
+            handle_parsing_errors=True,
+        )
+    else:
+        interpreter = ChatOllama(
+            model=settings.MODEL_NAME,
+            base_url=settings.LLM_API_BASE,
+        )
+        return initialize_agent(
+            experts,
+            interpreter,
+            agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+            verbose=True,
+            agent_kwargs=ollama_agent_kwargs,
+            memory=memory,
+            handle_parsing_errors=True,
+        )
 
 
 # this function is used to get the chat history of a session from Postgres
