@@ -11,7 +11,7 @@ class Swap(BaseModel):
 
 
 class Transfer(BaseModel):
-    task_id: str
+    # task_id: str
     to_address: str
     token: str
     token_address: str

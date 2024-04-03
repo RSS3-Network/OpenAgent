@@ -38,6 +38,7 @@ class SwapExpert(BaseTool):
     description = """Use this tool to swap cryptocurrencies.\n\
 """
     args_schema: Type[ParamSchema] = ParamSchema
+    return_direct = False
 
     def _run(
         self,
@@ -68,8 +69,8 @@ async def fetch_swap(from_token: str, to_token: str, amount: str):
             token_list["tokens"]["1"]
             res = {"from": from_token, "to": to_token, "amount": amount}
             results = [
-                select_best_token(res["from"]),
-                select_best_token(res["to"]),
+                await select_best_token(res["from"]),
+                await select_best_token(res["to"]),
             ]
             swap = Swap(
                 from_token=get_token_data_by_key(results[0], "symbol"),
