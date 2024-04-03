@@ -30,6 +30,9 @@ const ToolChunkFeed = dynamic(() =>
 const ToolChunkNetwork = dynamic(() =>
 	import("./network").then((mod) => mod.ToolChunkNetwork)
 );
+const ToolChunkSwap = dynamic(() =>
+	import("./swap").then((mod) => mod.ToolChunkSwap)
+);
 const ToolChunkToken = dynamic(() =>
 	import("./token").then((mod) => mod.ToolChunkToken)
 );
@@ -72,6 +75,11 @@ function ToolChunkBody({
 }: {
 	chunk: OmitMessageId<AiSessionMessageTool>;
 }) {
+	// `swap` chunk does not have output field, so we need to check it first
+	if (isChunkToolTypeOf(chunk, "swap")) {
+		return <ToolChunkSwap body={chunk.body.input} />;
+	}
+
 	if (!("output" in chunk.body) || !chunk.body.output) {
 		return <ToolChunkLoading body={chunk.body.input} />;
 	}
