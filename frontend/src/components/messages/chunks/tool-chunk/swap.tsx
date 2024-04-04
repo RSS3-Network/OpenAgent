@@ -1,4 +1,5 @@
 import { LiFiWidget, WidgetConfig } from "@lifi/widget";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { ShowUpItem } from "../basics/show-up-item";
 
@@ -12,10 +13,17 @@ const widgetConfig: WidgetConfig = {
 
 export function ToolChunkSwap({
 	body,
+	expired,
 }: {
 	body: AiSessionMessageToolInputBody_Swap;
+	expired: boolean;
 }) {
-	return (
+	return expired ? (
+		<div className="flex items-center gap-2 rounded-sm bg-gray-300 px-4 py-2">
+			<IconInfoCircle className="h-5 w-5" />
+			The swap has expired.
+		</div>
+	) : (
 		<ShowUpItem index={0}>
 			<LiFiWidget
 				config={{
