@@ -87,4 +87,4 @@ async def fetch_transfer(to_address: str, token: str, amount: str):
         decimals=get_token_data_by_key(token_info, "decimals"),
     )
 
-    return transfer
+    return transfer.model_dump_json()

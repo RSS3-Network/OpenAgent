@@ -79,4 +79,4 @@ async def fetch_swap(from_token: str, to_token: str, amount: str):
                 to_token_address=get_token_data_by_key(results[1], "address"),
                 amount=res.get("amount", "1"),
             )
-            return swap
+            return swap.model_dump_json()
