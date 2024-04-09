@@ -12,6 +12,14 @@ type AiSessionTree = AiSessionTreeItem[];
 
 type AiSessionTreeItemType = "folder" | "session";
 
+type TaskStatus =
+	| "canceled"
+	| "done"
+	| "failed"
+	| "idle"
+	| "pending"
+	| "running";
+
 interface AiSessionTreeItem<
 	T extends AiSessionTreeItemType = AiSessionTreeItemType,
 > {
@@ -110,6 +118,9 @@ interface AiSessionMessageTool<
 	body: {
 		input: AiSessionMessageToolInputBody<T>;
 		output?: AiSessionMessageToolOutputBody<T>;
+		// Frontend-only field, indicating whether the tool is expired or not.
+		// Used to show the 'expired' badge for 'swap' and 'transfer' tools after the user re-opens the session.
+		still_valid?: boolean;
 		tool_name: T;
 	};
 	message_id: string;
@@ -207,7 +218,7 @@ type AiSessionMessageToolInputBody_Type_Content_Mapping = {
 	network: AiSessionMessageToolInputBody_Default;
 	swap: AiSessionMessageToolInputBody_Swap;
 	token: AiSessionMessageToolInputBody_Default;
-	transfer: AiSessionMessageToolInputBody_Default;
+	transfer: AiSessionMessageToolInputBody_Transfer;
 };
 
 /**
@@ -453,4 +464,11 @@ interface AiSessionMessageToolInputBody_Swap {
 	amount: string;
 	from_token: string;
 	to_token: string;
+}
+
+interface AiSessionMessageToolInputBody_Transfer {
+	amount: string;
+	status: TaskStatus;
+	to_address: `0x${string}`;
+	token: string;
 }

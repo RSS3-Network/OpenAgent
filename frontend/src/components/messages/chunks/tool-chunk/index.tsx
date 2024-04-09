@@ -40,7 +40,7 @@ const ToolChunkExecutor = dynamic(() =>
 	import("./executor").then((mod) => mod.ToolChunkExecutor)
 );
 const ToolChunkTransfer = dynamic(() =>
-	import("./tasks/transfer").then((mod) => mod.ToolChunkTransfer)
+	import("./transfer").then((mod) => mod.ToolChunkTransfer)
 );
 
 export function ToolChunk({
@@ -77,7 +77,12 @@ function ToolChunkBody({
 }) {
 	// `swap` chunk does not have output field, so we need to check it first
 	if (isChunkToolTypeOf(chunk, "swap")) {
-		return <ToolChunkSwap body={chunk.body.input} />;
+		return (
+			<ToolChunkSwap
+				body={chunk.body.input}
+				expired={!chunk.body.still_valid}
+			/>
+		);
 	}
 
 	if (!("output" in chunk.body) || !chunk.body.output) {
@@ -136,7 +141,12 @@ function ToolChunkBody({
 	}
 
 	if (isChunkToolTypeOf(chunk, "transfer")) {
-		return <ToolChunkTransfer body={chunk.body.output} />;
+		return (
+			<ToolChunkTransfer
+				body={chunk.body.output}
+				expired={!chunk.body.still_valid}
+			/>
+		);
 	}
 
 	return <></>;
