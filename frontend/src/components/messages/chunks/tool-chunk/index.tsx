@@ -50,7 +50,7 @@ export function ToolChunk({
 }) {
 	const snap = useSnapshot(chunk) as typeof chunk;
 
-	const shouldShowRss3 = snap.body.tool_name !== "transfer";
+	const shouldShowRss3 = !["swap", "transfer"].includes(snap.body.tool_name);
 
 	return (
 		<div>
@@ -75,16 +75,6 @@ function ToolChunkBody({
 }: {
 	chunk: OmitMessageId<AiSessionMessageTool>;
 }) {
-	// `swap` chunk does not have output field, so we need to check it first
-	if (isChunkToolTypeOf(chunk, "swap")) {
-		return (
-			<ToolChunkSwap
-				body={chunk.body.input}
-				expired={!chunk.body.still_valid}
-			/>
-		);
-	}
-
 	if (!("output" in chunk.body) || !chunk.body.output) {
 		return <ToolChunkLoading body={chunk.body.input} />;
 	}
@@ -143,6 +133,15 @@ function ToolChunkBody({
 	if (isChunkToolTypeOf(chunk, "transfer")) {
 		return (
 			<ToolChunkTransfer
+				body={chunk.body.output}
+				expired={!chunk.body.still_valid}
+			/>
+		);
+	}
+
+	if (isChunkToolTypeOf(chunk, "swap")) {
+		return (
+			<ToolChunkSwap
 				body={chunk.body.output}
 				expired={!chunk.body.still_valid}
 			/>

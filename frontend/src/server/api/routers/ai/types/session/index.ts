@@ -190,7 +190,7 @@ type AiSessionMessageToolOutputBody_Type_Content_Mapping = {
 	executor: AiSessionMessageToolOutputBody_Executor;
 	feed: AiSessionMessageToolOutputBody_Feed;
 	network: AiSessionMessageToolOutputBody_Network;
-	swap: never;
+	swap: AiSessionMessageToolOutputBody_Swap;
 	token: AiSessionMessageToolOutputBody_Token;
 	transfer: AiSessionMessageToolOutputBody_Transfer;
 };
@@ -438,10 +438,8 @@ interface AiSessionMessageToolOutputBody_Executor {
 }
 
 interface AiSessionMessageToolOutputBody_Transfer {
-	/**
-	 * in ETH
-	 */
 	amount: string;
+	chain_id: string; // Check `lib/wagmi/config` to see all supported chain IDs
 	decimals: number;
 	logoURI: string;
 	task_id: string;
@@ -458,6 +456,15 @@ interface AiSessionMessageToolOutputBody_Transfer {
 	 * @example "0x0000000000000000000000000000000000000000"
 	 */
 	token_address: string;
+}
+
+interface AiSessionMessageToolOutputBody_Swap {
+	amount: string;
+	chain_id: string; // Check `lib/wagmi/config` to see all supported chain IDs
+	from_token: string;
+	from_token_address: `0x${string}`;
+	to_token: string;
+	to_token_address: `0x${string}`;
 }
 
 interface AiSessionMessageToolInputBody_Swap {

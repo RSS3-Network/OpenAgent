@@ -17,12 +17,14 @@ import { showNotification } from "@mantine/notifications";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { IconCircleCheck, IconInfoCircle } from "@tabler/icons-react";
 import { m } from "framer-motion";
-import { Suspense, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { type Input, object, string, union } from "valibot";
 import { Address, parseEther } from "viem";
 import {
 	useAccount,
+	useChains,
 	useSendTransaction,
+	useSwitchChain,
 	useWaitForTransactionReceipt,
 } from "wagmi";
 
@@ -43,6 +45,7 @@ function ToolChunkTransferWithSuspense({
 }: {
 	body: AiSessionMessageToolOutputBody_Transfer;
 }) {
+	const switchChain = useSwitchChain();
 	const transfer = useSendTransaction({
 		mutation: {
 			onError: (error) => {
@@ -82,6 +85,7 @@ function ToolChunkTransferWithSuspense({
 				className="mt-2 space-y-2"
 				onSubmit={form.onSubmit((values) => {
 					transfer.sendTransaction({
+						chainId: Number(body.chain_id),
 						to: values.toAddress as Address,
 						value: parseEther(values.amount),
 					});
@@ -126,10 +130,7 @@ function ToolChunkTransferWithSuspense({
 							<Button
 								color="red"
 								disabled={disableForm}
-								onClick={() => {
-									// FIXME: report canceled
-									setCanceled(true);
-								}}
+								onClick={() => setCanceled(true)}
 								type="button"
 								variant="light"
 							>
@@ -137,9 +138,23 @@ function ToolChunkTransferWithSuspense({
 							</Button>
 
 							{account.status === "connected" ? (
-								<Button disabled={disableForm} type="submit">
-									Transfer
-								</Button>
+								account.chainId === Number(body.chain_id) ? (
+									<Button disabled={disableForm} type="submit">
+										Transfer
+									</Button>
+								) : (
+									<Button
+										disabled={disableForm}
+										onClick={() => {
+											switchChain.switchChain({
+												chainId: Number(body.chain_id),
+											});
+										}}
+										type="button"
+									>
+										Switch Network
+									</Button>
+								)
 							) : (
 								<Button
 									disabled={disableForm}
@@ -161,11 +176,26 @@ export function ToolChunkTransfer(props: {
 	body: AiSessionMessageToolOutputBody_Transfer;
 	expired: boolean;
 }) {
+	const chains = useChains();
+	const chain = useMemo(
+		() => chains.find((chain) => chain.id === Number(props.body.chain_id)),
+		[chains, props.body.chain_id]
+	);
+
 	if (props.expired) {
 		return (
 			<div className="flex items-center gap-2 rounded-sm bg-gray-300 px-4 py-2">
 				<IconInfoCircle className="h-5 w-5" />
 				The transfer has expired.
+			</div>
+		);
+	}
+
+	if (!chain) {
+		return (
+			<div className="flex items-center gap-2 rounded-sm bg-red-200 px-4 py-2">
+				<IconInfoCircle className="h-5 w-5" />
+				Unsupported chain ID: {props.body.chain_id}
 			</div>
 		);
 	}
@@ -182,7 +212,9 @@ export function ToolChunkTransfer(props: {
 							w={rem(16)}
 						/>
 					)}
-					<Text fw="bold">Transfer {props.body.token}</Text>
+					<Text fw="bold">
+						Transfer {props.body.token} on {chain.name}
+					</Text>
 				</Group>
 
 				<ToolChunkTransferWithSuspense {...props} />
