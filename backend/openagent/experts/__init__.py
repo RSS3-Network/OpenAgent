@@ -10,8 +10,20 @@ def get_token_data_by_key(token, key) -> str:
     return token[key] if (token and key in token) else ""
 
 
+def chain_name_to_id(chain_name: str) -> str:
+    chain_name = chain_name.lower()
+    chain_map = {
+        "ethereum": "1",
+        "optimism": "10",
+        "binance_smart_chain": "56",
+        "polygon": "137",
+        "arbitrum": "42161",
+    }
+    return chain_map.get(chain_name, "1")
+
+
 @cached(ttl=60, cache=Cache.MEMORY)
-async def cached_get():
+async def cached_get(chain_id: str):
     logger.info("Attempting to retrieve data for https://li.quest/v1/tokens")
 
     url = """https://li.quest/v1/tokens"""
@@ -20,8 +32,8 @@ async def cached_get():
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers) as response:
             token_list = await response.json()
-            eth_list = token_list["tokens"]["1"]
-            return eth_list
+            token_list_on_chain = token_list["tokens"][chain_id]
+            return token_list_on_chain
 
 
 def handle_token(token: str) -> str:
@@ -60,20 +72,29 @@ async def get_token_by_address(address: str) -> dict:
     raise Exception("Token not found")
 
 
-async def select_best_token(keyword) -> dict | None:
+async def select_best_token(keyword, chain_id) -> dict | None:
     keyword = handle_token(keyword)
     ct_token = handle_ct_token(keyword)
     if ct_token:
         return ct_token
-    tokens = await cached_get()
+    tokens = await cached_get(chain_id)
     # Filtering based on symbol and name
-    results = [
-        token
-        for token in tokens
-        if token["symbol"].lower() == keyword
-        or token["name"].lower() == keyword
-        or token["coinKey"].lower() == keyword
-    ]
+    try:
+        results = [
+            token
+            for token in tokens
+            if token["symbol"].lower() == keyword
+            or token["name"].lower() == keyword
+            or token["coinKey"].lower() == keyword
+        ]
+    except Exception:
+        pass
+    finally:
+        results = [
+            token
+            for token in tokens
+            if token["symbol"].lower() == keyword or token["name"].lower() == keyword
+        ]
 
     if results:
         if len(results) == 1:
@@ -118,7 +139,7 @@ def handle_ct_token_by_address(addr) -> dict | None:
 
 async def main():
     token = await get_token_by_address("0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6")
-    best_token = await select_best_token("ct")
+    best_token = await select_best_token("ct", "1")
     print(best_token)
     print(token)
 

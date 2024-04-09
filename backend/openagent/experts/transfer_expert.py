@@ -11,6 +11,7 @@ from openagent.dto.mutation import Transfer
 from openagent.experts import (
     get_token_data_by_key,
     select_best_token,
+    chain_name_to_id,
 )
 
 
@@ -28,15 +29,14 @@ a '.eth' ending should be added to it.
 like: "BTC", "ETH", "RSS3", "USDT", "USDC" and etc. Default is "ETH"."""
     )
 
+    chain_name: str = Field(
+        description="""extract the chain name mentioned in the query,
+like: "ethereum", "binance_smart_chain", "arbitrum" and etc. Default is "ethereum"."""
+    )
+
     amount: str = Field(
         description="""extract the amount of cryptocurrencies mentioned in the query,
 like: "0.1", "1", "10" and etc. Default is "1"."""
-    )
-
-    status: str = Field(
-        description="""extract the status of the transaction mentioned in the query,
-like: "pending", "editing" or "running". Default is "pending", when user edit the transaction,
- the status will be "editing", when user confirm the transaction, the status will be "running"."""
     )
 
 
@@ -54,8 +54,8 @@ class TransferExpert(BaseTool):
         self,
         to_address: str,
         token: str,
+        chain_name: str,
         amount: str,
-        status: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
@@ -64,24 +64,29 @@ class TransferExpert(BaseTool):
         self,
         to_address: str,
         token: str,
+        chain_name: str,
         amount: str,
-        status: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
+        return await fetch_transfer(to_address, token, chain_name, amount)
 
-        return await fetch_transfer(to_address, token, amount)
 
-
-async def fetch_transfer(to_address: str, token: str, amount: str):
+async def fetch_transfer(to_address: str, token: str, chain_name: str, amount: str):
     if not to_address.startswith("0x") and not to_address.endswith(".eth"):
         to_address += ".eth"
-    res = {"to_address": to_address, "token": token, "amount": amount}
-    token_info = await select_best_token(token)
+    chain_id = chain_name_to_id(chain_name)
+    res = {
+        "to_address": to_address,
+        "token": token,
+        "amount": amount,
+    }
+    token_info = await select_best_token(token, chain_id)
 
     transfer = Transfer(
         to_address=res.get("to_address", "1"),
         token=get_token_data_by_key(token_info, "symbol"),
         token_address=get_token_data_by_key(token_info, "address"),
+        chain_id=chain_id,
         amount=res.get("amount", "1"),
         logoURI=get_token_data_by_key(token_info, "logoURI"),
         decimals=get_token_data_by_key(token_info, "decimals"),
