@@ -1,3 +1,6 @@
+import type { Transport } from "viem";
+import type { Config } from "wagmi";
+
 import { env } from "@/env.mjs";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import {
@@ -9,9 +12,20 @@ import {
 	sepolia,
 } from "wagmi/chains";
 
+declare module "wagmi" {
+	interface Register {
+		config: Config<
+			typeof chains,
+			Record<(typeof chains)[number]["id"], Transport>
+		>;
+	}
+}
+
+const chains = [mainnet, sepolia, optimism, polygon, arbitrum, bsc] as const;
+
 export const config = getDefaultConfig({
 	appName: "OpenAgent",
-	chains: [mainnet, sepolia, optimism, polygon, arbitrum, bsc],
+	chains,
 	projectId: env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
 	ssr: true, // If your dApp uses server side rendering (SSR)
 });
