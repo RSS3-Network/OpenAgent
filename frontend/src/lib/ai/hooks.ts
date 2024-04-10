@@ -1,5 +1,6 @@
 import { isChunkTypeof } from "@/components/messages/chunks/chunk-type-extractor";
 import { api } from "@/lib/trpc/client";
+import { AiSessionMessageForRoleAi } from "@/server/api/routers/ai/types/session";
 import { useAtomValue } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
 import { useParams, useRouter, useSearchParams } from "next/navigation";

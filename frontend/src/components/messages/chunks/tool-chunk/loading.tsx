@@ -1,3 +1,4 @@
+import { AiSessionMessageToolInputBody } from "@/server/api/routers/ai/types/session";
 import { Card, Group, Loader, Text } from "@mantine/core";
 import { m } from "framer-motion";
 

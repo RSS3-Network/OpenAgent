@@ -1,5 +1,6 @@
 import type { Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/tree-item";
 
+import { AiSessionTreeItem } from "@/server/api/routers/ai/types/session";
 import {
 	attachInstruction,
 	extractInstruction,

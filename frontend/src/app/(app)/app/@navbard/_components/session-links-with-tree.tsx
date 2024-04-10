@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/lib/trpc/client";
+import { AiSessionTree } from "@/server/api/routers/ai/types/session";
 import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";
 import { ItemMode } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/tree-item";
 import { Divider, Text } from "@mantine/core";

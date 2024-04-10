@@ -1,3 +1,4 @@
+import { AiSessionMessageToolOutputBody_Account } from "@/server/api/routers/ai/types/session";
 import { Card, Group, Image, Text } from "@mantine/core";
 import { useEnsName } from "wagmi";
 

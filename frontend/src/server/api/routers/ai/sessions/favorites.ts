@@ -1,4 +1,5 @@
 import { protectedProcedure } from "@/lib/trpc/server";
+import { AiSessionTree } from "@/server/api/routers/ai/types/session";
 import { TRPCError } from "@trpc/server";
 
 import { pool } from "../pool";

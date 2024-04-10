@@ -1,3 +1,4 @@
+import { AiSessionMessage } from "@/server/api/routers/ai/types/session";
 import { Alert, Avatar, Group, Skeleton } from "@mantine/core";
 import { IconBug } from "@tabler/icons-react";
 import dynamic from "next/dynamic";

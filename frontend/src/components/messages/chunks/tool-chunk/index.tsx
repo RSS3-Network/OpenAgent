@@ -1,3 +1,8 @@
+import {
+	AiSessionMessageTool,
+	AiSessionMessageToolOutputBody_Error,
+	OmitMessageId,
+} from "@/server/api/routers/ai/types/session";
 import { Anchor, Text } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 import dynamic from "next/dynamic";

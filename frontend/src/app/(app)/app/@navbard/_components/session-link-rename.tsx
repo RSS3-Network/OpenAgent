@@ -1,5 +1,6 @@
 import { useAiIsCurrentSession, useAiSessionTitle } from "@/lib/ai/hooks";
 import { api } from "@/lib/trpc/client";
+import { AiSessionListItem } from "@/server/api/routers/ai/types/session";
 import { TextInput } from "@mantine/core";
 import { getHotkeyHandler, useInputState } from "@mantine/hooks";
 import { IconMessageCircle } from "@tabler/icons-react";

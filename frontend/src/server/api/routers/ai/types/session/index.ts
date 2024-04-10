@@ -1,18 +1,20 @@
 // list
 
-type AiSessionList = AiSessionListItem[];
-interface AiSessionListItem {
+import type { Register } from "wagmi";
+
+export type AiSessionList = AiSessionListItem[];
+export interface AiSessionListItem {
 	session_id: string;
 	title: null | string;
 }
 
 // tree
 
-type AiSessionTree = AiSessionTreeItem[];
+export type AiSessionTree = AiSessionTreeItem[];
 
-type AiSessionTreeItemType = "folder" | "session";
+export type AiSessionTreeItemType = "folder" | "session";
 
-type TaskStatus =
+export type TaskStatus =
 	| "canceled"
 	| "done"
 	| "failed"
@@ -20,7 +22,7 @@ type TaskStatus =
 	| "pending"
 	| "running";
 
-interface AiSessionTreeItem<
+export interface AiSessionTreeItem<
 	T extends AiSessionTreeItemType = AiSessionTreeItemType,
 > {
 	children: AiSessionTreeItem[];
@@ -35,31 +37,31 @@ interface AiSessionTreeItem<
 
 // session
 
-interface AiSession {
+export interface AiSession {
 	messages: AiSessionMessage[];
 	title: null | string;
 }
 
 // message
 
-type AiSessionMessage =
+export type AiSessionMessage =
 	| AiSessionMessageForRoleAi
 	| AiSessionMessageForRoleHuman;
 
-type OmitMessageId<T> = Omit<T, "message_id">;
-type AiSessionMessageForRoleHumanContent =
+export type OmitMessageId<T> = Omit<T, "message_id">;
+export type AiSessionMessageForRoleHumanContent =
 	OmitMessageId<AiSessionMessageChunkForRoleHuman>[];
-type AiSessionMessageForRoleAiContent =
+export type AiSessionMessageForRoleAiContent =
 	OmitMessageId<AiSessionMessageChunkForRoleAi>[];
 
-interface AiSessionMessageForRoleHuman {
+export interface AiSessionMessageForRoleHuman {
 	content: AiSessionMessageForRoleHumanContent;
 	message_id: string;
 	role: "human";
 	send_at: string;
 }
 
-interface AiSessionMessageForRoleAi {
+export interface AiSessionMessageForRoleAi {
 	content: AiSessionMessageForRoleAiContent;
 	message_id: string;
 	role: "ai";
@@ -68,13 +70,13 @@ interface AiSessionMessageForRoleAi {
 
 /// chunk
 
-type AiSessionMessageChunkForRoleAiType =
+export type AiSessionMessageChunkForRoleAiType =
 	| "natural_language"
 	| "session_id"
 	| "session_title"
 	| "suggested_questions"
 	| "tool";
-type AiSessionMessageChunkForRoleAi<
+export type AiSessionMessageChunkForRoleAi<
 	T extends
 		AiSessionMessageChunkForRoleAiType = AiSessionMessageChunkForRoleAiType,
 > = T extends "natural_language"
@@ -89,29 +91,29 @@ type AiSessionMessageChunkForRoleAi<
 					? AiSessionMessageTool
 					: never;
 
-type AiSessionMessageChunkForRoleHuman = AiSessionMessageNaturalLanguage;
+export type AiSessionMessageChunkForRoleHuman = AiSessionMessageNaturalLanguage;
 
-interface AiSessionMessageNaturalLanguage {
+export interface AiSessionMessageNaturalLanguage {
 	block_id: string;
 	body: string;
 	message_id: string;
 	type: "natural_language";
 }
 
-interface AiSessionMessageOrderPlacementInquiry {
+export interface AiSessionMessageOrderPlacementInquiry {
 	block_id: string;
 	message_id: string;
 	type: "order_placement_inquiry";
 }
 
-interface AiSessionMessageSuggestedQuestions {
+export interface AiSessionMessageSuggestedQuestions {
 	block_id: string;
 	body: string[];
 	message_id: string;
 	type: "suggested_questions";
 }
 
-interface AiSessionMessageTool<
+export interface AiSessionMessageTool<
 	T extends AiSessionMessageToolType = AiSessionMessageToolType,
 > {
 	block_id: string;
@@ -127,27 +129,27 @@ interface AiSessionMessageTool<
 	type: "tool";
 }
 
-interface AiSessionMessageSessionTitle {
+export interface AiSessionMessageSessionTitle {
 	block_id: null;
 	body: string;
 	message_id: string;
 	type: "session_title";
 }
 
-interface AiSessionMessageSessionId {
+export interface AiSessionMessageSessionId {
 	block_id: null;
 	body: string;
 	message_id: string;
 	type: "session_id";
 }
 
-interface AiSessionMessageError {
+export interface AiSessionMessageError {
 	block_id: string;
 	message_id: string;
 	type: "error";
 }
 
-interface AiSessionErrorResponse {
+export interface AiSessionErrorResponse {
 	code: number;
 	data: any;
 	message: string;
@@ -155,7 +157,7 @@ interface AiSessionErrorResponse {
 
 // Tool interfaces
 
-type AiSessionMessageToolType =
+export type AiSessionMessageToolType =
 	| "account"
 	| "collection"
 	| "dapp"
@@ -167,11 +169,11 @@ type AiSessionMessageToolType =
 	| "token"
 	| "transfer";
 
-type AiSessionMessageToolInputBody<
+export type AiSessionMessageToolInputBody<
 	T extends AiSessionMessageToolType = AiSessionMessageToolType,
 > = AiSessionMessageToolInputBody_Type_Content_Mapping[T];
 
-type AiSessionMessageToolOutputBody<
+export type AiSessionMessageToolOutputBody<
 	T extends AiSessionMessageToolType = AiSessionMessageToolType,
 > =
 	| AiSessionMessageToolOutputBody_Error
@@ -182,7 +184,7 @@ type AiSessionMessageToolOutputBody<
 /**
  * @private
  */
-type AiSessionMessageToolOutputBody_Type_Content_Mapping = {
+export type AiSessionMessageToolOutputBody_Type_Content_Mapping = {
 	account: AiSessionMessageToolOutputBody_Account;
 	collection: AiSessionMessageToolOutputBody_Collection;
 	dapp: AiSessionMessageToolOutputBody_Dapp;
@@ -198,7 +200,7 @@ type AiSessionMessageToolOutputBody_Type_Content_Mapping = {
 /**
  * @private
  */
-type AiSessionMessageToolInputBody_Default =
+export type AiSessionMessageToolInputBody_Default =
 	| {
 			network: string;
 			query_target: string;
@@ -208,7 +210,7 @@ type AiSessionMessageToolInputBody_Default =
 /**
  * @private
  */
-type AiSessionMessageToolInputBody_Type_Content_Mapping = {
+export type AiSessionMessageToolInputBody_Type_Content_Mapping = {
 	account: AiSessionMessageToolInputBody_Default;
 	collection: AiSessionMessageToolInputBody_Default;
 	dapp: AiSessionMessageToolInputBody_Default;
@@ -224,7 +226,7 @@ type AiSessionMessageToolInputBody_Type_Content_Mapping = {
 /**
  * @example "list the most active users on ethereum"
  */
-interface AiSessionMessageToolOutputBody_Account {
+export interface AiSessionMessageToolOutputBody_Account {
 	data: {
 		items: {
 			/** @example "0xae2fc483527b8ef99eb5d9b44875f005ba1fae13" */
@@ -240,7 +242,7 @@ interface AiSessionMessageToolOutputBody_Account {
 /**
  * @example "list some hot nfts"
  */
-interface AiSessionMessageToolOutputBody_Collection {
+export interface AiSessionMessageToolOutputBody_Collection {
 	data: {
 		items: {
 			/** @example "ethereum" */
@@ -292,7 +294,7 @@ interface AiSessionMessageToolOutputBody_Collection {
  * @example "what are the top dapps in ethereum?" - dapp
  * @example "list some defi projects having the highest tvl" - defi
  */
-interface AiSessionMessageToolOutputBody_Dapp {
+export interface AiSessionMessageToolOutputBody_Dapp {
 	data: {
 		items: {
 			/** @example "ethereum" */
@@ -306,7 +308,7 @@ interface AiSessionMessageToolOutputBody_Dapp {
 	};
 }
 
-interface AiSessionMessageToolOutputBody_Defi {
+export interface AiSessionMessageToolOutputBody_Defi {
 	data: {
 		items: {
 			dapp_defi_dex_volume_daily: number;
@@ -328,7 +330,7 @@ interface AiSessionMessageToolOutputBody_Defi {
 /**
  * @example "what did vitalik.eth do recently?"
  */
-interface AiSessionMessageToolOutputBody_Feed {
+export interface AiSessionMessageToolOutputBody_Feed {
 	data: {
 		items: {
 			actions: {
@@ -358,7 +360,7 @@ interface AiSessionMessageToolOutputBody_Feed {
  * @example "current block height?"
  * @example "the gas price?"
  */
-interface AiSessionMessageToolOutputBody_Network {
+export interface AiSessionMessageToolOutputBody_Network {
 	data: {
 		items: {
 			/** @example "ethereum" */
@@ -382,7 +384,7 @@ interface AiSessionMessageToolOutputBody_Network {
  * @example "what is the price of ETH?"
  * @example "list some popular tokens"
  */
-interface AiSessionMessageToolOutputBody_Token {
+export interface AiSessionMessageToolOutputBody_Token {
 	data: {
 		items: {
 			/** @example "ethereum" */
@@ -423,7 +425,7 @@ interface AiSessionMessageToolOutputBody_Token {
 	};
 }
 
-interface AiSessionMessageToolOutputBody_Error {
+export interface AiSessionMessageToolOutputBody_Error {
 	data: never;
 	error: {
 		code: string;
@@ -431,15 +433,15 @@ interface AiSessionMessageToolOutputBody_Error {
 	};
 }
 
-interface AiSessionMessageToolOutputBody_Executor {
+export interface AiSessionMessageToolOutputBody_Executor {
 	data: {
 		items: ExecutorDetail[];
 	};
 }
 
-interface AiSessionMessageToolOutputBody_Transfer {
+export interface AiSessionMessageToolOutputBody_Transfer {
 	amount: string;
-	chain_id: string; // Check `lib/wagmi/config` to see all supported chain IDs
+	chain_id: `${Register["config"]["chains"][number]["id"]}`;
 	decimals: number;
 	logoURI: string;
 	task_id: string;
@@ -458,22 +460,22 @@ interface AiSessionMessageToolOutputBody_Transfer {
 	token_address: string;
 }
 
-interface AiSessionMessageToolOutputBody_Swap {
+export interface AiSessionMessageToolOutputBody_Swap {
 	amount: string;
-	chain_id: string; // Check `lib/wagmi/config` to see all supported chain IDs
+	chain_id: `${Register["config"]["chains"][number]["id"]}`;
 	from_token: string;
 	from_token_address: `0x${string}`;
 	to_token: string;
 	to_token_address: `0x${string}`;
 }
 
-interface AiSessionMessageToolInputBody_Swap {
+export interface AiSessionMessageToolInputBody_Swap {
 	amount: string;
 	from_token: string;
 	to_token: string;
 }
 
-interface AiSessionMessageToolInputBody_Transfer {
+export interface AiSessionMessageToolInputBody_Transfer {
 	amount: string;
 	status: TaskStatus;
 	to_address: `0x${string}`;
