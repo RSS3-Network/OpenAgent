@@ -1,3 +1,4 @@
+import { AiSessionMessageToolOutputBody_Network } from "@/server/api/routers/ai/types/session";
 import { Card, Group, Text } from "@mantine/core";
 
 import { Counter } from "../basics/counter";

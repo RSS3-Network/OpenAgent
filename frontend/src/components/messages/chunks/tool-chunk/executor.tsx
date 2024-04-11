@@ -1,6 +1,7 @@
 import { ActionIconCopy } from "@/components/action-icons/copy";
 import { ExecutorAddressAvatar } from "@/components/executor/executor-address-avatar";
 import { TokenBalance } from "@/components/executor/token-balance";
+import { AiSessionMessageToolOutputBody_Executor } from "@/server/api/routers/ai/types/session";
 import { Card, Group, Text, rem } from "@mantine/core";
 
 import { ActionIconExternalLink } from "../basics/action-icon";

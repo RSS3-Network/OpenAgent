@@ -1,3 +1,4 @@
+import { AiSessionMessageToolOutputBody_Swap } from "@/server/api/routers/ai/types/session";
 import { LiFiWidget, WidgetConfig } from "@lifi/widget";
 import { IconInfoCircle } from "@tabler/icons-react";
 
@@ -15,7 +16,7 @@ export function ToolChunkSwap({
 	body,
 	expired,
 }: {
-	body: AiSessionMessageToolInputBody_Swap;
+	body: AiSessionMessageToolOutputBody_Swap;
 	expired: boolean;
 }) {
 	return expired ? (
@@ -29,7 +30,9 @@ export function ToolChunkSwap({
 				config={{
 					...widgetConfig,
 					fromAmount: body.amount,
+					fromChain: Number(body.chain_id),
 					fromToken: body.from_token,
+					toChain: Number(body.chain_id),
 					toToken: body.to_token,
 				}}
 				integrator={widgetConfig.integrator}

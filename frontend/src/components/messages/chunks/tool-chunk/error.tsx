@@ -1,3 +1,4 @@
+import { AiSessionMessageToolOutputBody_Error } from "@/server/api/routers/ai/types/session";
 import { Card, Group, Text } from "@mantine/core";
 
 import { ShowUpItem } from "../basics/show-up-item";

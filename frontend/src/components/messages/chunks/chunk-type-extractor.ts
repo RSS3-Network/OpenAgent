@@ -1,3 +1,10 @@
+import {
+	AiSessionMessageChunkForRoleAi,
+	AiSessionMessageTool,
+	AiSessionMessageToolType,
+	OmitMessageId,
+} from "@/server/api/routers/ai/types/session";
+
 export function isChunkTypeof<T extends AiSessionMessageChunkForRoleAi["type"]>(
 	chunk: AiSessionMessageChunkForRoleAi,
 	type: T

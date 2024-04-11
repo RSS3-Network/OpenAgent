@@ -4,6 +4,7 @@ import { ethAddress } from "@/lib/validations/pipelines/eth-address";
 import { ethName } from "@/lib/validations/pipelines/eth-name";
 import { valibotResolver } from "@/lib/validations/resolver";
 import { truncateAddress } from "@/lib/wagmi/utils";
+import { AiSessionMessageToolOutputBody_Transfer } from "@/server/api/routers/ai/types/session";
 import {
 	Button,
 	Card,

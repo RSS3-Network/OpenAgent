@@ -1,5 +1,9 @@
 import { protectedProcedure } from "@/lib/trpc/server";
 import { wrap } from "@/lib/validations/wrap";
+import {
+	AiSession,
+	AiSessionErrorResponse,
+} from "@/server/api/routers/ai/types/session";
 import { TRPCError } from "@trpc/server";
 import {
 	maxValue,

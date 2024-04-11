@@ -92,7 +92,7 @@ const atomWithMutation = <TProcedure extends AnyMutationProcedure, TClient>(
 
 const atomWithSubscription = <
 	TProcedure extends AnySubscriptionProcedure,
-	TClient
+	TClient,
 >(
 	path: string[],
 	getClient: (get: Getter) => TClient,
@@ -174,7 +174,7 @@ interface TRPCSubscriptionObserver<TValue, TError> {
 }
 type NativeSubscriptionResolver<
 	TConfig extends AnyRootConfig,
-	TProcedure extends AnyProcedure
+	TProcedure extends AnyProcedure,
 > = (
 	...args: [
 		input: ProcedureArgs<TProcedure["_def"]>[0],
@@ -184,45 +184,49 @@ type NativeSubscriptionResolver<
 				TRPCClientError<TConfig>
 			>
 		> &
-			ProcedureArgs<TProcedure["_def"]>[1]
+			ProcedureArgs<TProcedure["_def"]>[1],
 	]
 ) => Unsubscribable;
 
 type DecorateProcedure<
 	TConfig extends AnyRootConfig,
 	TProcedure extends AnyProcedure,
-	TClient
+	TClient,
 > = TProcedure extends AnyQueryProcedure
 	? {
 			atomWithQuery: QueryResolver<TProcedure, TClient>;
 			query: Resolver<TConfig, TProcedure>;
-	  }
+		}
 	: TProcedure extends AnyMutationProcedure
-	? {
-			atomWithMutation: MutationResolver<TProcedure, TClient>;
-			mutate: Resolver<TConfig, TProcedure>;
-	  }
-	: TProcedure extends AnySubscriptionProcedure
-	? {
-			atomWithSubscription: SubscriptionResolver<TProcedure, TClient>;
-			subscribe: NativeSubscriptionResolver<TConfig, TProcedure>;
-	  }
-	: never;
+		? {
+				atomWithMutation: MutationResolver<TProcedure, TClient>;
+				mutate: Resolver<TConfig, TProcedure>;
+			}
+		: TProcedure extends AnySubscriptionProcedure
+			? {
+					atomWithSubscription: SubscriptionResolver<TProcedure, TClient>;
+					subscribe: NativeSubscriptionResolver<TConfig, TProcedure>;
+				}
+			: never;
 
 type DecoratedProcedureRecord<
 	TRouter extends AnyRouter,
 	TProcedures extends ProcedureRouterRecord,
-	TClient
+	TClient,
 > = {
 	[TKey in keyof TProcedures]: TProcedures[TKey] extends AnyRouter
 		? DecoratedProcedureRecord<
 				TRouter,
 				TProcedures[TKey]["_def"]["record"],
 				TClient
-		  >
+			>
 		: TProcedures[TKey] extends AnyProcedure
-		? DecorateProcedure<TRouter["_def"]["_config"], TProcedures[TKey], TClient>
-		: never;
+			? DecorateProcedure<
+					TRouter["_def"]["_config"],
+					TProcedures[TKey],
+					TClient
+				>
+			: never;
 };
 
 export function createTRPCJotai<TRouter extends AnyRouter>(
