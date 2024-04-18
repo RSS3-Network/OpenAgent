@@ -19,6 +19,7 @@ from openagent.experts.network_expert import NetworkExpert
 from openagent.experts.swap_expert import SwapExpert
 from openagent.experts.token_expert import TokenExpert
 from openagent.experts.transfer_expert import TransferExpert
+from openagent.experts.hoot_expert import HootExpert
 
 init_cache()
 
@@ -47,6 +48,7 @@ def get_agent(session_id: str) -> AgentExecutor:
         SwapExpert(),
         TransferExpert(),
         ExecutorExpert(),
+        HootExpert(),
     ]
 
     if settings.MODEL_NAME.startswith("gpt"):
