@@ -1,0 +1,25 @@
+name: backend code quality
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+      - 'prod'
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - run: pip install mypy ruff
+      - name: ruff lint
+        run: ruff check .
+      - name: ruff format
+        run: ruff format .
+      - name: mypy
+        run: mypy .
