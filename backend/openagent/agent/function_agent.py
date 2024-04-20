@@ -36,7 +36,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     memory = ConversationBufferMemory(
         memory_key="memory", return_messages=True, chat_memory=message_history
     )
-    # load Exports as tools for the agent
+    # load Experts as tools for the agent
     experts = [
         GoogleExpert(),
         NetworkExpert(),
