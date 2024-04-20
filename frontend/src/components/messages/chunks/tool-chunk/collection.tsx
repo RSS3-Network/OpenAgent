@@ -1,3 +1,4 @@
+import { AiSessionMessageToolOutputBody_Collection } from "@/server/api/routers/ai/types/session";
 import { Card, Group, Image, Text } from "@mantine/core";
 
 import { ActionIconCopy, ActionIconExternalLink } from "../basics/action-icon";

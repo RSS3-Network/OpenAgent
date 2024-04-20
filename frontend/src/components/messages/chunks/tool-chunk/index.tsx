@@ -1,3 +1,8 @@
+import {
+	AiSessionMessageTool,
+	AiSessionMessageToolOutputBody_Error,
+	OmitMessageId,
+} from "@/server/api/routers/ai/types/session";
 import { Anchor, Text } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
@@ -30,6 +35,9 @@ const ToolChunkFeed = dynamic(() =>
 const ToolChunkNetwork = dynamic(() =>
 	import("./network").then((mod) => mod.ToolChunkNetwork)
 );
+const ToolChunkSwap = dynamic(() =>
+	import("./swap").then((mod) => mod.ToolChunkSwap)
+);
 const ToolChunkToken = dynamic(() =>
 	import("./token").then((mod) => mod.ToolChunkToken)
 );
@@ -37,7 +45,7 @@ const ToolChunkExecutor = dynamic(() =>
 	import("./executor").then((mod) => mod.ToolChunkExecutor)
 );
 const ToolChunkTransfer = dynamic(() =>
-	import("./tasks/transfer").then((mod) => mod.ToolChunkTransfer)
+	import("./transfer").then((mod) => mod.ToolChunkTransfer)
 );
 
 export function ToolChunk({
@@ -47,7 +55,7 @@ export function ToolChunk({
 }) {
 	const snap = useSnapshot(chunk) as typeof chunk;
 
-	const shouldShowRss3 = snap.body.tool_name !== "transfer";
+	const shouldShowRss3 = !["swap", "transfer"].includes(snap.body.tool_name);
 
 	return (
 		<div>
@@ -128,7 +136,21 @@ function ToolChunkBody({
 	}
 
 	if (isChunkToolTypeOf(chunk, "transfer")) {
-		return <ToolChunkTransfer body={chunk.body.output} />;
+		return (
+			<ToolChunkTransfer
+				body={chunk.body.output}
+				expired={!chunk.body.still_valid}
+			/>
+		);
+	}
+
+	if (isChunkToolTypeOf(chunk, "swap")) {
+		return (
+			<ToolChunkSwap
+				body={chunk.body.output}
+				expired={!chunk.body.still_valid}
+			/>
+		);
 	}
 
 	return <></>;

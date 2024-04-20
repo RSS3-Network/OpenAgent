@@ -1,8 +1,8 @@
 import { createTRPCRouter } from "@/lib/trpc/server";
 
 import { aiRouter } from "./routers/ai";
-import { userSettingsRouter } from "./routers/user-settings";
 import { executorRouter } from "./routers/executor";
+import { userSettingsRouter } from "./routers/user-settings";
 
 /**
  * This is the primary router for your server.
@@ -11,6 +11,6 @@ import { executorRouter } from "./routers/executor";
  */
 export const appRouter = createTRPCRouter({
 	ai: aiRouter,
-	userSettings: userSettingsRouter,
 	executor: executorRouter,
+	userSettings: userSettingsRouter,
 });

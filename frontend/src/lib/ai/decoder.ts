@@ -1,3 +1,5 @@
+import { AiSessionMessageChunkForRoleAi } from "@/server/api/routers/ai/types/session";
+
 export function createChunkDecoder() {
 	const decoder = new TextDecoder();
 

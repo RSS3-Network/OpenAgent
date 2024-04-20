@@ -1,3 +1,4 @@
+import { AiSession } from "@/server/api/routers/ai/types/session";
 import { atom } from "jotai";
 import { proxy } from "valtio";
 

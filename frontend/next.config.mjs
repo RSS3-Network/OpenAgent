@@ -16,6 +16,11 @@ const nextConfig = {
 		],
 		// swcPlugins: [["@swc-jotai/react-refresh", {}]],
 	},
+	webpack: (config) => {
+		config.resolve.fallback = { fs: false, net: false, tls: false };
+		config.externals.push("pino-pretty", "lokijs", "encoding");
+		return config;
+	},
 };
 
 /** @type {Parameters<million['next']>[1]} */

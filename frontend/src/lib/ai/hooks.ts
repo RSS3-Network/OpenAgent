@@ -1,5 +1,6 @@
 import { isChunkTypeof } from "@/components/messages/chunks/chunk-type-extractor";
 import { api } from "@/lib/trpc/client";
+import { AiSessionMessageForRoleAi } from "@/server/api/routers/ai/types/session";
 import { useAtomValue } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -176,9 +177,13 @@ export function useAskAi({
 							sessionDetail.title = cur.body;
 							continue;
 						} else if (cur.type === "tool") {
+							// Mark newest message as still valid
+							cur.body.still_valid = true;
+
 							const targetBlock = lastContent.find(
 								(c) => c.block_id === cur.block_id
 							);
+
 							if (targetBlock && isChunkTypeof(targetBlock, "tool")) {
 								targetBlock.body = {
 									...targetBlock.body,

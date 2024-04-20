@@ -6,6 +6,7 @@ import {
 	useAiSessionTitle,
 } from "@/lib/ai/hooks";
 import { api } from "@/lib/trpc/client";
+import { AiSessionListItem } from "@/server/api/routers/ai/types/session";
 import {
 	ActionIcon,
 	Group,
@@ -73,8 +74,8 @@ export function SessionLink({ session }: { session: AiSessionListItem }) {
 	const title = updatedTitle
 		? updatedTitle
 		: isCurrentSession
-		? session.title ?? sessionTitle ?? session.session_id
-		: session.title ?? session.session_id;
+			? session.title ?? sessionTitle ?? session.session_id
+			: session.title ?? session.session_id;
 
 	const handleTitleChange = (newTitle: string) => {
 		if (newTitle !== title) {

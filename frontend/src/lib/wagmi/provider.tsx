@@ -10,3 +10,6 @@ import { config } from "./config";
 export function WagmiProvider({ children }: { children: React.ReactNode }) {
 	return <WagmiProvider_ config={config}>{children}</WagmiProvider_>;
 }
+
+import "@rainbow-me/rainbowkit/styles.css";
+export { RainbowKitProvider } from "@rainbow-me/rainbowkit";

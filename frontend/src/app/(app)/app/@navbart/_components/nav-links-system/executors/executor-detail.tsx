@@ -38,13 +38,14 @@ function ExecutorDetailWithSuspense({ executorId }: { executorId: number }) {
 				<Text fw="bold">Balance</Text>
 				{executor.balance.map((token) => (
 					<TokenBalance
-						address={token.tokenAddress}
 						balance={token.tokenBalance}
 						decimals={token.tokenDecimal}
+						executorAddress={executor.executorAddress}
 						imgUrl={token.tokenImageUrl}
 						key={token.tokenAddress}
 						name={token.tokenName}
 						symbol={token.tokenSymbol}
+						tokenAddress={token.tokenAddress}
 					/>
 				))}
 			</div>

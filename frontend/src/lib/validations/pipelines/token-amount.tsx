@@ -7,7 +7,7 @@ import {
 
 export type TokenAmountValidation<
 	TInput extends string,
-	TRequirement extends number
+	TRequirement extends number,
 > = BaseValidation<TInput> & {
 	/**
 	 * Decimals

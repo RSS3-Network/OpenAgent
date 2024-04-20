@@ -1,5 +1,6 @@
 import type { Activity, Theme } from "@rss3/js-sdk";
 
+import { AiSessionMessageToolOutputBody_Feed } from "@/server/api/routers/ai/types/session";
 import { Card, Image, Text, px } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { tokenizeToActions } from "@rss3/js-sdk/lib/readable/activity/index";
