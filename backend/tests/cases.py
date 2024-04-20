@@ -4,9 +4,13 @@ import time
 from openagent.agent.function_agent import get_agent
 
 question_list = [
-    "Hello?",
-    "What is the price of ETH?",
-    "what did vitalik.eth do recently?",
+    # "Hello?",
+    # "What is the price of ETH?",
+    # "What's the ethereum network's gas price now?",
+    # "What did vitalik.eth do recently?",
+    # "send 0.01 eth to vitalik.eth",
+    # "swap 1 eth to usdt",
+    "show me some posts about vitalik on Mirror",
 ]
 
 
@@ -15,6 +19,7 @@ async def dummy(_):
 
 
 async def init():
+    # langchain.debug=True
     start = time.time()
     agent = get_agent("")
     for question in question_list:

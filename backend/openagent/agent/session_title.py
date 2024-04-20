@@ -1,17 +1,16 @@
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
-from langchain.chat_models import ChatOpenAI
+from langchain.chat_models import ChatOpenAI, ChatOllama
 from langchain.prompts import PromptTemplate
 from loguru import logger
 
-from openagent.conf.env import settings
 from openagent.db.database import DBSession
 from openagent.db.models import ChatSession
+from openagent.conf.env import settings
 
 load_dotenv()
 
 
-# This function is used to generate a session title based on the user's chat history.
 async def agen_session_title(user_id: str, session_id: str, history: str) -> list[str]:
     prompt = PromptTemplate(
         template="""
@@ -24,8 +23,14 @@ Session Title:
     """,
         input_variables=["history"],
     )
-
-    model = ChatOpenAI(openai_api_base=settings.LLM_API_BASE, temperature=0.5)
+    if settings.MODEL_NAME.startswith("gpt"):
+        model = ChatOpenAI(
+            model=settings.MODEL_NAME,
+            openai_api_base=settings.LLM_API_BASE,
+            temperature=0.5,
+        )
+    else:
+        model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.LLM_API_BASE)
     interpreter = LLMChain(llm=model, prompt=prompt)
     logger.info(f"start to generate session title based on history: {history}")
     output = await interpreter.arun(
@@ -40,3 +45,10 @@ Session Title:
         ).update({ChatSession.title: output})
         db_session.commit()
     return output
+
+
+if __name__ == "__main__":
+
+    import asyncio
+
+    asyncio.run(agen_session_title("123", "456", "what's your name ?"))

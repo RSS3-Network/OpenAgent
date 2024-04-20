@@ -13,7 +13,7 @@ from openagent.conf.env import settings
 
 
 class ExecutorExpert(BaseTool):
-    name = "executor"
+    name = "wallet"
     description = """Use this tool to query wallet information. for example: \
 "what is my wallet balance", "what is my wallet address" and etc. \
 """

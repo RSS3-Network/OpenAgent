@@ -1,3 +1,4 @@
+import json
 from typing import Optional, Type
 
 import aiohttp
@@ -14,8 +15,8 @@ from openagent.conf.env import settings
 
 class ParamSchema(BaseModel):
     query_type: str = Field(
-        description="""query type, option: "market_cap", "token_price", \
-"token_volume", "token_supply", "popular_tokens"."""
+        description="""query type, option: "token_price", "market_cap", \
+        "token_volume", "token_supply", "popular_tokens"."""
     )
     token_name: str = Field(
         description="""token name. default is "eth". option: "wbtc", "eth", \
@@ -44,7 +45,12 @@ class TokenExpert(BaseTool):
         token_name: str = "",
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
-        return await fetch_token(query_type, token_name)
+        token_name = token_name.lower()
+        token_resp = await fetch_token(query_type, token_name)
+        if query_type == 'token_price':
+            token_price_ = json.loads(token_resp)['data']['items'][0]['token_price']
+            return f"The price of {token_name} is {token_price_}$"
+        return token_resp
 
 
 async def fetch_token(query_type: str, token_name: str):
@@ -58,5 +64,4 @@ async def fetch_token(query_type: str, token_name: str):
         logger.info(f"fetching {url}")
         async with session.get(url, headers=headers) as resp:
             result = await resp.text()
-            result += "\nThe monetary unit is USD.\n"
             return result

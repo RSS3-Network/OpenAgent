@@ -6,6 +6,7 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
+    MODEL_NAME: str = Field(default="llava:13b", env="MODEL_NAME")
     LLM_API_BASE: str = Field(..., env="LLM_API_BASE")
     RSS3_AI_API_BASE: str = Field(..., env="RSS3_AI_API_BASE")
     EXECUTOR_API: str = Field(..., env="EXECUTOR_API")

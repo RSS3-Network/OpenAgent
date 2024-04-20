@@ -33,7 +33,7 @@ data about block_height, gas_price.\n\
     def _run(
         self,
         query_type: str,
-        network: str,
+        network: str = "ethereum",
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
@@ -41,7 +41,7 @@ data about block_height, gas_price.\n\
     async def _arun(
         self,
         query_type: str,
-        network: str,
+        network: str = "ethereum",
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
         return await fetch_network(query_type, network)
