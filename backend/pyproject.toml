@@ -29,6 +29,88 @@ websockets = "^12.0"
 aiocache = "^0.12.2"
 pytz = "^2023.3.post1"
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.1"
+pre-commit = "^3.7.0"
+mypy = "^1.9.0"
+
+[tool.ruff]
+preview = true
+line-length = 88
+indent-width = 4
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 7
+
+[tool.ruff.lint]
+select = [
+    "AIR",
+    "B",
+    "C90",
+    "E",
+    "F",
+    "FLY",
+    "FURB",
+    "I",
+    "N",
+    "PERF",
+    "RUF",
+    "SIM",
+    "UP",
+    "W"
+]
+[tool.ruff.lint.per-file-ignores]
+"__init__.py"= ["F401"]
+"chainlit_app.py"= ["F811"]
+"openagent/db/database.py"= ["E261"]
+"openagent/service/chat.py"= ["C901"]
+"openagent/service/history.py"= ["E711"]
+"openagent/service/session.py"= ["C901"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+
+[tool.mypy]
+disallow_any_unimported = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+strict_equality = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+check_untyped_defs = true
+show_error_codes = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
