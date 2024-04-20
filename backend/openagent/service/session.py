@@ -8,10 +8,10 @@ from toolz.curried import compose_left, map
 from openagent.db.database import DBSession
 from openagent.db.models import ChatSession
 from openagent.dto.session import (
-    SessionTreeNodeDTOType,
-    SessionTreeNodeDTO,
-    build_session_tree_node,
     SessionTab,
+    SessionTreeNodeDTO,
+    SessionTreeNodeDTOType,
+    build_session_tree_node,
 )
 
 

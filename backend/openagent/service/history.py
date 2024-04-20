@@ -2,14 +2,14 @@ from datetime import datetime
 
 from sqlalchemy import desc
 from sqlalchemy.sql.operators import and_
-from toolz.curried import map, compose_left
+from toolz.curried import compose_left, map
 
 from openagent.db.database import DBSession
 from openagent.db.models import ChatHistory, ChatSession
 from openagent.dto.chat_history import ChatHistory as ChatHistoryDto
 from openagent.dto.chat_history import ChatMessage as ChatMessageDto
 from openagent.dto.chat_history import ChatSession as ChatSessionDto
-from openagent.dto.session import SessionTreeNodeDTOType, SessionTab
+from openagent.dto.session import SessionTab, SessionTreeNodeDTOType
 
 
 def get_sessions(user_id: str, offset: int, limit: int):
@@ -20,7 +20,7 @@ def get_sessions(user_id: str, offset: int, limit: int):
                 and_(
                     and_(
                         ChatSession.user_id == user_id,
-                        None == ChatSession.deleted_at,
+                        ChatSession.deleted_at == None,
                     ),
                     ChatSession.type == SessionTreeNodeDTOType.session,
                 )
@@ -42,7 +42,7 @@ def get_recent_sessions(user_id: str, offset: int, limit: int):
                     and_(
                         and_(
                             ChatSession.user_id == user_id,
-                            None == ChatSession.deleted_at,
+                            ChatSession.deleted_at == None,
                         ),
                         ChatSession.tab == SessionTab.recent,
                     ),

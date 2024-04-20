@@ -31,7 +31,7 @@ class ChatMessageRole(str, Enum):
             return ChatMessageRole.ai
         if type0 == "human":
             return ChatMessageRole.human
-        if type0 in ["tool"]:
+        if type0 == "tool":
             return ChatMessageRole.ai
         raise ValueError(f"Unknown role: {type0}")
 
@@ -69,7 +69,7 @@ class ChatMessage(BaseModel):  # type: ignore
                 lc_msg_type = msg_json["type"]
                 if lc_msg_type in ["ai", "human"]:
                     msg_type = "natural_language"
-                if lc_msg_type in ["tool"]:
+                if lc_msg_type == "tool":
                     msg_type = "tool"
 
                 block_id = msg_json["data"]["additional_kwargs"]["block_id"]
@@ -83,7 +83,7 @@ class ChatMessage(BaseModel):  # type: ignore
                 )
 
             # reverse the order of contents
-            contents = contents[::-1]
+            contents.reverse()
             res.append(
                 ChatMessage(
                     message_id=first_msg.message_id,

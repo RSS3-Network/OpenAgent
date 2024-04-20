@@ -14,10 +14,10 @@ from openagent.conf.env import settings
 from openagent.db.database import DBSession
 from openagent.db.models import Task
 from openagent.dto.task import (
-    TaskStatus,
-    TaskDTO,
-    build_task_dto,
     ConfirmTransferDTO,
+    TaskDTO,
+    TaskStatus,
+    build_task_dto,
 )
 from openagent.experts import get_token_by_address
 
@@ -116,7 +116,7 @@ async def do_transfer(req, tx_id):
                 "toAddress": to_address,
                 "amount": amount,
                 "tokenAddress": token_address,
-                "tokenDecimal": token["decimals"],  # noqa
+                "tokenDecimal": token["decimals"],
             },
         ) as resp:
             return await resp.json()

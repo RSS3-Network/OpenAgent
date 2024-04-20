@@ -27,7 +27,7 @@ Assistants may prompt the user to employ specific tools to gather information th
 
 Here are tools' schemas:
         """,
-    "format_instructions": """
+    "format_instructions": r"""
 
 When responding, you must exclusively use one of the following two formats:
 

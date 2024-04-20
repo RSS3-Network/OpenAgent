@@ -126,7 +126,7 @@ def handle_ct_token(kw) -> dict | None:
 
 
 def handle_ct_token_by_address(addr) -> dict | None:
-    if addr in ["0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6"]:
+    if addr == "0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6":
         return {
             "address": "0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6",
             "symbol": "CT",

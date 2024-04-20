@@ -1,13 +1,13 @@
 import asyncio
 import json
 import uuid
-from typing import Any, AsyncIterator, Dict, List, Literal, Union, cast, Optional
+from typing import Any, AsyncIterator, Dict, List, Literal, Optional, Union, cast
 from uuid import UUID
 
 from langchain.callbacks.base import AsyncCallbackHandler
-from langchain.schema import AgentFinish, _message_to_dict, BaseMessage, LLMResult
+from langchain.schema import AgentFinish, BaseMessage, LLMResult, _message_to_dict
 
-from openagent.agent.ctx_var import resp_msg_id, chat_req_ctx
+from openagent.agent.ctx_var import chat_req_ctx, resp_msg_id
 from openagent.db.database import DBSession
 from openagent.db.models import ChatHistory
 from openagent.dto.cb_content import CbContent, CbContentType

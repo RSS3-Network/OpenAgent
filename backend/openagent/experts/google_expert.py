@@ -2,8 +2,8 @@ from typing import Optional, Type
 
 from langchain import SerpAPIWrapper
 from langchain.callbacks.manager import (
-    CallbackManagerForToolRun,
     AsyncCallbackManagerForToolRun,
+    CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field

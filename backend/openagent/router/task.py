@@ -6,10 +6,10 @@ from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from openagent.dto.error import ErrorResp
 from openagent.dto.task import (
-    TaskStatus,
-    TaskDTO,
     CancelTransferDTO,
     ConfirmTransferDTO,
+    TaskDTO,
+    TaskStatus,
 )
 from openagent.service import task
 from openagent.service.task import user2ws

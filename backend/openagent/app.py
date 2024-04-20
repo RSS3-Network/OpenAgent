@@ -38,7 +38,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/tasks/ws-test", response_class=HTMLResponse, include_in_schema=False)
 async def get_websocket_test_page():
-    return HTMLResponse(content=open("./static/websocket_test.html", "r").read())
+    return HTMLResponse(content=open("./static/websocket_test.html").read())
 
 
 @app.on_event("startup")
