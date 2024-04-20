@@ -47,8 +47,8 @@ class TokenExpert(BaseTool):
     ):
         token_name = token_name.lower()
         token_resp = await fetch_token(query_type, token_name)
-        if query_type == 'token_price':
-            token_price_ = json.loads(token_resp)['data']['items'][0]['token_price']
+        if query_type == "token_price":
+            token_price_ = json.loads(token_resp)["data"]["items"][0]["token_price"]
             return f"The price of {token_name} is {token_price_}$"
         return token_resp
 

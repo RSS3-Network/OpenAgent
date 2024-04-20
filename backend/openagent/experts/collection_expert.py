@@ -73,6 +73,8 @@ async def fetch_collections(query_type: str, nft_name: str):
                     item.pop(key, None)
 
             data = str(data).replace("'", '"')
-            data += "\nWhen an official website URL is available in the tool's results, \
+            data += (
+                "\nWhen an official website URL is available in the tool's results, \
 it will be included in the response.\n"
+            )
             return data

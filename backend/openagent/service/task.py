@@ -86,14 +86,12 @@ async def save_task(req, task, hash0):
         body_json["token_address"] = req.token_address
         task.body = json.dumps(body_json)
 
-        db_session.query(Task).filter(Task.task_id == task.task_id).update(
-            {
-                "body": task.body,
-                "status": TaskStatus.running,
-                "run_at": datetime.utcnow(),
-                "hash": hash0,
-            }
-        )
+        db_session.query(Task).filter(Task.task_id == task.task_id).update({
+            "body": task.body,
+            "status": TaskStatus.running,
+            "run_at": datetime.utcnow(),
+            "hash": hash0,
+        })
 
         db_session.commit()
 
