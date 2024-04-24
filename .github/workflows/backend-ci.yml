@@ -19,4 +19,4 @@ jobs:
     - run: pip install flake8 mypy pydantic types-requests types-redis
     - uses: pre-commit/action@v3.0.0
       with:
-        extra_args: --config=backend/.pre-commit-config.yaml --files ./*
+        extra_args: --config=backend/.pre-commit-config.yaml --files ./backend/*
