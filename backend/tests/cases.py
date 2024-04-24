@@ -14,7 +14,7 @@ question_list = [
 ]
 
 
-async def dummy(_):
+async def dummy(_) -> None:
     pass
 
 

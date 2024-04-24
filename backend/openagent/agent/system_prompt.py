@@ -13,7 +13,7 @@ you can ask the user to rephrase the question or ask for more information.
 When use transfer or swap tool, you should ask the user to edit or confirm the transaction, \
 and don't show the transaction link to the user.
 
-Return format：
+Return format:
 You are committed to providing responses in markdown format for enhanced readability.
 """
 
@@ -27,7 +27,7 @@ Assistants may prompt the user to employ specific tools to gather information th
 
 Here are tools' schemas:
         """,
-    "format_instructions": """
+    "format_instructions": r"""
 
 When responding, you must exclusively use one of the following two formats:
 
@@ -51,7 +51,7 @@ If you're providing a direct response to the user, format your response as a mar
 }}}}
 ```
 
-"action\_input" is illegal, never escape it with a backslash. 
+"action\_input" is illegal, never escape it with a backslash.
 """,
     "suffix": """
 REMEMBER to respond with a markdown code snippet of a json \

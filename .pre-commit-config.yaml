@@ -1,0 +1,54 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-ast
+        files: ^backend/
+      - id: check-case-conflict
+        files: ^backend/
+      - id: check-docstring-first
+        files: ^backend/
+      - id: check-executables-have-shebangs
+        files: ^backend/
+      - id: check-json
+        files: ^backend/
+      - id: check-added-large-files
+        files: ^backend/
+      - id: pretty-format-json
+        args:
+          - "--autofix"
+          - "--indent=4"
+        files: ^backend/
+      - id: detect-private-key
+        files: ^backend/
+      - id: debug-statements
+        files: ^backend/
+      - id: end-of-file-fixer
+        files: ^backend/
+      - id: trailing-whitespace
+        files: ^backend/
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy .
+        require_serial: true
+        language: system
+        types: [ python ]
+        files: ^backend/
+        pass_filenames: false
+        args: [--config-file=backend/pyproject.toml]
+      - id: ruff-lint
+        name: ruff-lint
+        entry: ruff check --fix
+        require_serial: true
+        language: system
+        files: ^backend/
+        types: [ python ]
+      - id: ruff-format
+        name: ruff-format
+        entry: ruff format
+        require_serial: true
+        language: system
+        files: ^backend/
+        types: [ python ]

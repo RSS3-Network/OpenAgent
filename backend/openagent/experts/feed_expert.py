@@ -2,8 +2,8 @@ from typing import Optional, Type
 
 import aiohttp
 from langchain.callbacks.manager import (
-    CallbackManagerForToolRun,
     AsyncCallbackManagerForToolRun,
+    CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
 from loguru import logger
@@ -26,7 +26,8 @@ hint: vitalik's address is vitalik.eth"""
 class FeedExpert(BaseTool):
     name = "feed"
     description = """Use this tool to get the activities of a wallet address or \
-blockchain domain name on a platform, and know what this address has done or doing recently."""
+blockchain domain name on a platform, and know
+ what this address has done or doing recently."""
     args_schema: Type[ParamSchema] = ParamSchema
 
     def _run(

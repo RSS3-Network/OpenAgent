@@ -1,13 +1,13 @@
 import asyncio
 import json
 import uuid
-from typing import Any, AsyncIterator, Dict, List, Literal, Union, cast, Optional
+from typing import Any, AsyncIterator, Dict, List, Literal, Optional, Union, cast
 from uuid import UUID
 
 from langchain.callbacks.base import AsyncCallbackHandler
-from langchain.schema import AgentFinish, _message_to_dict, BaseMessage, LLMResult
+from langchain.schema import AgentFinish, BaseMessage, LLMResult, _message_to_dict
 
-from openagent.agent.ctx_var import resp_msg_id, chat_req_ctx
+from openagent.agent.ctx_var import chat_req_ctx, resp_msg_id
 from openagent.db.database import DBSession
 from openagent.db.models import ChatHistory
 from openagent.dto.cb_content import CbContent, CbContentType
@@ -225,9 +225,18 @@ class StreamCallbackHandler(AsyncCallbackHandler):
         self.done.set()
 
     async def on_llm_error(
-        self, error: Union[Exception, KeyboardInterrupt], **kwargs: Any
+        self,
+        error: BaseException,
+        *,
+        run_id: UUID,
+        parent_run_id: Optional[UUID] = None,
+        tags: Optional[List[str]] = None,
+        **kwargs: Any,
     ) -> None:
         self.done.set()
+        return await super().on_llm_error(
+            error, run_id=run_id, parent_run_id=parent_run_id, tags=tags, **kwargs
+        )
 
     # TODO implement the other methods
 

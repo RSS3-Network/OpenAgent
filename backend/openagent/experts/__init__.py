@@ -7,7 +7,7 @@ from loguru import logger
 
 
 def get_token_data_by_key(token, key) -> str:
-    return token[key] if (token and key in token) else ""
+    return str(token[key]) if (token and key in token) else ""
 
 
 def chain_name_to_id(chain_name: str) -> str:
@@ -61,14 +61,14 @@ async def get_token_by_address(address: str) -> dict:
 
     if results:
         if len(results) == 1:
-            return results[0]
+            return dict(results[0])
 
         # Sorting based on priority
         results.sort(
             key=lambda x: (x["address"].lower() == address,),
             reverse=True,
         )
-        return results[0]
+        return dict(results[0])
     raise Exception("Token not found")
 
 
@@ -126,7 +126,7 @@ def handle_ct_token(kw) -> dict | None:
 
 
 def handle_ct_token_by_address(addr) -> dict | None:
-    if addr in ["0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6"]:
+    if addr == "0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6":
         return {
             "address": "0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6",
             "symbol": "CT",

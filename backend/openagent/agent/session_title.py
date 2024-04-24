@@ -1,12 +1,12 @@
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
-from langchain.chat_models import ChatOpenAI, ChatOllama
+from langchain.chat_models import ChatOllama, ChatOpenAI
 from langchain.prompts import PromptTemplate
 from loguru import logger
 
+from openagent.conf.env import settings
 from openagent.db.database import DBSession
 from openagent.db.models import ChatSession
-from openagent.conf.env import settings
 
 load_dotenv()
 
@@ -48,7 +48,6 @@ Session Title:
 
 
 if __name__ == "__main__":
-
     import asyncio
 
     asyncio.run(agen_session_title("123", "456", "what's your name ?"))

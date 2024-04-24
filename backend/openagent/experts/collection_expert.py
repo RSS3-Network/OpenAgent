@@ -3,8 +3,8 @@ from typing import Optional, Type
 
 import aiohttp
 from langchain.callbacks.manager import (
-    CallbackManagerForToolRun,
     AsyncCallbackManagerForToolRun,
+    CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
 from loguru import logger
@@ -16,7 +16,8 @@ from openagent.conf.env import settings
 class ParamSchema(BaseModel):
     query_type: str = Field(
         description="""
-    query type. default is 'market_cap'. option: "average_price", "floor_price", "market_cap", \
+    query type. default is 'market_cap'. option: "average_price",
+     "floor_price", "market_cap", \
     "sales_7d", "sales_change_7d", "volume_7d", "volume_change_7d", \
     "sales_total", "volume_total", "popular_nfts".
     """,
@@ -73,6 +74,8 @@ async def fetch_collections(query_type: str, nft_name: str):
                     item.pop(key, None)
 
             data = str(data).replace("'", '"')
-            data += "\nWhen an official website URL is available in the tool's results, \
+            data += (
+                "\nWhen an official website URL is available in the tool's results, \
 it will be included in the response.\n"
+            )
             return data

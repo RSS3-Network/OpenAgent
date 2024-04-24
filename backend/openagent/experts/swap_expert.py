@@ -2,8 +2,8 @@ from typing import Optional, Type
 
 import aiohttp
 from langchain.callbacks.manager import (
-    CallbackManagerForToolRun,
     AsyncCallbackManagerForToolRun,
+    CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
 from loguru import logger
@@ -11,9 +11,9 @@ from pydantic import BaseModel, Field
 
 from openagent.dto.mutation import Swap
 from openagent.experts import (
+    chain_name_to_id,
     get_token_data_by_key,
     select_best_token,
-    chain_name_to_id,
 )
 
 

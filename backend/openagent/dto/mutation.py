@@ -18,5 +18,5 @@ class Transfer(BaseModel):
     token_address: str
     chain_id: str
     amount: str
-    logoURI: str
+    logoURI: str  # noqa
     decimals: int
