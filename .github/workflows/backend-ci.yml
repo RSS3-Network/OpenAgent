@@ -8,18 +8,13 @@ on:
       - 'prod'
 
 jobs:
-  ruff:
+  pre-commit:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-      - run: pip install mypy ruff
-      - name: ruff lint
-        run: ruff check .
-      - name: ruff format
-        run: ruff format .
-      - name: mypy
-        run: mypy .
+    - run: pip install flake8 mypy pydantic types-requests types-redis
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+    - uses: pre-commit/action@v3.0.0
