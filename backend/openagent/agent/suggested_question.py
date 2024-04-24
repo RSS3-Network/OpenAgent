@@ -14,7 +14,7 @@ load_dotenv()
 async def agen_suggested_questions(user_id: str, history: str) -> list[str]:
     prompt = PromptTemplate(
         template="""
-Suggest follow up questions based on the user chat history. 
+Suggest follow up questions based on the user chat history.
 
 Return Format:
 ["question1", "question2", "question3"]
@@ -34,7 +34,7 @@ A:
 -----------------------------------------------------------------
 Q:
 {history}
-A:""",
+A:""",  # noqa
         input_variables=["history"],
     )
     if settings.MODEL_NAME.startswith("gpt"):

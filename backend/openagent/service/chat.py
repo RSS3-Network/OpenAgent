@@ -1,6 +1,6 @@
 import asyncio
 import uuid
-from typing import AsyncIterable
+from typing import Any, AsyncIterable
 
 from sqlalchemy.exc import NoResultFound
 
@@ -16,7 +16,9 @@ from openagent.dto.chat_req import ChatReq
 from openagent.dto.chat_resp import ChatResp, ChatRespType
 
 
-async def arun_agent(req: ChatReq, stream_cb: StreamCallbackHandler, resp_msg_id0):
+async def arun_agent(
+    req: ChatReq, stream_cb: StreamCallbackHandler, resp_msg_id0: str
+) -> Any:
     agent = get_agent(req.session_id)
     resp_msg_id.set(resp_msg_id0)
     chat_req_ctx.set(req)
@@ -88,7 +90,7 @@ async def answer(req: ChatReq) -> AsyncIterable[str]:
     await chat_task
 
 
-async def gen_agent_resp(cb_content: CbContent, resp_msg_id0):
+async def gen_agent_resp(cb_content: CbContent, resp_msg_id0: str) -> str:
     resp_type = get_resp_type(cb_content.type)
     resp = ChatResp(
         message_id=resp_msg_id0,
@@ -125,7 +127,7 @@ def get_resp_type(cb_content_type: CbContentType) -> ChatRespType:
     raise ValueError(f"Unknown cb_content_type: {cb_content_type}")
 
 
-async def need_create_session(req):
+async def need_create_session(req: ChatReq) -> bool:
     session_id = req.session_id
     with DBSession() as db_session:
         try:

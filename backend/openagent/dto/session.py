@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from typing import ClassVar
 
 from pydantic import BaseModel, Field
 
@@ -60,7 +61,7 @@ class NewSessionFolderDTO(BaseModel):
     )
 
     class Config:
-        json_schema_extra = {
+        json_schema_extra: ClassVar = {
             "example": {"user_id": "jackma", "title": "folder1", "order": 0}
         }
 
@@ -99,12 +100,14 @@ class MoveSessionDTO(BaseModel):
     user_id: str = Field(description="user id", example="jackma")
     from_session_id: str = Field(description="source session id", example="1234567890")
     to_session_tab: SessionTab = Field(
-        description="target tab, favorite or recent. if recent, to_session_id will be ignored",
+        description="target tab, favorite or recent. "
+        "if recent, to_session_id will be ignored",
         example="favorite",
     )
     to_session_id: str | None = Field(
-        description="target parent session id, only valid when to_session_tab is favorite\
-, if null, will move to root folder",
+        description="target parent session id, only valid when"
+        " to_session_tab is favorite, if null, "
+        "will move to root folder",
         example="0987654321",
         default=None,
     )

@@ -225,9 +225,18 @@ class StreamCallbackHandler(AsyncCallbackHandler):
         self.done.set()
 
     async def on_llm_error(
-        self, error: Union[Exception, KeyboardInterrupt], **kwargs: Any
+        self,
+        error: BaseException,
+        *,
+        run_id: UUID,
+        parent_run_id: Optional[UUID] = None,
+        tags: Optional[List[str]] = None,
+        **kwargs: Any,
     ) -> None:
         self.done.set()
+        return await super().on_llm_error(
+            error, run_id=run_id, parent_run_id=parent_run_id, tags=tags, **kwargs
+        )
 
     # TODO implement the other methods
 

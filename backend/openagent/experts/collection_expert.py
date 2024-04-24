@@ -16,7 +16,8 @@ from openagent.conf.env import settings
 class ParamSchema(BaseModel):
     query_type: str = Field(
         description="""
-    query type. default is 'market_cap'. option: "average_price", "floor_price", "market_cap", \
+    query type. default is 'market_cap'. option: "average_price",
+     "floor_price", "market_cap", \
     "sales_7d", "sales_change_7d", "volume_7d", "volume_change_7d", \
     "sales_total", "volume_total", "popular_nfts".
     """,

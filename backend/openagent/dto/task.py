@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 from enum import Enum
 
@@ -86,19 +85,3 @@ class TaskDTO(BaseModel):
     hash: str | None = None
     run_at: datetime | None = None
     done_at: datetime | None = None
-
-
-def build_task_dto(task):
-    body = json.loads(task.body)
-    return TaskDTO(
-        task_id=task.task_id,
-        user_id=task.user_id,
-        session_id=task.session_id,
-        type=task.type,
-        body=body,
-        status=task.status,
-        created_at=task.created_at,
-        hash=task.hash,
-        run_at=task.run_at,
-        done_at=task.done_at,
-    )

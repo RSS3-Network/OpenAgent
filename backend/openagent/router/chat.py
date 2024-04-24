@@ -10,7 +10,7 @@ chat_router = APIRouter(tags=["Chat"])
 
 
 @chat_router.post("/stream_chat/", response_model=ChatResp)
-async def stream_chat(req: ChatReq):
+async def stream_chat(req: ChatReq) -> EventSourceResponse:
     logger.info(f"Received request: req={req}")
     generator = answer(req)
     return EventSourceResponse(generator)

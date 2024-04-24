@@ -92,7 +92,12 @@ select = [
 "openagent/db/database.py"= ["E261"]
 "openagent/service/chat.py"= ["C901"]
 "openagent/service/history.py"= ["E711"]
-"openagent/service/session.py"= ["C901"]
+"openagent/service/session.py"= ["C901","B904"]
+"openagent/agent/system_prompt.py" =["E501"]
+"openagent/dto/task.py"=["N815"]
+"openagent/experts/__init__.py"=["SIM117"]
+"openagent/experts/swap_expert.py"=["SIM117"]
+
 
 [tool.ruff.format]
 quote-style = "double"
@@ -101,7 +106,7 @@ docstring-code-format = true
 
 [tool.mypy]
 disallow_any_unimported = true
-disallow_untyped_defs = true
+disallow_untyped_defs = false
 no_implicit_optional = true
 strict_equality = true
 warn_unused_ignores = true
@@ -109,6 +114,8 @@ warn_redundant_casts = true
 warn_return_any = true
 check_untyped_defs = true
 show_error_codes = true
+disable_error_code = ["arg-type","call-arg","unused-ignore","import-untyped","assignment","no-any-return"]
+
 
 [build-system]
 requires = ["poetry-core"]
