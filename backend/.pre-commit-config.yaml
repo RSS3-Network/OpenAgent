@@ -28,14 +28,14 @@ repos:
         pass_filenames: false
       - id: ruff-lint
         name: ruff-lint
-        entry: bash -c 'cd backend && poetry run ruff check'
+        entry: bash -c 'poetry run ruff check'
         require_serial: true
         language: system
         files: ^backend/
         types: [ python ]
       - id: ruff-format
         name: ruff-format
-        entry: bash -c 'cd backend && poetry run ruff format'
+        entry: bash -c 'poetry run ruff format'
         require_serial: true
         language: system
         files: ^backend/

@@ -193,11 +193,13 @@ class StreamCallbackHandler(AsyncCallbackHandler):
             msg_id = resp_msg_id.get()
             chat_req = chat_req_ctx.get()
             ai_message = BaseMessage(
-                content=json.dumps({
-                    "tool_name": tool_name,
-                    "output": output_json,
-                    "input": self.current_tool_start_content,
-                }),
+                content=json.dumps(
+                    {
+                        "tool_name": tool_name,
+                        "output": output_json,
+                        "input": self.current_tool_start_content,
+                    }
+                ),
                 type="tool",
                 additional_kwargs={"block_id": self.current_tool_block_id},
             )
