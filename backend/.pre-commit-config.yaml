@@ -37,7 +37,7 @@ repos:
         types: [ python ]
         files: ^backend/
         pass_filenames: false
-        args: [--config-file=backend/setup.cfg]
+        args: [--config-file=backend/pyproject.toml]
       - id: ruff-lint
         name: ruff-lint
         entry: ruff check --fix
