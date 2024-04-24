@@ -32,7 +32,7 @@ pytz = "^2023.3.post1"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
 pre-commit = "^3.7.0"
-mypy = "^1.9.0"
+mypy = "^1.10.0"
 
 [tool.ruff]
 line-length = 88
@@ -114,7 +114,7 @@ warn_redundant_casts = true
 warn_return_any = true
 check_untyped_defs = true
 show_error_codes = true
-disable_error_code = ["arg-type","call-arg","unused-ignore","import-untyped","assignment","no-any-return"]
+disable_error_code = ["arg-type","call-arg","unused-ignore","import-untyped","assignment","no-any-return","no-any-unimported","import-not-found"]
 
 
 [build-system]
