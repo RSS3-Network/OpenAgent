@@ -28,6 +28,7 @@ psycopg2 = "^2.9.9"
 websockets = "^12.0"
 aiocache = "^0.12.2"
 pytz = "^2023.3.post1"
+ccxt = "^4.3.7"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
