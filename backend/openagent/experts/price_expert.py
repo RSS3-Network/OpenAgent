@@ -37,6 +37,6 @@ _binance = ccxt.binance()
 
 
 def fetch_price(base: str, quote: str = "USDT") -> float:
-    trades = _binance.fetch_trades(f"{base}/{quote}", limit=1)
+    trades = _binance.fetch_trades(f"{base.upper()}/{quote}", limit=1)
     last = trades[0]["price"]
     return last
