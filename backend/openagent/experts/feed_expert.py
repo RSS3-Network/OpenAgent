@@ -9,8 +9,6 @@ from langchain.tools import BaseTool
 from loguru import logger
 from pydantic import BaseModel, Field
 
-from openagent.conf.env import settings
-
 
 class ParamSchema(BaseModel):
     address: str = Field(
@@ -48,8 +46,8 @@ blockchain domain name on a platform, and know
 
 
 async def fetch_feeds(address: str, platform: str):
-    host = settings.RSS3_AI_API_BASE
-    url = f"""{host}/m1/v2/feeds?platform={platform}&limit=5&address={address}"""
+    host = "https://api.rss3.io/v1/notes/"
+    url = f"""{host}{address}?limit=5&platform={platform}"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")
