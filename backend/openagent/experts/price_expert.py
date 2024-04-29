@@ -6,6 +6,7 @@ from langchain.callbacks.manager import (
     CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
+from loguru import logger
 from pydantic import BaseModel, Field
 
 
@@ -33,10 +34,20 @@ class PriceExpert(BaseTool):
         return f"The price of {coin} is {fetch_price(coin)}"
 
 
-_binance = ccxt.binance()
+_exchanges = [ccxt.binance(), ccxt.okx(), ccxt.gateio(), ccxt.mexc()]
 
 
 def fetch_price(base: str, quote: str = "USDT") -> float:
-    trades = _binance.fetch_trades(f"{base.upper()}/{quote}", limit=1)
-    last = trades[0]["price"]
-    return last
+    for exchange in _exchanges:
+        try:
+            trades = exchange.fetch_trades(f"{base.upper()}/{quote}", limit=1)
+            last = trades[0]["price"]
+            return last
+        except Exception as e:  # noqa
+            logger.warning(f"fetch price error from {exchange.id}: {e}")
+    raise Exception(f"no market found for {base}")
+
+
+if __name__ == "__main__":
+    price = fetch_price("RSS3")
+    print(price)
