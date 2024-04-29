@@ -9,8 +9,8 @@ from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
 from openagent.agent.system_prompt import SYSTEM_PROMPT, ollama_agent_kwargs
 from openagent.conf.env import settings
-from openagent.experts.collection_expert import CollectionExpert
 from openagent.experts.feed_expert import FeedExpert
+from openagent.experts.nft_expert import nft_expert
 from openagent.experts.search_expert import SearchExpert
 from openagent.experts.swap_expert import SwapExpert
 from openagent.experts.transfer_expert import TransferExpert
@@ -34,7 +34,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     experts = [
         SearchExpert(),
         FeedExpert(),
-        CollectionExpert(),
+        nft_expert,
         SwapExpert(),
         TransferExpert(),
     ]
