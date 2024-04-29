@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = Field(..., env="POSTGRES_PASSWORD")
     POSTGRES_DB: str = Field(..., env="POSTGRES_DB")
     POSTGRES_CONNECTION_STRING: str = ""
+    NFTSCAN_API_KEY: str = Field(..., env="NFTSCAN_API_KEY")
 
     def postgres_connection_string(self):
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}\
