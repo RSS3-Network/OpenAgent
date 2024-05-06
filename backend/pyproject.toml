@@ -29,6 +29,8 @@ aiocache = "^0.12.2"
 pytz = "^2023.3.post1"
 ccxt = "^4.3.7"
 openai = "^1.25.2"
+beautifulsoup4 = "^4.12.3"
+markdown = "^3.6"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
