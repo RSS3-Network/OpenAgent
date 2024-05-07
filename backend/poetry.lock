@@ -171,17 +171,6 @@ test = ["anyio[trio]", "coverage[toml] (>=4.5)", "hypothesis (>=4.0)", "mock (>=
 trio = ["trio (<0.22)"]
 
 [[package]]
-name = "async-timeout"
-version = "4.0.3"
-description = "Timeout context manager for asyncio programs"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "async-timeout-4.0.3.tar.gz", hash = "sha256:4640d96be84d82d02ed59ea2b7105a0f7b33abe8703703cd0ab0bf87c427522f"},
-    {file = "async_timeout-4.0.3-py3-none-any.whl", hash = "sha256:7405140ff1230c310e51dc27b3145b9092d659ce68ff733fb0cefe3ee42be028"},
-]
-
-[[package]]
 name = "asyncpg"
 version = "0.28.0"
 description = "An asyncio PostgreSQL driver"
@@ -1591,23 +1580,6 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
-name = "python-redis-lock"
-version = "4.0.0"
-description = "Lock context manager implemented via redis SETNX/BLPOP."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "python-redis-lock-4.0.0.tar.gz", hash = "sha256:4abd0bcf49136acad66727bf5486dd2494078ca55e49efa693f794077319091a"},
-    {file = "python_redis_lock-4.0.0-py3-none-any.whl", hash = "sha256:ff786e587569415f31e64ca9337fce47c4206e832776e9e42b83bfb9ee1af4bd"},
-]
-
-[package.dependencies]
-redis = ">=2.10.0"
-
-[package.extras]
-django = ["django-redis (>=3.8.0)"]
-
-[[package]]
 name = "pytz"
 version = "2023.4"
 description = "World timezone definitions, modern and historical"
@@ -1666,24 +1638,6 @@ files = [
     {file = "PyYAML-6.0.1-cp39-cp39-win_amd64.whl", hash = "sha256:510c9deebc5c0225e8c96813043e62b680ba2f9c50a08d3724c7f28a747d1486"},
     {file = "PyYAML-6.0.1.tar.gz", hash = "sha256:bfdf460b1736c775f2ba9f6a92bca30bc2095067b8a9d77876d1fad6cc3b4a43"},
 ]
-
-[[package]]
-name = "redis"
-version = "5.0.4"
-description = "Python client for Redis database and key-value store"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "redis-5.0.4-py3-none-any.whl", hash = "sha256:7adc2835c7a9b5033b7ad8f8918d09b7344188228809c98df07af226d39dec91"},
-    {file = "redis-5.0.4.tar.gz", hash = "sha256:ec31f2ed9675cc54c21ba854cfe0462e6faf1d83c8ce5944709db8a4700b9c61"},
-]
-
-[package.dependencies]
-async-timeout = {version = ">=4.0.3", markers = "python_full_version < \"3.11.3\""}
-
-[package.extras]
-hiredis = ["hiredis (>=1.0.0)"]
-ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==20.0.1)", "requests (>=2.26.0)"]
 
 [[package]]
 name = "regex"
@@ -2383,4 +2337,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "2417b5b08517b70a6c968c1db64e141605405913d60e0f38580fe494c1aa312b"
+content-hash = "3d3aa1e2bf15383a8cc70555201db34fbf19bf4f0ef4bb13ee96904441b10692"
