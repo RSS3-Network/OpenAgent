@@ -23,7 +23,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Copy env variables
-COPY .env.example .env
+COPY .env.ci .env
 
 # RUN apk add --no-cache git
 RUN npm run build
