@@ -13,22 +13,25 @@ def fetch_mirror_feeds(since_timestamp, until_timestamp, limit=10) -> dict:
     return fetch_feeds("Mirror", since_timestamp, until_timestamp, limit)
 
 
-def fetch_iqwiki_feeds(since_timestamp, until_timestamp, limit=10) -> dict:
+def fetch_iqwiki_feeds(since_timestamp, until_timestamp, limit=10, cursor=None) -> dict:
     """
     Fetch feeds from IQWiki.
     """
-    return fetch_feeds("IQ.Wiki", since_timestamp, until_timestamp, limit)
+    return fetch_feeds("IQ.Wiki", since_timestamp, until_timestamp, limit, cursor)
 
 
-def fetch_feeds(platform, since_timestamp, until_timestamp, limit=10) -> dict:
+def fetch_feeds(
+    platform, since_timestamp, until_timestamp, limit=10, cursor=None
+) -> dict:
     """
     Fetch feeds from a platform.
     """
 
+    cursor_str = f"&cursor={cursor}" if cursor else ""
     url = (
         f"{settings.RSS3_DATA_API}/platforms/{platform}/activities?"
         f"since_timestamp={since_timestamp}&until_timestamp={until_timestamp}&"
-        f"limit={limit}"
+        f"limit={limit}{cursor_str}"
     )
 
     payload = {}  # type: ignore
@@ -41,5 +44,6 @@ def fetch_feeds(platform, since_timestamp, until_timestamp, limit=10) -> dict:
 
 if __name__ == "__main__":
     curr_ts = int(datetime.datetime.now().timestamp())
-    feeds = fetch_iqwiki_feeds(0, curr_ts)
+    _cursor = None
+    feeds = fetch_iqwiki_feeds(0, curr_ts, cursor=_cursor)
     print(json.dumps(feeds, indent=4))
