@@ -22,6 +22,9 @@ COPY . .
 # Disable the usage data collection of Next.js.
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Copy env variables
+COPY .env.example .env
+
 # RUN apk add --no-cache git
 RUN npm run build
 
