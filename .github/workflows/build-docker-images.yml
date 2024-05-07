@@ -67,6 +67,13 @@ jobs:
 
   merge:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        component:
+          - backend
+          - executor
+          - frontend
     permissions:
       contents: read
       packages: write
