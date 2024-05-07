@@ -18,7 +18,7 @@ jobs:
       matrix:
         platform:
           - linux/amd64
-          - linux/arm64
+          # - linux/arm64 # Cannot build frontend (install apk packages) within acceptable time
         component:
           - backend
           - executor
