@@ -13,7 +13,7 @@ from openagent.agent.system_prompt import (
 )
 from openagent.conf.env import settings
 from openagent.experts.feed_expert import FeedExpert
-from openagent.experts.nft_expert import nft_expert
+from openagent.experts.nft_expert import NFTExpert
 from openagent.experts.search_expert import SearchExpert
 from openagent.experts.swap_expert import SwapExpert
 from openagent.experts.transfer_expert import TransferExpert
@@ -37,7 +37,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     experts = [
         SearchExpert(),
         FeedExpert(),
-        nft_expert,
+        NFTExpert,
         SwapExpert(),
         TransferExpert(),
     ]
