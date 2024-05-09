@@ -1,0 +1,53 @@
+import json
+from typing import Optional, Type
+
+from langchain.callbacks.manager import (
+    AsyncCallbackManagerForToolRun,
+    CallbackManagerForToolRun,
+)
+from langchain.tools import BaseTool
+from pydantic import BaseModel, Field
+
+from openagent.index.pgvector_store import store
+
+
+class ARGS(BaseModel):
+    keyword: str = Field(
+        default=None,
+        description="keyword to search for",
+    )
+
+
+class ArticleExpert(BaseTool):
+    name = "article"
+    description = "A tool for searching web3 related articles."
+    args_schema: Type[ARGS] = ARGS
+
+    def _run(
+        self,
+        keyword: Optional[str] = None,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
+    ) -> str:
+        return self.search_articles(keyword)
+
+    async def _arun(
+        self,
+        keyword: Optional[str] = None,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+    ) -> str:
+        raise NotImplementedError
+
+    @staticmethod
+    def search_articles(keyword: str) -> str:
+        retriever = store.as_retriever(
+            search_type="similarity_score_threshold",
+            search_kwargs={"score_threshold": 0.6, "k": 3},
+        )
+        res = retriever.get_relevant_documents(keyword)
+        docs = list(map(lambda x: x.page_content, res))
+        return json.dumps(docs)
+
+
+if __name__ == "__main__":
+    expert = ArticleExpert()
+    print(expert._run("web3"))

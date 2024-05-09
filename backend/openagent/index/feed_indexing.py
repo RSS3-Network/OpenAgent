@@ -9,14 +9,12 @@ from loguru import logger
 
 from openagent.conf.env import settings
 from openagent.index.feed_scrape import fetch_iqwiki_feeds
-from openagent.index.pgvector_store import build_vector_store
+from openagent.index.pgvector_store import store
 
 load_dotenv()
 
 record_manager = SQLRecordManager("backend", db_url=settings.VEC_DB_CONNECTION)
 record_manager.create_schema()
-
-store = build_vector_store()
 
 
 def _clear():
@@ -71,5 +69,8 @@ def build_docs(record):
 
 
 if __name__ == "__main__":
-    _clear()
-    build_index()
+    # _clear()
+    # build_index()
+
+    res = store.similarity_search("hello world")
+    print(res)
