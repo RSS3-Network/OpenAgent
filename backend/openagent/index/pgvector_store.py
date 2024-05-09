@@ -19,9 +19,10 @@ def build_vector_store() -> PGVector:
     )
 
 
-if __name__ == "__main__":
-    store = build_vector_store()
+store = build_vector_store()
 
+
+if __name__ == "__main__":
     docs = [
         Document(
             page_content="there are cats in the pond",
