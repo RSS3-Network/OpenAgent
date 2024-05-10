@@ -26,6 +26,9 @@ def build_index():
     cursor = None
     while True:
         resp = fetch_iqwiki_feeds(0, curr_ts, cursor=cursor)
+        if resp["meta"] is None:
+            logger.info("no meta in response, done!")
+            break
         cursor = resp["meta"]["cursor"]
         logger.info(f"fetched {len(resp['data'])} records, next cursor: {cursor}")
 
