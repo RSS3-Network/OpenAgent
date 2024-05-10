@@ -30,6 +30,7 @@ ccxt = "^4.3.7"
 openai = "^0.28.1"
 beautifulsoup4 = "^4.12.3"
 markdown = "^3.6"
+sqlalchemy-utils = "^0.41.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
