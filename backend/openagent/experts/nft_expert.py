@@ -65,7 +65,7 @@ class NFTExpert(BaseTool):
         sort_field: Optional[str] = "market_cap",
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
-        raise NotImplementedError
+        return self._run(action, keyword, sort_field, run_manager)
 
     @staticmethod
     def search_nft_collections(keyword: str) -> str:

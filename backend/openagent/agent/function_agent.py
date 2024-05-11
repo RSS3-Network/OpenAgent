@@ -37,7 +37,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     experts = [
         SearchExpert(),
         FeedExpert(),
-        NFTExpert,
+        NFTExpert(),
         SwapExpert(),
         TransferExpert(),
     ]
