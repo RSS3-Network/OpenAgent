@@ -41,7 +41,7 @@ class ArticleExpert(BaseTool):
     def search_articles(keyword: str) -> str:
         retriever = store.as_retriever(
             search_type="similarity_score_threshold",
-            search_kwargs={"score_threshold": 0.6, "k": 3},
+            search_kwargs={"score_threshold": 0.7, "k": 3},
         )
         res = retriever.get_relevant_documents(keyword)
         docs = list(map(lambda x: x.page_content, res))

@@ -22,10 +22,12 @@ def _clear():
 
 
 def build_index():
+    since_ts = 0
     curr_ts = int(datetime.datetime.now().timestamp())
     cursor = None
+    logger.info(f"start indexing from {since_ts} to {curr_ts}")
     while True:
-        resp = fetch_iqwiki_feeds(0, curr_ts, cursor=cursor)
+        resp = fetch_iqwiki_feeds(since_ts, curr_ts, cursor=cursor)
         if resp["meta"] is None:
             logger.info("no meta in response, done!")
             break
@@ -72,8 +74,5 @@ def build_docs(record):
 
 
 if __name__ == "__main__":
-    # _clear()
-    # build_index()
-
-    res = store.similarity_search("hello world")
-    print(res)
+    _clear()
+    build_index()
