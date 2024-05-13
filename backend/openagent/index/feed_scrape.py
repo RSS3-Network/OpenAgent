@@ -2,6 +2,8 @@ import datetime
 import json
 
 import requests
+from loguru import logger
+from retrying import retry
 
 from openagent.conf.env import settings
 
@@ -21,25 +23,36 @@ def fetch_iqwiki_feeds(since_timestamp, until_timestamp, limit=10, cursor=None) 
 
 
 def fetch_feeds(
-    platform, since_timestamp, until_timestamp, limit=10, cursor=None
+    platform, since_timestamp, until_timestamp, limit=10, cursor=None, max_retries=3
 ) -> dict:
     """
-    Fetch feeds from a platform.
+    Fetch feeds from a platform with retry functionality.
     """
 
-    cursor_str = f"&cursor={cursor}" if cursor else ""
-    url = (
-        f"{settings.RSS3_DATA_API}/platforms/{platform}/activities?"
-        f"since_timestamp={since_timestamp}&until_timestamp={until_timestamp}&"
-        f"limit={limit}{cursor_str}"
-    )
+    @retry(stop_max_attempt_number=max_retries)
+    def _fetch_feeds():
+        cursor_str = f"&cursor={cursor}" if cursor else ""
+        url = (
+            f"{settings.RSS3_DATA_API}/platforms/{platform}/activities?"
+            f"since_timestamp={since_timestamp}&until_timestamp={until_timestamp}&"
+            f"limit={limit}{cursor_str}"
+        )
 
-    payload = {}  # type: ignore
-    headers = {}  # type: ignore
+        payload = {}  # type: ignore
+        headers = {}  # type: ignore
 
-    response = requests.request("GET", url, headers=headers, data=payload)
+        response = requests.request("GET", url, headers=headers, data=payload)
 
-    return json.loads(response.text)
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch feeds: {response.text}")
+
+        return json.loads(response.text)
+
+    try:
+        return _fetch_feeds()
+    except Exception as e:
+        logger.error(f"Failed to fetch feeds from {platform}: {e}")
+        return {}
 
 
 if __name__ == "__main__":
