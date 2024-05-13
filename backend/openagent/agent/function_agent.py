@@ -12,6 +12,7 @@ from openagent.agent.system_prompt import (
     ollama_agent_kwargs,
 )
 from openagent.conf.env import settings
+from openagent.experts.article_expert import ArticleExpert
 from openagent.experts.feed_expert import FeedExpert
 from openagent.experts.nft_expert import NFTExpert
 from openagent.experts.search_expert import SearchExpert
@@ -37,6 +38,7 @@ def get_agent(session_id: str) -> AgentExecutor:
     experts = [
         SearchExpert(),
         FeedExpert(),
+        ArticleExpert(),
         NFTExpert(),
         SwapExpert(),
         TransferExpert(),

@@ -10,9 +10,11 @@ question_list = [
     # "What did vitalik.eth do recently?",
     # "Send 0.01 eth to vitalik.eth",
     # "Swap 1 eth to usdt",
-    "What is mode chain?",
-    "Give the bitcoin price chart",
-    "Show me some posts about vitalik on Mirror",
+    # "What is mode chain?",
+    # "Give the bitcoin price chart",
+    # "Show me some posts about vitalik on Mirror",
+    # "most popular nft?"
+    "any bnb dex in web3 articles"
 ]
 
 
