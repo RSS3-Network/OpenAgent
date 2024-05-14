@@ -8,11 +8,11 @@ from retrying import retry
 from openagent.conf.env import settings
 
 
-def fetch_mirror_feeds(since_timestamp, until_timestamp, limit=10) -> dict:
+def fetch_mirror_feeds(since_timestamp, until_timestamp, limit=10, cursor=None) -> dict:
     """
     Fetch feeds from Mirror.
     """
-    return fetch_feeds("Mirror", since_timestamp, until_timestamp, limit)
+    return fetch_feeds("Mirror", since_timestamp, until_timestamp, limit, cursor)
 
 
 def fetch_iqwiki_feeds(since_timestamp, until_timestamp, limit=10, cursor=None) -> dict:
@@ -58,5 +58,5 @@ def fetch_feeds(
 if __name__ == "__main__":
     curr_ts = int(datetime.datetime.now().timestamp())
     _cursor = None
-    feeds = fetch_iqwiki_feeds(0, curr_ts, cursor=_cursor)
+    feeds = fetch_mirror_feeds(0, curr_ts, cursor=_cursor)
     print(json.dumps(feeds, indent=4))
