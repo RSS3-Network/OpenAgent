@@ -14,7 +14,7 @@ question_list = [
     # "Give the bitcoin price chart",
     # "Show me some posts about vitalik on Mirror",
     # "most popular nft?"
-    "any bnb dex in web3 articles"
+    "recommend me some articles about web3",
 ]
 
 
