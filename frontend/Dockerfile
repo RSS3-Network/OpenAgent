@@ -1,5 +1,10 @@
 # Install dependencies only when needed
 FROM node:20-alpine AS deps
+
+# Install dependencies for node-gyp
+RUN apk update && apk add --no-cache \
+    make g++ py3-pip
+
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -16,6 +21,9 @@ COPY . .
 
 # Disable the usage data collection of Next.js.
 ENV NEXT_TELEMETRY_DISABLED 1
+
+# Copy env variables
+COPY .env.ci .env
 
 # RUN apk add --no-cache git
 RUN npm run build

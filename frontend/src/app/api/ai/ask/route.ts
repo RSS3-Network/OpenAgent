@@ -33,7 +33,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
 			method: "GET",
 			path: "/api/auth/session",
 		})
-		.then((res) => res.body.json());
+		.then((res) => res.body.json())
+		.catch((e) => {
+			console.error(e);
+			throw new Error("Error while fetching session", { cause: e });
+		});
 
 	if (!session?.user) {
 		throw new Error("Session not found");
@@ -41,24 +45,30 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 	const user_id = session.user.id;
 
-	const response = await fetch(
-		isOnboarding
-			? `${env.BACKEND_URL}/onboarding/`
-			: `${env.BACKEND_URL}/stream_chat/`,
-		{
-			body: JSON.stringify({
-				body,
-				message_id,
-				session_id,
-				type: "natural_language",
-				user_id,
-			}),
-			headers: {
-				"Content-Type": "application/json",
-			},
-			method: "POST",
-		}
-	);
+	let response: Response;
+	try {
+		response = await fetch(
+			isOnboarding
+				? `${env.BACKEND_URL}/onboarding/`
+				: `${env.BACKEND_URL}/stream_chat/`,
+			{
+				body: JSON.stringify({
+					body,
+					message_id,
+					session_id,
+					type: "natural_language",
+					user_id,
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				},
+				method: "POST",
+			}
+		);
+	} catch (e) {
+		console.error(e);
+		throw new Error("Error while streaming from backend", { cause: e });
+	}
 
 	// return new Response(response.body, {
 	// 	headers: {
@@ -150,7 +160,7 @@ class experimental_StreamData {
 								console.warn(
 									"The data stream is hanging. Did you forget to close it with `data.close()`?"
 								);
-							}, 3000)
+						  }, 3000)
 						: null;
 
 				await self.isClosedPromise;
