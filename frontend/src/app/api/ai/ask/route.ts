@@ -33,7 +33,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
 			method: "GET",
 			path: "/api/auth/session",
 		})
-		.then((res) => res.body.json());
+		.then((res) => res.body.json())
+		.catch((e) => {
+			console.error(e);
+			throw new Error("Error while fetching session", { cause: e });
+		});
 
 	if (!session?.user) {
 		throw new Error("Session not found");
