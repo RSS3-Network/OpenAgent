@@ -11,27 +11,27 @@ from pydantic import BaseModel, Field
 
 
 class ARGS(BaseModel):
-    coin: str = Field(description="coin symbol")
+    token: str = Field(description="token symbol")
 
 
 class PriceExpert(BaseTool):
     name = "price"
-    description = "use this tool to get the price of a coin."
+    description = "use this tool to get the price of a token."
     args_schema: Type[ARGS] = ARGS
 
     def _run(
         self,
-        coin: str,
+        token: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
         self,
-        coin: str,
+        token: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
-        return f"The price of {coin} is {fetch_price(coin)}"
+        return f"The price of {token} is {fetch_price(token)}"
 
 
 _exchanges = [ccxt.binance(), ccxt.okx(), ccxt.gateio(), ccxt.mexc()]
