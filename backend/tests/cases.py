@@ -8,9 +8,13 @@ question_list = [
     # "What is the price of ETH?",
     # "What's the ethereum network's gas price now?",
     # "What did vitalik.eth do recently?",
-    # "send 0.01 eth to vitalik.eth",
-    # "swap 1 eth to usdt",
-    "show me some posts about vitalik on Mirror",
+    # "Send 0.01 eth to vitalik.eth",
+    # "Swap 1 eth to usdt",
+    # "What is mode chain?",
+    # "Give the bitcoin price chart",
+    # "Show me some posts about vitalik on Mirror",
+    # "most popular nft?"
+    "recommend me some articles about web3",
 ]
 
 

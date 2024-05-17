@@ -7,13 +7,16 @@ from toolz import memoize
 
 from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
-from openagent.agent.system_prompt import SYSTEM_PROMPT, ollama_agent_kwargs
+from openagent.agent.system_prompt import (
+    SYSTEM_PROMPT,
+    ollama_agent_kwargs,
+)
 from openagent.conf.env import settings
-from openagent.experts.account_expert import AccountExpert
-from openagent.experts.collection_expert import CollectionExpert
+from openagent.experts.article_expert import ArticleExpert
 from openagent.experts.feed_expert import FeedExpert
-from openagent.experts.google_expert import GoogleExpert
-from openagent.experts.hoot_expert import HootExpert
+from openagent.experts.nft_expert import NFTExpert
+from openagent.experts.price_expert import PriceExpert
+from openagent.experts.search_expert import SearchExpert
 from openagent.experts.swap_expert import SwapExpert
 from openagent.experts.transfer_expert import TransferExpert
 
@@ -34,13 +37,13 @@ def get_agent(session_id: str) -> AgentExecutor:
     )
     # load Experts as tools for the agent
     experts = [
-        GoogleExpert(),
+        SearchExpert(),
         FeedExpert(),
-        CollectionExpert(),
-        AccountExpert(),
+        PriceExpert(),
+        ArticleExpert(),
+        NFTExpert(),
         SwapExpert(),
         TransferExpert(),
-        HootExpert(),
     ]
 
     if settings.MODEL_NAME.startswith("gpt"):

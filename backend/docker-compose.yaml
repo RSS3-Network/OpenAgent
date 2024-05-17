@@ -1,55 +1,32 @@
 version: '3.4'
 services:
-  weaviate:
-    image: semitechnologies/weaviate:1.20.3
-    container_name: weaviate
+  vec_db:
+    image: pgvector/pgvector:pg16
+    container_name: vec_db
     restart: unless-stopped
-    ports:
-      - "8091:8080"
-    env_file:
-      - .env
     environment:
-      QUERY_DEFAULTS_LIMIT: 20
-      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true' # disable this in production
-      AUTHENTICATION_APIKEY_ENABLED: 'true'
-      AUTHENTICATION_APIKEY_ALLOWED_KEYS: ${WEAVIATE_API_KEYS}
-      AUTHENTICATION_APIKEY_USERS: ${WEAVIATE_USERS}
-      PERSISTENCE_DATA_PATH: "./data"
-      DEFAULT_VECTORIZER_MODULE: text2vec-openai
-      ENABLE_MODULES: 'text2vec-openai,generative-openai'
+      POSTGRES_USER: langchain
+      POSTGRES_PASSWORD: langchain
+      POSTGRES_DB: langchain
+    ports:
+      - "6024:5432"
     volumes:
-      - weaviate_data:/var/lib/weaviate
-  postgres:
+      - pgvector_data:/var/lib/postgresql/data
+
+  biz_db:
     image: postgres:14-alpine
-    container_name: postgres
+    container_name: biz_db
     restart: unless-stopped
     ports:
       - "5432:5432"
     env_file:
       - .env
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: password
     volumes:
       - pg_data:/var/lib/postgresql/data
-  redis:
-    image: redis:alpine
-    container_name: redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    env_file:
-      - .env
-    command: /bin/sh -c "redis-server --requirepass ${REDIS_PASSWORD}"
-    volumes:
-      - redis_data:/data
-  weaviate-ui:
-    image: naaive/weaviate-ui:v1.0.3
-    ports:
-      - "7777:7777"
-    environment:
-      - WEAVIATE_URL=http://weaviate:8080
-      - WEAVIATE_API_KEYS=${WEAVIATE_API_KEYS}
+
+
 volumes:
-  weaviate_data:
+  pgvector_data:
   pg_data:
-  redis_data:
