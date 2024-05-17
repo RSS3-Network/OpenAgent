@@ -30,4 +30,3 @@ services:
 volumes:
   pgvector_data:
   pg_data:
-  redis_data:
