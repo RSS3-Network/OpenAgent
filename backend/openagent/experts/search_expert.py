@@ -9,6 +9,8 @@ from langchain.callbacks.manager import (
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
+from openagent.conf.env import settings
+
 
 class SearchSchema(BaseModel):
     query: str = Field(description="The search query keywords.")
@@ -25,6 +27,21 @@ class SearchSchema(BaseModel):
         default="en",
         description="Language code for Google search, e.g., 'en', 'zh-cn', 'ja'",
     )
+
+
+async def dune_search(query: str) -> str:
+    url = f"{settings.RSS3_SEARCH_API}/dune/search?keyword={query}"
+    headers = {"Accept": "*/*", "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.request("GET", url, headers=headers)
+    return response.text
+
+
+async def google_search(query: str, gl: str, hl: str) -> str:
+    search_wrapper = SerpAPIWrapper(
+        search_engine="google",
+        params={"engine": "google", "gl": gl, "hl": hl},
+    )
+    return search_wrapper.run(query)
 
 
 class SearchExpert(BaseTool):
@@ -54,21 +71,8 @@ class SearchExpert(BaseTool):
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
         if search_type == "google":
-            return await self.google_search(query, gl, hl)
+            return await google_search(query, gl, hl)
         elif search_type == "dune":
-            return await self.dune_search(query)
+            return await dune_search(query)
         else:
             raise ValueError(f"Unknown search type: {search_type}")
-
-    async def google_search(self, query: str, gl: str, hl: str) -> str:
-        search_wrapper = SerpAPIWrapper(
-            search_engine="google",
-            params={"engine": "google", "gl": gl, "hl": hl},
-        )
-        return search_wrapper.run(query)
-
-    async def dune_search(self, query: str) -> str:
-        url = f"https://devnet.rss3.io/search/dune/search?keyword={query}"
-        headers = {"Accept": "*/*", "Content-Type": "application/x-www-form-urlencoded"}
-        response = requests.request("GET", url, headers=headers)
-        return response.text
