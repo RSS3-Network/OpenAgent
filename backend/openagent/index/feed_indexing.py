@@ -26,41 +26,37 @@ def build_index():
     indexing_mirror()
 
 
-def indexing_mirror():
-    since_ts = 0
-    curr_ts = int(datetime.datetime.now().timestamp())
-    cursor = None
-    logger.info(f"start indexing mirror from {since_ts} to {curr_ts}")
-    while True:
-        resp = fetch_mirror_feeds(since_ts, curr_ts, cursor=cursor)
-        if resp["meta"] is None:
-            logger.info("no meta in response, done!")
-            break
-        cursor = resp["meta"]["cursor"]
-        logger.info(f"fetched {len(resp['data'])} records, next cursor: {cursor}")
-
-        # get all the records
-        records = resp.get("data", [])
-        if len(records) == 0:
-            break
-
-        save_records(records)
-
-
 def indexing_iqwiki():
-    since_ts = 0
-    curr_ts = int(datetime.datetime.now().timestamp())
+    index_feed(fetch_iqwiki_feeds, "iqwiki")
+
+
+def indexing_mirror():
+    index_feed(fetch_mirror_feeds, "mirror")
+
+
+def index_feed(fetch_function, feed_name):
+    since_date = datetime.datetime.now() - datetime.timedelta(days=180)
+    curr_date = datetime.datetime.now()
+    since_ts = int(since_date.timestamp())
+    curr_ts = int(curr_date.timestamp())
+
     cursor = None
-    logger.info(f"start indexing iqwiki from {since_ts} to {curr_ts}")
+    logger.info(
+        f"Starting to index feed '{feed_name}' from "
+        f"{since_date.strftime('%Y-%m-%d %H:%M:%S')} to"
+        f" {curr_date.strftime('%Y-%m-%d %H:%M:%S')}"
+    )
     while True:
-        resp = fetch_iqwiki_feeds(since_ts, curr_ts, cursor=cursor)
+        resp = fetch_function(since_ts, curr_ts, cursor=cursor)
         if resp["meta"] is None:
-            logger.info("no meta in response, done!")
+            logger.info(f"no meta in response, done with {feed_name}!")
             break
         cursor = resp["meta"]["cursor"]
-        logger.info(f"fetched {len(resp['data'])} records, next cursor: {cursor}")
+        logger.info(
+            f"fetched {len(resp['data'])} records from {feed_name},"
+            f" next cursor: {cursor}"
+        )
 
-        # get all the records
         records = resp.get("data", [])
         if len(records) == 0:
             break

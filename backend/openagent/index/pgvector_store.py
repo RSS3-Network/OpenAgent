@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from langchain.embeddings import OpenAIEmbeddings
-from langchain_core.documents import Document
 from langchain_postgres.vectorstores import PGVector
 
 from openagent.conf.env import settings
@@ -20,17 +19,3 @@ def build_vector_store() -> PGVector:
 
 
 store = build_vector_store()
-
-
-if __name__ == "__main__":
-    docs = [
-        Document(
-            page_content="there are cats in the pond",
-            metadata={"id": 1, "location": "pond", "topic": "animals"},
-        ),
-        Document(
-            page_content="ducks are also found in the pond",
-            metadata={"id": 2, "location": "pond", "topic": "animals"},
-        ),
-    ]
-    store.add_documents(docs, ids=[doc.metadata["id"] for doc in docs])

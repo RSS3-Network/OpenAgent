@@ -3,6 +3,7 @@ services:
   vec_db:
     image: pgvector/pgvector:pg16
     container_name: vec_db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: langchain
       POSTGRES_PASSWORD: langchain

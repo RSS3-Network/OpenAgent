@@ -58,5 +58,6 @@ def fetch_feeds(
 if __name__ == "__main__":
     curr_ts = int(datetime.datetime.now().timestamp())
     _cursor = None
-    feeds = fetch_mirror_feeds(0, curr_ts, cursor=_cursor)
+    since_ts = int((datetime.datetime.now() - datetime.timedelta(days=180)).timestamp())
+    feeds = fetch_mirror_feeds(since_ts, curr_ts, cursor=_cursor)
     print(json.dumps(feeds, indent=4))
