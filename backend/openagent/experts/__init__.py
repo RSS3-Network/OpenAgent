@@ -135,14 +135,3 @@ def handle_ct_token_by_address(addr) -> dict | None:
             "chainId": 1,
         }
     return None
-
-
-async def main():
-    token = await get_token_by_address("0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6")
-    best_token = await select_best_token("ct", "1")
-    print(best_token)
-    print(token)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

@@ -52,8 +52,3 @@ class ArticleExpert(BaseTool):
         res = retriever.get_relevant_documents(keyword)
         docs = list(map(lambda x: x.page_content, res))
         return json.dumps(docs)
-
-
-if __name__ == "__main__":
-    expert = ArticleExpert()
-    print(expert._run("vitalik's father"))

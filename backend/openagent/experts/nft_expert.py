@@ -98,9 +98,3 @@ class NFTExpert(BaseTool):
         headers = {"X-API-KEY": f"{settings.NFTSCAN_API_KEY}"}
         response = requests.get(url, headers=headers)
         return response.text
-
-
-if __name__ == "__main__":
-    nft_expert = NFTExpert()
-    print(nft_expert.search_nft_collections("BAYC"))
-    print(nft_expert.collection_ranking("market_cap"))

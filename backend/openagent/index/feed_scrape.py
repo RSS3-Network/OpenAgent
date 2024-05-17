@@ -1,4 +1,3 @@
-import datetime
 import json
 
 import requests
@@ -53,11 +52,3 @@ def fetch_feeds(
     except Exception as e:
         logger.error(f"Failed to fetch feeds from {platform}: {e}")
         return {}
-
-
-if __name__ == "__main__":
-    curr_ts = int(datetime.datetime.now().timestamp())
-    _cursor = None
-    since_ts = int((datetime.datetime.now() - datetime.timedelta(days=180)).timestamp())
-    feeds = fetch_mirror_feeds(since_ts, curr_ts, cursor=_cursor)
-    print(json.dumps(feeds, indent=4))

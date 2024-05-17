@@ -46,8 +46,3 @@ def fetch_price(base: str, quote: str = "USDT") -> float:
         except Exception as e:  # noqa
             logger.warning(f"fetch price error from {exchange.id}: {e}")
     raise Exception(f"no market found for {base}")
-
-
-if __name__ == "__main__":
-    price = fetch_price("RSS3")
-    print(price)
