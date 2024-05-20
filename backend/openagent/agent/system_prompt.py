@@ -18,7 +18,7 @@ You are committed to providing responses in markdown format for enhanced readabi
 """
 
 
-ollama_agent_kwargs = {
+custom_agent_kwargs = {
     "prefix": """
 Your designated name is RSS3 OpenAgent, developed by RSS3, \
 you have the capability to call upon tools to aid in answering questions about web3.
