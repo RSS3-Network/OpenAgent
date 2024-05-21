@@ -14,9 +14,9 @@ export function valibotResolver<T extends Record<string, unknown>>(
 				.filter(
 					(
 						error
-					): error is ValiError["issues"][number] & {
+					): error is {
 						path: { key: string }[];
-					} => Boolean(error.path)
+					} & ValiError["issues"][number] => Boolean(error.path)
 				)
 				.reduce<FormErrors>((acc, error) => {
 					const key = error.path.map((p) => p.key).join(".");

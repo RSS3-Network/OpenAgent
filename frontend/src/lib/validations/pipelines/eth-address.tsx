@@ -6,10 +6,10 @@ import {
 } from "valibot";
 
 export type EthAddressValidation<TInput extends string> =
-	BaseValidation<TInput> & {
+	{
 		requirement: RegExp;
 		type: "eth_address";
-	};
+	} & BaseValidation<TInput>;
 
 export function ethAddress<TInput extends string>(
 	message: ErrorMessage = "Invalid address"

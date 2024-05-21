@@ -12,9 +12,9 @@ function UserCard({
 	image,
 	username,
 	withBurger = false,
-}: UserButtonProps & {
+}: {
 	withBurger?: boolean;
-}) {
+} & UserButtonProps) {
 	return (
 		<Group className="overflow-hidden" wrap="nowrap">
 			<Avatar radius="xl" src={image} />

@@ -8,13 +8,13 @@ import {
 export type TokenAmountValidation<
 	TInput extends string,
 	TRequirement extends number,
-> = BaseValidation<TInput> & {
+> = {
 	/**
 	 * Decimals
 	 */
 	requirement: TRequirement;
 	type: "token_amount";
-};
+} & BaseValidation<TInput>;
 
 /**
  * @example "songkeys.eth" (always ends with ".eth")

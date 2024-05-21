@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export function PageModal(
-	props: Omit<ModalProps, "children" | "onClose" | "opened"> & {
+	props: {
 		children:
 			| (({ close }: { close: () => void }) => React.ReactNode)
 			| React.ReactNode;
 		// documentTitle: string;
-	}
+	} & Omit<ModalProps, "children" | "onClose" | "opened">
 ) {
 	const { children, ...rest } = props;
 

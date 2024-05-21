@@ -176,10 +176,10 @@ export type AiSessionMessageToolInputBody<
 export type AiSessionMessageToolOutputBody<
 	T extends AiSessionMessageToolType = AiSessionMessageToolType,
 > =
-	| AiSessionMessageToolOutputBody_Error
-	| (AiSessionMessageToolOutputBody_Type_Content_Mapping[T] & {
+	| ({
 			error: never;
-	  });
+	  } & AiSessionMessageToolOutputBody_Type_Content_Mapping[T])
+	| AiSessionMessageToolOutputBody_Error;
 
 /**
  * @private

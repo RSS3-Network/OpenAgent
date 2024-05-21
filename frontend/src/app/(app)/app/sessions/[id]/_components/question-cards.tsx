@@ -29,9 +29,10 @@ export function QuestionCards({
 	useEffect(() => {
 		if (status === "pending" || status === "streaming") {
 			setShow(false);
-		} else {
-			setShow(true);
 		}
+		// else {
+		// 	setShow(true);
+		// }
 	}, [status]);
 
 	const hide = () => {

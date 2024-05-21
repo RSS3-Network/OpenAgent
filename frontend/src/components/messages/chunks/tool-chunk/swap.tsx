@@ -21,7 +21,7 @@ export function ToolChunkSwap({
 }) {
 	return expired ? (
 		<div className="flex items-center gap-2 rounded-sm bg-gray-300 px-4 py-2">
-			<IconInfoCircle className="h-5 w-5" />
+			<IconInfoCircle className="size-5" />
 			The swap has expired.
 		</div>
 	) : (

@@ -81,7 +81,8 @@ export function useAskAi({
 
 			// remove the `?new=true` query param
 			if (searchParams.get("new") === "true") {
-				router.replace(`/app/sessions/${sessionId}`);
+				// router.replace(`/app/sessions/${sessionId}`);
+				window.history.replaceState({}, "", `/app/sessions/${sessionId}`);
 			}
 
 			const _abortController = new AbortController();
@@ -259,7 +260,6 @@ export function useAskAi({
 			body,
 			isOnboarding,
 			messageId,
-			router,
 			scrollToBottom,
 			searchParams,
 			sessionId,

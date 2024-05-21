@@ -186,7 +186,7 @@ export function ToolChunkTransfer(props: {
 	if (props.expired) {
 		return (
 			<div className="flex items-center gap-2 rounded-sm bg-gray-300 px-4 py-2">
-				<IconInfoCircle className="h-5 w-5" />
+				<IconInfoCircle className="size-5" />
 				The transfer has expired.
 			</div>
 		);
@@ -195,7 +195,7 @@ export function ToolChunkTransfer(props: {
 	if (!chain) {
 		return (
 			<div className="flex items-center gap-2 rounded-sm bg-red-200 px-4 py-2">
-				<IconInfoCircle className="h-5 w-5" />
+				<IconInfoCircle className="size-5" />
 				Unsupported chain ID: {props.body.chain_id}
 			</div>
 		);

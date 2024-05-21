@@ -8,10 +8,10 @@ import {
 import { DropIndicator } from "@atlaskit/pragmatic-drag-and-drop-react-indicator/tree-item";
 import { createContext } from "react";
 
-export type LocalAiSessionTreeItem = Omit<AiSessionTreeItem, "children"> & {
+export type LocalAiSessionTreeItem = {
 	children: LocalAiSessionTreeItem[];
 	isOpen: boolean;
-};
+} & Omit<AiSessionTreeItem, "children">;
 export type LocalAiSessionTree = LocalAiSessionTreeItem[];
 
 type TreeAction =

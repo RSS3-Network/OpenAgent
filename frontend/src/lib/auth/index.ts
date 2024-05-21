@@ -1,2 +1,2 @@
-export { SessionProvider } from "./provider";
 export * from "./options";
+export { SessionProvider } from "./provider";

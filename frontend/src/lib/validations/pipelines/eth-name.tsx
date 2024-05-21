@@ -6,10 +6,10 @@ import {
 } from "valibot";
 
 export type EthAddressValidation<TInput extends string> =
-	BaseValidation<TInput> & {
+	{
 		requirement: RegExp;
 		type: "eth_name";
-	};
+	} & BaseValidation<TInput>;
 
 /**
  * @example "songkeys.eth" (always ends with ".eth")

@@ -26,13 +26,13 @@ export default async function LoginPage({
 		<div className="container mx-auto flex h-screen w-screen flex-col items-center justify-center">
 			<Link className="absolute left-4 top-4 md:left-8 md:top-8" href="/">
 				<>
-					<IconArrowLeft className="mr-2 h-4 w-4" />
+					<IconArrowLeft className="mr-2 size-4" />
 					Back
 				</>
 			</Link>
 			<div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
 				<div className="flex flex-col space-y-2 text-center">
-					<IconLogo className="mx-auto h-10 w-10" />
+					<IconLogo className="mx-auto size-10" />
 					<h1 className="text-2xl font-semibold tracking-tight">
 						Welcome to OpenAgent
 					</h1>
