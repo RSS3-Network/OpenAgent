@@ -25,9 +25,9 @@ declare global {
 	// Used to convert string chain IDs to their number equivalents
 	// e.g. const n = Number("42") // n's type is `42` instead of `number`
 	interface NumberConstructor {
-		<T extends string>(
-			value: T
-		): T extends `${infer N extends number}` ? N : number;
+		<T extends string>(value: T): T extends `${infer N extends number}`
+			? N
+			: number;
 	}
 }
 

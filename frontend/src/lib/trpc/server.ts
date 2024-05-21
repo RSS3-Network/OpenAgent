@@ -1,14 +1,17 @@
-import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import {
+	createTRPCClient,
+	loggerLink,
+	unstable_httpBatchStreamLink,
+} from "@trpc/client";
 import { experimental_createServerActionHandler } from "@trpc/next/app-dir/server";
 import { TRPCError } from "@trpc/server";
 import { headers } from "next/headers";
 
 import { createInnerTRPCContext } from "./context";
-import { createTRPCJotai } from "./jotai";
 import { type AppRouter, getUrl, transformer } from "./shared";
 import { t } from "./trpc";
 
-export const api = createTRPCJotai<AppRouter>({
+export const api = createTRPCClient<AppRouter>({
 	links: [
 		loggerLink({
 			enabled: (op) =>
@@ -21,10 +24,10 @@ export const api = createTRPCJotai<AppRouter>({
 				heads.set("x-trpc-source", "rsc");
 				return Object.fromEntries(heads);
 			},
+			transformer,
 			url: getUrl(),
 		}),
 	],
-	transformer,
 });
 
 /**

@@ -28,10 +28,10 @@ export function TrpcProvider(props: {
 						heads.set("x-trpc-source", "react");
 						return Object.fromEntries(heads);
 					},
+					transformer,
 					url: getUrl(),
 				}),
 			],
-			transformer,
 		})
 	);
 

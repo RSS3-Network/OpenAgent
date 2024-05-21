@@ -1,5 +1,10 @@
 import { env } from "@/env.mjs";
-import { AIStream, StreamingTextResponse } from "ai";
+import {
+	AIStream,
+	type JSONValue,
+	StreamingTextResponse,
+	formatStreamPart,
+} from "ai";
 import { type NextRequest, type NextResponse } from "next/server";
 import { type Session } from "next-auth";
 import { Pool } from "undici";
@@ -80,7 +85,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 	// 	},
 	// });
 
-	const data = new experimental_StreamData();
+	const data = new StreamData();
 	let hasSentSessionId = false;
 
 	// Convert the response into a friendly text-stream
@@ -90,7 +95,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 			return data;
 		},
 		{
-			experimental_streamData: true,
 			onFinal(completion) {
 				// IMPORTANT! you must close StreamData manually or the response will never finish.
 				data.close();
@@ -130,74 +134,66 @@ export async function POST(req: NextRequest, res: NextResponse) {
 /**
  * A stream wrapper to send custom JSON-encoded data back to the client.
  */
-class experimental_StreamData {
-	private controller: TransformStreamDefaultController<Uint8Array> | null =
-		null;
+export class StreamData {
+	private controller: ReadableStreamController<Uint8Array> | null = null;
 
-	// array to store appended data
-	private data: object | undefined = undefined;
 	private encoder = new TextEncoder();
-
-	// closing the stream is synchronous, but we want to return a promise
 	private isClosed: boolean = false;
-	// in case we're doing async work
-	private isClosedPromise: Promise<void> | null = null;
-	private isClosedPromiseResolver: (() => void) | undefined = undefined;
 
-	public stream: TransformStream<Uint8Array, Uint8Array>;
+	private warningTimeout: NodeJS.Timeout | null = null;
+	public stream: ReadableStream<Uint8Array>;
+
 	constructor() {
-		this.isClosedPromise = new Promise((resolve) => {
-			this.isClosedPromiseResolver = resolve;
-		});
-
 		const self = this;
-		this.stream = new TransformStream({
-			async flush(controller) {
-				// Show a warning during dev if the data stream is hanging after 3 seconds.
-				const warningTimeout =
-					process.env.NODE_ENV === "development"
-						? setTimeout(() => {
-								console.warn(
-									"The data stream is hanging. Did you forget to close it with `data.close()`?"
-								);
-						  }, 3000)
-						: null;
 
-				await self.isClosedPromise;
-
-				if (warningTimeout !== null) {
-					clearTimeout(warningTimeout);
-				}
-
-				if (self.data) {
-					const encodedData = self.encoder.encode(
-						formatStreamPart("data", self.data)
-					);
-					controller.enqueue(encodedData);
-				}
+		this.stream = new ReadableStream({
+			cancel: (reason) => {
+				this.isClosed = true;
+			},
+			pull: (controller) => {
+				// No-op: we don't need to do anything special on pull
 			},
 			start: async (controller) => {
 				self.controller = controller;
-			},
-			transform: async (chunk, controller) => {
-				controller.enqueue(chunk);
 
-				// add buffered data to the stream
-				if (self.data) {
-					const encodedData = self.encoder.encode(JSON.stringify(self.data));
-					self.data = undefined;
-					controller.enqueue(encodedData);
+				// Set a timeout to show a warning if the stream is not closed within 3 seconds
+				if (process.env.NODE_ENV === "development") {
+					self.warningTimeout = setTimeout(() => {
+						console.warn(
+							"The data stream is hanging. Did you forget to close it with `data.close()`?"
+						);
+					}, 3000);
 				}
 			},
 		});
 	}
 
-	append(value: object): void {
+	append(value: JSONValue): void {
 		if (this.isClosed) {
 			throw new Error("Data Stream has already been closed.");
 		}
 
-		this.data = value;
+		if (!this.controller) {
+			throw new Error("Stream controller is not initialized.");
+		}
+
+		this.controller.enqueue(
+			this.encoder.encode(formatStreamPart("data", [value]))
+		);
+	}
+
+	appendMessageAnnotation(value: JSONValue): void {
+		if (this.isClosed) {
+			throw new Error("Data Stream has already been closed.");
+		}
+
+		if (!this.controller) {
+			throw new Error("Stream controller is not initialized.");
+		}
+
+		this.controller.enqueue(
+			this.encoder.encode(formatStreamPart("message_annotations", [value]))
+		);
 	}
 
 	async close(): Promise<void> {
@@ -209,18 +205,27 @@ class experimental_StreamData {
 			throw new Error("Stream controller is not initialized.");
 		}
 
-		this.isClosedPromiseResolver?.();
+		this.controller.close();
 		this.isClosed = true;
+
+		// Clear the warning timeout if the stream is closed
+		if (this.warningTimeout) {
+			clearTimeout(this.warningTimeout);
+		}
 	}
 }
 
 /**
- * https://github.com/vercel/ai/blob/main/packages/core/shared/stream-parts.ts#L256
- * Prepends a string with a prefix from the `StreamChunkPrefixes`, JSON-ifies it,
- * and appends a new line.
- *
- * It ensures type-safety for the part type and value.
+ * A TransformStream for LLMs that do not have their own transform stream handlers managing encoding (e.g. OpenAIStream has one for function call handling).
+ * This assumes every chunk is a 'text' chunk.
  */
-function formatStreamPart(type: "data", value: object): string {
-	return `2:${JSON.stringify(value)}\n`;
+export function createStreamDataTransformer() {
+	const encoder = new TextEncoder();
+	const decoder = new TextDecoder();
+	return new TransformStream({
+		transform: async (chunk, controller) => {
+			const message = decoder.decode(chunk);
+			controller.enqueue(encoder.encode(formatStreamPart("text", message)));
+		},
+	});
 }

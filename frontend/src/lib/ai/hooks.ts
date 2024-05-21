@@ -62,6 +62,14 @@ export function useAskAi({
 			const _sessionId = sessionId;
 			const _messageId = options.messageId ?? messageId;
 
+			if (!sessionDetailStore[_sessionId]) {
+				sessionDetailStore[_sessionId] = {
+					messages: [],
+					status: "idle",
+					title: null,
+				};
+			}
+
 			const sessionDetail = sessionDetailStore[_sessionId];
 
 			if (

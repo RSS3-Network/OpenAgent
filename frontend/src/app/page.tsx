@@ -17,7 +17,7 @@ export default function Page() {
 }
 
 function Stars() {
-	const ref = useRef<THREE.Points>(null);
+	const ref = useRef<any>(null);
 	const [sphere] = useState(
 		() => inSphere(new Float32Array(5000), { radius: 1.5 }) as Float32Array
 	);
