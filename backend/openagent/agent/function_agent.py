@@ -8,10 +8,7 @@ from toolz import memoize
 
 from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
-from openagent.agent.system_prompt import (
-    SYSTEM_PROMPT,
-    custom_agent_kwargs,
-)
+from openagent.agent.system_prompt import SYSTEM_PROMPT, custom_agent_kwargs
 from openagent.conf.env import settings
 from openagent.experts.article_expert import ArticleExpert
 from openagent.experts.feed_expert import FeedExpert
@@ -58,16 +55,27 @@ def create_interpreter(model_name):
 
 @memoize
 def get_agent(session_id: str) -> AgentExecutor:
+    # Initialize message history based on session_id
     message_history = (
         get_msg_history(session_id) if session_id else ChatMessageHistory()
     )
-    agent_kwargs = {
-        "system_message": SystemMessage(content=SYSTEM_PROMPT),
-        "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
-    }
+
+    # Define agent arguments
+    agent_kwargs = (
+        {
+            "system_message": SystemMessage(content=SYSTEM_PROMPT),
+            "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
+        }
+        if settings.MODEL_NAME.startswith("gpt")
+        else custom_agent_kwargs
+    )
+
+    # Create conversation memory
     memory = ConversationBufferMemory(
         memory_key="memory", return_messages=True, chat_memory=message_history
     )
+
+    # List of experts to be loaded
     experts = [
         SearchExpert(),
         FeedExpert(),
@@ -78,20 +86,18 @@ def get_agent(session_id: str) -> AgentExecutor:
         TransferExpert(),
     ]
 
+    # Initialize interpreter
     interpreter = create_interpreter(settings.MODEL_NAME)
 
-    if settings.MODEL_NAME.startswith("gpt"):
-        return create_agent(
-            experts, interpreter, agent_kwargs, memory, AgentType.OPENAI_FUNCTIONS
-        )
-    else:
-        return create_agent(
-            experts,
-            interpreter,
-            custom_agent_kwargs,
-            memory,
-            AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-        )
+    # Define agent type based on model name
+    agent_type = (
+        AgentType.OPENAI_FUNCTIONS
+        if settings.MODEL_NAME.startswith("gpt")
+        else AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION
+    )
+
+    # Return created agent with appropriate arguments
+    return create_agent(experts, interpreter, agent_kwargs, memory, agent_type)
 
 
 # this function is used to get the chat history of a session from Postgres
