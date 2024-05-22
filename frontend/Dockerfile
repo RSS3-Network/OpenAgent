@@ -26,6 +26,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 COPY .env.ci .env
 
 # RUN apk add --no-cache git
+RUN npx next telemetry disable
 RUN npm run build
 
 # Production image, copy all the files and run next

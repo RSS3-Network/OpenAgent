@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 	title: "Login",
 };
 
-export default async function LoginPage({
+// million-ignore
+export default async function Page({
 	searchParams,
 }: {
 	searchParams?: { from?: string };

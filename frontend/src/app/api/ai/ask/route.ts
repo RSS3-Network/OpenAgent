@@ -134,7 +134,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 /**
  * A stream wrapper to send custom JSON-encoded data back to the client.
  */
-export class StreamData {
+class StreamData {
 	private controller: ReadableStreamController<Uint8Array> | null = null;
 
 	private encoder = new TextEncoder();
@@ -213,19 +213,4 @@ export class StreamData {
 			clearTimeout(this.warningTimeout);
 		}
 	}
-}
-
-/**
- * A TransformStream for LLMs that do not have their own transform stream handlers managing encoding (e.g. OpenAIStream has one for function call handling).
- * This assumes every chunk is a 'text' chunk.
- */
-export function createStreamDataTransformer() {
-	const encoder = new TextEncoder();
-	const decoder = new TextDecoder();
-	return new TransformStream({
-		transform: async (chunk, controller) => {
-			const message = decoder.decode(chunk);
-			controller.enqueue(encoder.encode(formatStreamPart("text", message)));
-		},
-	});
 }
