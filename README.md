@@ -21,7 +21,27 @@ A set of APIs for responding to requests from the frontend. It leverages LangCha
 
 It leverages the power of RSS3 Network to retrieve knowledge and feed into designated Experts.
 
-Theoretically, it is compatible with any LLMs with function calling capability.
+### LLM Compatibility
+
+Theoretically, OpenAgent is compatible with any LLMs with function calling capability.
+We encourage you to test with your chosen LLMs and contribute to the compatibility lists below.
+Here we provide a list of LLMs tested to be sufficiently intelligent for the purpose:
+
+#### Open Source LLMs
+
+- codellama:13b
+- deepseek-coder:33b
+- llama:8b
+- llava:13b
+- phi:3.8b
+- solar:10.7b
+
+#### Proprietary LLMs
+
+- gpt-3.5
+- gpt-4
+- gemini-1.5-pro
+- gatedemini-1.5-flash
 
 See [backend/README.md](backend/README.md) for more information on development and deployment.
 
