@@ -86,4 +86,5 @@ export const {
 	session: {
 		strategy: "database",
 	},
+	trustHost: true,
 });
