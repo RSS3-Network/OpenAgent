@@ -38,10 +38,11 @@ Here we provide a list of LLMs tested to be sufficiently intelligent for the pur
 
 #### Proprietary LLMs
 
+- gemini-1.5-flash
+- gemini-1.5-pro
 - gpt-3.5
 - gpt-4
-- gemini-1.5-pro
-- gatedemini-1.5-flash
+- gpt-4o
 
 See [backend/README.md](backend/README.md) for more information on development and deployment.
 
