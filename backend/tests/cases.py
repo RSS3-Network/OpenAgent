@@ -4,17 +4,15 @@ import time
 from openagent.agent.function_agent import get_agent
 
 question_list = [
-    # "Hello?",
+    "Hello?",
     # "What is the price of ETH?",
-    # "What's the ethereum network's gas price now?",
     # "What did vitalik.eth do recently?",
     # "Send 0.01 eth to vitalik.eth",
     # "Swap 1 eth to usdt",
-    # "What is mode chain?",
+    # "What is MODE chain?",
     # "Give the bitcoin price chart",
-    # "Show me some posts about vitalik on Mirror",
-    # "most popular nft?"
-    "recommend me some articles about web3",
+    # "List some popular NFTs?",
+    # "Can you recommend me some articles about web3",
 ]
 
 
