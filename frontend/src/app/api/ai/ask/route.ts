@@ -118,14 +118,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
 	return new StreamingTextResponse(
 		stream,
 		{
-			headers: {
-				...response.headers,
-				"Cache-Control": "no-cache, no-transform",
-				Connection: "keep-alive",
-				"Content-Encoding": "none",
-				"Content-Type": "text/event-stream",
-				"X-Accel-Buffering": "no",
-			},
+			// headers: {
+			// 	...response.headers,
+			// 	"Cache-Control": "no-cache, no-transform",
+			// 	Connection: "keep-alive",
+			// 	"Content-Encoding": "none",
+			// 	"Content-Type": "text/event-stream",
+			// 	"X-Accel-Buffering": "no",
+			// },
 		},
 		data as any
 	);
