@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:20.1.0-alpine AS deps
+FROM node:22-alpine AS deps
 
 # Install dependencies for node-gyp
 RUN apk update && apk add --no-cache \
@@ -14,7 +14,7 @@ COPY prisma ./prisma
 RUN corepack pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM node:20.1.0-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
