@@ -60,8 +60,8 @@ class SwapExpert(BaseTool):
         self,
         from_token: str,
         to_token: str,
-        chain_name: str,
-        amount: str,
+        chain_name: str = "ethereum",
+        amount: str = "1",
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
         return await fetch_swap(from_token, to_token, chain_name, amount)

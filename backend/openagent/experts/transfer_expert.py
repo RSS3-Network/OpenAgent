@@ -64,8 +64,8 @@ class TransferExpert(BaseTool):
         self,
         to_address: str,
         token: str,
-        chain_name: str,
-        amount: str,
+        chain_name: str = "ethereum",
+        amount: str = "1",
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
         return await fetch_transfer(to_address, token, chain_name, amount)
