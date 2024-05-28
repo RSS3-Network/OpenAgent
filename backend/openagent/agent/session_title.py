@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
-from langchain.chat_models import ChatOllama, ChatOpenAI
 from langchain.prompts import PromptTemplate
+from langchain_community.chat_models import ChatOllama, ChatOpenAI
 from loguru import logger
 
 from openagent.conf.env import settings
