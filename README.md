@@ -29,20 +29,29 @@ Here we provide a list of LLMs tested to be sufficiently intelligent for the pur
 
 #### Open Source LLMs
 
-- codellama:13b
-- deepseek-coder:33b
-- llama:8b
-- llava:13b
-- phi:3.8b
-- solar:10.7b
+| Open Source LLMs    | Performance |
+|---------------------|-------------|
+| llama3              | ★★★★☆   |
+| codellama           | ★★★☆☆   |
+| gemma               | ★★★☆☆   |
+| aya                 | ★★☆☆☆   |
+| mistral             | ★★☆☆☆   |
+| deepseek-coder      | ★☆☆☆☆   |
+| solar               | ★☆☆☆☆   |
+| llava               | ★☆☆☆☆   |
+| phi3                | ★☆☆☆☆   |
+
 
 #### Proprietary LLMs
 
-- gemini-1.5-flash
-- gemini-1.5-pro
-- gpt-3.5
-- gpt-4
-- gpt-4o
+| Proprietary LLMs    | Performance |
+|---------------------|-------------|
+| gpt-3.5             | ★★★★★   |
+| gpt-4               | ★★★★★   |
+| gpt-4o              | ★★★★★   |
+| gemini-1.5-flash    | ★★★★☆   |
+| gemini-1.5-pro      | ★★★★☆   |
+
 
 See [backend/README.md](backend/README.md) for more information on development and deployment.
 
