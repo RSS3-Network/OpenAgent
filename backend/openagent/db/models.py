@@ -1,10 +1,19 @@
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import func
 
 from openagent.dto.task import TaskStatus
 
 Base = declarative_base()  # type: ignore
+
+
+class BotMsg(Base):  # type: ignore
+    __tablename__ = "bot_msg"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    session_id = Column(String(255), nullable=False)
+    msg = Column(JSONB, nullable=False)
+    send_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class ChatHistory(Base):  # type: ignore
