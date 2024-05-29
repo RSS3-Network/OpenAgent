@@ -23,13 +23,13 @@ class OpenAgentBot:
         ).start(bot_token=settings.TG_BOT_TOKEN)
         self.db_session = DBSession()
 
-    async def get_response_and_send(self, event, question, session_id):
+    async def get_response_and_send(self, event, question, session_id, reply_to):
         """
         Get response from OpenAgent and send to user
         """
         lc_events = await ask(question=question, session_id=session_id)
         final_answer = ""
-        response_msg = await event.respond("🤔 Thinking...")
+        response_msg = await event.respond("🤔 Thinking...", reply_to=reply_to)
 
         async for lc_event in lc_events:
             kind = lc_event["event"]
@@ -73,7 +73,9 @@ class OpenAgentBot:
         logger.info(f"Received message: {message_text}")
         session_id = self.get_current_session_id(user_id)
 
-        await self.get_response_and_send(event, message_text, session_id)
+        await self.get_response_and_send(
+            event, message_text, session_id, reply_to=event.message.id
+        )
 
     def get_current_session_id(self, user_id):
         current_session = (
@@ -112,10 +114,10 @@ class OpenAgentBot:
         """
         query_data = event.data.decode("utf-8")
         question = get_followup_question(query_data) or query_data
-        await event.respond(f"✅ You selected: {question}")
+        msg = await event.respond(f"{question}")
         user_id = event.chat.id
         session_id = self.get_current_session_id(user_id)
-        await self.get_response_and_send(event, question, session_id)
+        await self.get_response_and_send(event, question, session_id, reply_to=msg.id)
 
     def run(self):
         """
