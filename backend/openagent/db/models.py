@@ -30,6 +30,13 @@ class BotCurrentSession(Base):  # type: ignore
     session_id = Column(String(255), nullable=False)
 
 
+class BotFollowup(Base):  # type: ignore
+    __tablename__ = "bot_followup"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    key = Column(String(255), nullable=False, unique=True)
+    question = Column(String(255), nullable=False)
+
+
 class ChatHistory(Base):  # type: ignore
     __tablename__ = "chat_history"
 
