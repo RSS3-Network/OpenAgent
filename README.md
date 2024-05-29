@@ -46,8 +46,8 @@ Here we provide a list of LLMs tested to be sufficiently intelligent for the pur
 
 | Proprietary LLMs    | Performance |
 |---------------------|-------------|
-| gpt-3.5             | ★★★★★   |
-| gpt-4               | ★★★★★   |
+| gpt-3.5-turbo       | ★★★★★   |
+| gpt-4-turbo         | ★★★★★   |
 | gpt-4o              | ★★★★★   |
 | gemini-1.5-flash    | ★★★★☆   |
 | gemini-1.5-pro      | ★★★★☆   |
