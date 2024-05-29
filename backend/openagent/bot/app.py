@@ -34,19 +34,31 @@ class OpenAgentBot:
         async for lc_event in lc_events:
             kind = lc_event["event"]
             if kind == "on_chat_model_stream":
-                content = lc_event["data"]["chunk"].content
-                if content:
-                    final_answer += content
-                    await response_msg.edit(final_answer)
-            elif kind == "on_tool_start":
-                output = (
-                    f"🔧 Starting tool: {lc_event['name']}"
-                    f" with inputs: {lc_event['data'].get('input')}"
+                final_answer = await self.handle_stream(
+                    final_answer, lc_event, response_msg
                 )
-                await response_msg.edit(output)
-            elif kind == "on_chain_end":
-                if lc_event["name"] == "Agent":
-                    await self.handle_followup(final_answer, response_msg, session_id)
+            if kind == "on_tool_start":
+                await self.handle_tool(lc_event, response_msg)
+            if kind == "on_chain_end" and lc_event["name"] == "Agent":
+                await self.handle_followup(final_answer, response_msg, session_id)
+
+    async def handle_stream(self, final_answer, lc_event, response_msg):
+        content = lc_event["data"]["chunk"].content
+        if content:
+            new_answer = final_answer + content
+            if new_answer.strip() != final_answer.strip():
+                final_answer = new_answer
+                await response_msg.edit(final_answer)
+            else:
+                final_answer = new_answer
+        return final_answer
+
+    async def handle_tool(self, lc_event, response_msg):
+        tool_name = lc_event["name"]
+        inputs = lc_event["data"].get("input")
+        formatted_inputs = ", ".join(f"{k}='{v}'" for k, v in inputs.items())
+        output = f"🔧 Starting tool: {tool_name}({formatted_inputs})"
+        await response_msg.edit(output)
 
     async def handle_followup(self, final_answer, response_msg, session_id):
         memory = get_pg_memory(session_id)
@@ -58,7 +70,7 @@ class OpenAgentBot:
         for fq in questions:
             key = hashlib.md5(fq.encode()).hexdigest()
             store_followup_question(key, fq)
-            buttons.append([Button.inline(f"{fq[:30]}...", data=key)])
+            buttons.append([Button.inline(f"{fq[:30]}", data=key)])
         await response_msg.edit(final_answer, buttons=buttons)
 
     async def handle_message(self, event):
