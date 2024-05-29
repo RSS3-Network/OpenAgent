@@ -7,6 +7,7 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.runnables.schema import StreamEvent
 from langchain_openai import ChatOpenAI
 
+from openagent.agent.system_prompt import SYSTEM_PROMPT
 from openagent.bot.memory import BotPGMemory
 from openagent.experts.article_expert import ArticleExpert
 from openagent.experts.feed_expert import FeedExpert
@@ -40,7 +41,7 @@ async def create_agent():
     llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0, streaming=True)
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", "You are a helpful assistant"),
+            ("system", SYSTEM_PROMPT),
             ("placeholder", "{chat_history}"),
             ("human", "{input}"),
             ("placeholder", "{agent_scratchpad}"),
