@@ -16,6 +16,20 @@ class BotMsg(Base):  # type: ignore
     send_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
+class BotUserSession(Base):  # type: ignore
+    __tablename__ = "bot_user_session"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, nullable=False)
+    session_id = Column(String(255), nullable=False)
+
+
+class BotCurrentSession(Base):  # type: ignore
+    __tablename__ = "bot_current_session"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, nullable=False, unique=True)
+    session_id = Column(String(255), nullable=False)
+
+
 class ChatHistory(Base):  # type: ignore
     __tablename__ = "chat_history"
 
