@@ -78,7 +78,7 @@ class OpenAgentBot:
         Handle new message events
         """
         message_text = event.message.message
-        if message_text == "/start":
+        if message_text.strip().startswith("/"):
             return
 
         user_id = event.chat.id
@@ -180,3 +180,9 @@ class OpenAgentBot:
 if __name__ == "__main__":
     bot = OpenAgentBot()
     bot.run()
+
+
+# BotFather edit commands
+# start - Start the bot and get some suggested questions.
+# new_session - Start a new session.
+# help - Show help message.
