@@ -107,6 +107,20 @@ class OpenAgentBot:
             session_id = current_session[0].session_id
         return session_id
 
+    async def new_session(self, event):
+        """
+        Handle /new_session command
+        """
+        user_id = event.chat.id
+        session_id = uuid.uuid4().hex
+        self.db_session.query(BotCurrentSession).filter(
+            BotCurrentSession.user_id == user_id
+        ).delete()
+        self.db_session.add(BotCurrentSession(user_id=user_id, session_id=session_id))
+        self.db_session.add(BotUserSession(user_id=user_id, session_id=session_id))
+        self.db_session.commit()
+        await event.respond("🔄 New session started!")
+
     async def start(self, event):
         """
         Handle /start command
