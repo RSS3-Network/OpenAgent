@@ -134,6 +134,20 @@ class OpenAgentBot:
             buttons=buttons,
         )
 
+    async def help(self, event):
+        """
+        Handle /help command
+        """
+        help_text = (
+            "🆘 **Help Menu**\n\n"
+            "Here are the commands you can use:\n"
+            "/start - Start the bot and get some suggested questions.\n"
+            "/new_session - Start a new session.\n"
+            "/help - Show this help message.\n\n"
+            "Just type your question and I'll do my best to assist you!"
+        )
+        await event.respond(help_text)
+
     async def handle_question_selection(self, event):
         """
         Handle button click events
@@ -151,6 +165,11 @@ class OpenAgentBot:
         """
         self.client.add_event_handler(self.handle_message, events.NewMessage)
         self.client.add_event_handler(self.start, events.NewMessage(pattern="/start"))
+        self.client.add_event_handler(
+            self.new_session, events.NewMessage(pattern="/new_session")
+        )
+        self.client.add_event_handler(self.help, events.NewMessage(pattern="/help"))
+
         self.client.add_event_handler(
             self.handle_question_selection, events.CallbackQuery
         )
