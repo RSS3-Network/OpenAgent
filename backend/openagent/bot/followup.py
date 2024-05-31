@@ -8,6 +8,7 @@ from langchain_openai import ChatOpenAI
 from loguru import logger
 from sqlalchemy.orm.exc import NoResultFound
 
+from openagent.agent.system_prompt import SYSTEM_PROMPT
 from openagent.db.database import DBSession
 from openagent.db.models import BotFollowup
 
@@ -24,7 +25,7 @@ def gen_followup_question(chat_history: List[str]) -> List[str]:
     parser = PydanticOutputParser(pydantic_object=FollowUpQuestion)  # type: ignore
 
     prompt = PromptTemplate(
-        template="You are a web3 OpenAgent."
+        template=SYSTEM_PROMPT + "\n"
         "Generate follow-up questions based on the user's chat history."
         "each question should be less than 6 words."
         "\n{format_instructions}\n{query}\n",
