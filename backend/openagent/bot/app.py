@@ -1,3 +1,4 @@
+import asyncio
 import hashlib
 import uuid
 
@@ -31,6 +32,11 @@ class OpenAgentBot:
         final_answer = ""
         response_msg = await event.respond("🤔 Thinking...", reply_to=reply_to)
 
+        # Create follow-up questions task
+        followup_task = asyncio.create_task(
+            self.precompute_followup_questions(session_id)
+        )
+
         async for lc_event in lc_events:
             kind = lc_event["event"]
             if kind == "on_chat_model_stream":
@@ -40,7 +46,7 @@ class OpenAgentBot:
             if kind == "on_tool_start":
                 await self.handle_tool(lc_event, response_msg)
             if kind == "on_chain_end" and lc_event["name"] == "Agent":
-                await self.handle_followup(final_answer, response_msg, session_id)
+                await self.handle_followup(final_answer, response_msg, followup_task)
 
     async def handle_stream(self, final_answer, lc_event, response_msg):
         content = lc_event["data"]["chunk"].content
@@ -60,11 +66,8 @@ class OpenAgentBot:
         output = f"🔧 Starting tool: {tool_name}({formatted_inputs})"
         await response_msg.edit(output)
 
-    async def handle_followup(self, final_answer, response_msg, session_id):
-        memory = get_pg_memory(session_id)
-        messages = memory.get_messages()
-        history = list(map(lambda x: f"{x.type}: {x.content}", messages))
-        questions = gen_followup_question(history)[-4:]
+    async def handle_followup(self, final_answer, response_msg, followup_task):
+        questions = await followup_task
         # Generate inline buttons for follow-up questions
         buttons = []
         for fq in questions:
@@ -72,6 +75,13 @@ class OpenAgentBot:
             store_followup_question(key, fq)
             buttons.append([Button.inline(f"{fq[:30]}", data=key)])
         await response_msg.edit(final_answer, buttons=buttons)
+
+    async def precompute_followup_questions(self, session_id):
+        memory = get_pg_memory(session_id)
+        messages = memory.get_messages()
+        history = list(map(lambda x: f"{x.type}: {x.content}", messages))
+        questions = gen_followup_question(history)[-4:]
+        return questions
 
     async def handle_message(self, event):
         """
@@ -181,9 +191,3 @@ class OpenAgentBot:
 if __name__ == "__main__":
     bot = OpenAgentBot()
     bot.run()
-
-
-# BotFather edit commands
-# start - Start the bot and get some suggested questions.
-# new_session - Start a new session.
-# help - Show help message.
