@@ -10,6 +10,7 @@ from langchain_openai import ChatOpenAI
 from openagent.bot.memory import BotPGMemory
 from openagent.bot.prompt import SYSTEM_PROMPT
 from openagent.experts.article_expert import ArticleExpert
+from openagent.experts.block_stat_expert import BlockStatExpert
 from openagent.experts.feed_expert import FeedExpert
 from openagent.experts.nft_expert import NFTExpert
 from openagent.experts.price_expert import PriceExpert
@@ -51,12 +52,13 @@ async def create_agent():
         PriceExpert(),
         ArticleExpert(),
         NFTExpert(),
+        BlockStatExpert(),
     ]
     agent = create_tool_calling_agent(
         llm.with_config({"tags": ["agent_llm"]}), experts, prompt
     )
     agent_executor = AgentExecutor(
-        agent=agent, tools=experts, verbose=False, handle_parsing_errors=True
+        agent=agent, tools=experts, verbose=True, handle_parsing_errors=True
     ).with_config({"run_name": "Agent"})
     agent_with_chat_history = RunnableWithMessageHistory(
         agent_executor,
