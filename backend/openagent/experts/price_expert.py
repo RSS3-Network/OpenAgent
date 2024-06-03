@@ -24,7 +24,10 @@ class PriceExpert(BaseTool):
         token: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
-        raise NotImplementedError
+        try:
+            return f"The price of {token} is {fetch_price(token)}"
+        except Exception as e:
+            return f"error: {e}"
 
     async def _arun(
         self,
