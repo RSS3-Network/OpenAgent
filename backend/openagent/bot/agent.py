@@ -9,7 +9,6 @@ from langchain_openai import ChatOpenAI
 
 from openagent.bot.memory import BotPGMemory
 from openagent.bot.prompt import SYSTEM_PROMPT
-from openagent.experts.article_expert import ArticleExpert
 from openagent.experts.block_stat_expert import BlockStatExpert
 from openagent.experts.feed_expert import FeedExpert
 from openagent.experts.nft_expert import NFTExpert
@@ -50,7 +49,6 @@ async def create_agent():
         SearchExpert(),
         FeedExpert(),
         PriceExpert(),
-        ArticleExpert(),
         NFTExpert(),
         BlockStatExpert(),
     ]
