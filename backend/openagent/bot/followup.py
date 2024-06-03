@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from dotenv import load_dotenv
 from langchain.output_parsers import PydanticOutputParser
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI
 from loguru import logger
@@ -28,9 +28,11 @@ def gen_followup_question(chat_history: List[str]) -> List[str]:
     model = ChatOpenAI(temperature=0.3)
     follow_up_query = "please suggest 5 follow-up questions.\n" f"{chat_history}"
     parser = PydanticOutputParser(pydantic_object=FollowUpQuestion)  # type: ignore
-
-    prompt = PromptTemplate(
-        template="""
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """
 You are OpenAgent, a professional Web3 domain chatbot assistant. \
 You have the following capabilities:
 1. Query historical transaction activities of Ethereum addresses
@@ -42,7 +44,7 @@ Conversation Requirements:
 questions they might ask next
 2. If the previous conversation is not related to Web3, skillfully \
 guide the topic into the Web3 domain
-3. Generated questions should avoid repetition, be limited to 6 \
+3. Generated questions should avoid repetition, be limited to 5 \
 words, and take the user's perspective
 Example Questions:
 - What's vitalik.eth up to?
@@ -50,14 +52,19 @@ Example Questions:
 - Hottest NFT projects?
 
 {format_instructions}
-{query}
-    """,
-        input_variables=["query"],
-        partial_variables={"format_instructions": parser.get_format_instructions()},
+""",
+            ),
+            ("human", "{query}"),
+        ]
     )
 
     chain = prompt | model | parser
-    response = chain.invoke({"query": follow_up_query})
+    response = chain.invoke(
+        {
+            "query": follow_up_query,
+            "format_instructions": parser.get_format_instructions(),
+        }
+    )
     return response.questions
 
 
