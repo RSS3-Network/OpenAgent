@@ -56,7 +56,7 @@ async def create_agent():
         llm.with_config({"tags": ["agent_llm"]}), experts, prompt
     )
     agent_executor = AgentExecutor(
-        agent=agent, tools=experts, verbose=False
+        agent=agent, tools=experts, verbose=False, handle_parsing_errors=True
     ).with_config({"run_name": "Agent"})
     agent_with_chat_history = RunnableWithMessageHistory(
         agent_executor,

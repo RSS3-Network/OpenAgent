@@ -31,7 +31,10 @@ class PriceExpert(BaseTool):
         token: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
-        return f"The price of {token} is {fetch_price(token)}"
+        try:
+            return f"The price of {token} is {fetch_price(token)}"
+        except Exception as e:
+            return f"error: {e}"
 
 
 _exchanges = [ccxt.binance(), ccxt.okx(), ccxt.gateio(), ccxt.mexc()]
