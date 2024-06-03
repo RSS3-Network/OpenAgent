@@ -52,17 +52,27 @@ class BotPGMemory(BaseChatMessageHistory):
                 lambda x: json.loads(x.msg),
                 self._db_session.query(BotMsg)
                 .filter(BotMsg.session_id == self._session_id)
-                .order_by(BotMsg.send_at.asc())
+                .order_by(BotMsg.send_at.desc())  # get the messages in descending order
                 .all(),
             )
         )
 
         messages = messages_from_dict(items)
-        return messages
+
+        # Limit the number of messages to 6 and the total length to 6000 characters
+        total_length = 0
+        limited_messages: list[BaseMessage] = []
+        for message in messages:
+            message_length = len(json.dumps(message_to_dict(message)))
+            if total_length + message_length > 6000 or len(limited_messages) >= 6:
+                break
+            limited_messages.append(message)
+            total_length += message_length
+
+        return list(reversed(limited_messages))  # return the messages in reverse order
 
     async def aget_messages(self) -> list[BaseMessage]:
         """Retrieve messages from the chat message history."""
-
         return self.get_messages()
 
     @property  # type: ignore[override]
