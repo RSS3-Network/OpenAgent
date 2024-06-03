@@ -57,7 +57,7 @@ class OpenAgentBot:
             if new_answer.strip() != final_answer.strip():
                 final_answer = new_answer
                 current_time = asyncio.get_event_loop().time()
-                if current_time - last_edit_time > 1:  # rate limit edits
+                if current_time - last_edit_time > 0.65:  # rate limit edits
                     last_edit_time = current_time
                     await response_msg.edit(final_answer)
             else:
@@ -199,3 +199,9 @@ class OpenAgentBot:
 if __name__ == "__main__":
     bot = OpenAgentBot()
     bot.run()
+
+
+# BotFather edit commands
+# start - Start the bot and get some suggested questions.
+# new_session - Start a new session.
+# help - Show help message.
