@@ -14,8 +14,6 @@ from openagent.experts.feed_expert import FeedExpert
 from openagent.experts.nft_expert import NFTExpert
 from openagent.experts.price_expert import PriceExpert
 from openagent.experts.search_expert import SearchExpert
-from openagent.experts.swap_expert import SwapExpert
-from openagent.experts.transfer_expert import TransferExpert
 
 load_dotenv()
 
@@ -53,8 +51,6 @@ async def create_agent():
         PriceExpert(),
         ArticleExpert(),
         NFTExpert(),
-        SwapExpert(),
-        TransferExpert(),
     ]
     agent = create_tool_calling_agent(
         llm.with_config({"tags": ["agent_llm"]}), experts, prompt
