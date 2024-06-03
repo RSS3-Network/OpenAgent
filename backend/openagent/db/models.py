@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Boolean, Column, DateTime, Integer, String, Text
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import func
@@ -19,14 +19,14 @@ class BotMsg(Base):  # type: ignore
 class BotUserSession(Base):  # type: ignore
     __tablename__ = "bot_user_session"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(BigInteger, nullable=False)
+    user_id = Column(String(255), nullable=False)
     session_id = Column(String(255), nullable=False)
 
 
 class BotCurrentSession(Base):  # type: ignore
     __tablename__ = "bot_current_session"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(BigInteger, nullable=False, unique=True)
+    user_id = Column(String(255), nullable=False, unique=True)
     session_id = Column(String(255), nullable=False)
 
 

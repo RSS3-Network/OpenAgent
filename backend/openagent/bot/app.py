@@ -103,7 +103,7 @@ class OpenAgentBot:
         if message_text.strip().startswith("/"):
             return
 
-        user_id = event.sender.id if event.is_group else event.chat.id
+        user_id = str(event.sender.id if event.is_group else event.chat.id)
         logger.info(f"Received message: {message_text}")
         session_id = self.get_current_session_id(user_id)
 
@@ -133,7 +133,7 @@ class OpenAgentBot:
         """
         Handle /new_session command
         """
-        user_id = event.sender.id if event.is_group else event.chat.id
+        user_id = str(event.sender.id if event.is_group else event.chat.id)
         session_id = uuid.uuid4().hex
         self.db_session.query(BotCurrentSession).filter(
             BotCurrentSession.user_id == user_id
@@ -179,7 +179,7 @@ class OpenAgentBot:
         question = get_followup_question(query_data) or query_data
         msg = await event.respond(f"{question}", parse_mode="markdown")
 
-        user_id = event.sender.id if event.is_group else event.chat.id
+        user_id = str(event.sender.id if event.is_group else event.chat.id)
         session_id = self.get_current_session_id(user_id)
         await self.get_response_and_send(event, question, session_id, reply_to=msg.id)
 
