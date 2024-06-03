@@ -7,8 +7,8 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.runnables.schema import StreamEvent
 from langchain_openai import ChatOpenAI
 
-from openagent.agent.system_prompt import SYSTEM_PROMPT
 from openagent.bot.memory import BotPGMemory
+from openagent.bot.prompt import SYSTEM_PROMPT
 from openagent.experts.article_expert import ArticleExpert
 from openagent.experts.feed_expert import FeedExpert
 from openagent.experts.nft_expert import NFTExpert

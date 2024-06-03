@@ -94,6 +94,7 @@ select = [
     "W"
 ]
 [tool.ruff.lint.per-file-ignores]
+"openagent/bot/prompt.py" = ["E501"]
 "__init__.py"= ["F401"]
 "chainlit_app.py"= ["F811"]
 "openagent/db/database.py"= ["E261"]
