@@ -8,7 +8,7 @@ questions = [
     "Top NFT projects right now?",
     "Current trends in the crypto market?",
     "Top crypto exchanges?",
-    "Give the bitcoin price chart",
+    "Show some btc price dashboard?",
 ]
 
 
