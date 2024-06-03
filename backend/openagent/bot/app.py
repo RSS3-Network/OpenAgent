@@ -30,7 +30,9 @@ class OpenAgentBot:
         """
         lc_events = await ask(question=question, session_id=session_id)
         final_answer = ""
-        response_msg = await event.respond("🤔 Thinking...", reply_to=reply_to)
+        response_msg = await event.respond(
+            "🤔 Thinking...", reply_to=reply_to, parse_mode="markdown"
+        )
 
         # Create follow-up questions task
         followup_task = asyncio.create_task(
@@ -59,7 +61,7 @@ class OpenAgentBot:
                 current_time = asyncio.get_event_loop().time()
                 if current_time - last_edit_time > 0.65:  # rate limit edits
                     last_edit_time = current_time
-                    await response_msg.edit(final_answer)
+                    await response_msg.edit(final_answer, parse_mode="markdown")
             else:
                 final_answer = new_answer
         return final_answer, last_edit_time
@@ -69,7 +71,7 @@ class OpenAgentBot:
         inputs = lc_event["data"].get("input")
         formatted_inputs = ", ".join(f"{k}='{v}'" for k, v in inputs.items())
         output = f"🔧 Starting tool: {tool_name}({formatted_inputs})"
-        await response_msg.edit(output)
+        await response_msg.edit(output, parse_mode="markdown")
 
     async def handle_followup(self, final_answer, response_msg, followup_task):
         questions = await followup_task
@@ -80,7 +82,9 @@ class OpenAgentBot:
             store_followup_question(key, fq)
             buttons.append([Button.inline(f"{fq[:30]}", data=key)])
         try:
-            await response_msg.edit(final_answer, buttons=buttons)
+            await response_msg.edit(
+                final_answer, buttons=buttons, parse_mode="markdown"
+            )
         except Exception as e:
             logger.error(e)
 
@@ -137,7 +141,7 @@ class OpenAgentBot:
         self.db_session.add(BotCurrentSession(user_id=user_id, session_id=session_id))
         self.db_session.add(BotUserSession(user_id=user_id, session_id=session_id))
         self.db_session.commit()
-        await event.respond("🔄 New session started!")
+        await event.respond("🔄 New session started!", parse_mode="markdown")
 
     async def start(self, event):
         """
@@ -150,6 +154,7 @@ class OpenAgentBot:
             " you might be interested in:\n\nPlease click on an "
             "option to select a question.",
             buttons=buttons,
+            parse_mode="markdown",
         )
 
     async def help(self, event):
@@ -164,7 +169,7 @@ class OpenAgentBot:
             "/help - Show this help message.\n\n"
             "Just type your question and I'll do my best to assist you!"
         )
-        await event.respond(help_text)
+        await event.respond(help_text, parse_mode="markdown")
 
     async def handle_question_selection(self, event):
         """
@@ -172,7 +177,7 @@ class OpenAgentBot:
         """
         query_data = event.data.decode("utf-8")
         question = get_followup_question(query_data) or query_data
-        msg = await event.respond(f"{question}")
+        msg = await event.respond(f"{question}", parse_mode="markdown")
 
         user_id = event.sender.id if event.is_group else event.chat.id
         session_id = self.get_current_session_id(user_id)
