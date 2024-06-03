@@ -11,13 +11,22 @@ from pydantic import BaseModel, Field
 
 
 class ARGS(BaseModel):
-    chain: str = Field(description="block chain, options:ethereum, bitcoin")
+    chain: str = Field(
+        description="The blockchain to fetch statistics for. "
+        "Options: ethereum, bitcoin, bitcoin-cash, litecoin,"
+        " bitcoin-sv, dogecoin, dash, groestlcoin,"
+        " zcash, ecash, bitcoin/testnet"
+    )
 
 
 class BlockStatExpert(BaseTool):
     name = "block_chain_stat"
     description = (
-        "use this tool to get block chain stat, like block height, gas fee, etc."
+        "Use this tool to get blockchain statistics such as block height, "
+        "transaction count, gas fees, and more. "
+        "Supported blockchains include ethereum, Bitcoin, Bitcoin Cash, "
+        "Litecoin, Bitcoin SV, Dogecoin, Dash, Groestlcoin, Zcash, eCash, "
+        "and Bitcoin Testnet."
     )
     args_schema: Type[ARGS] = ARGS
 
@@ -33,10 +42,7 @@ class BlockStatExpert(BaseTool):
         chain: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
-        try:
-            return fetch_stat(chain)
-        except Exception as e:
-            return f"error: {e}"
+        return fetch_stat(chain)
 
 
 _exchanges = [ccxt.binance(), ccxt.okx(), ccxt.gateio(), ccxt.mexc()]
@@ -45,13 +51,15 @@ _exchanges = [ccxt.binance(), ccxt.okx(), ccxt.gateio(), ccxt.mexc()]
 def fetch_stat(chain) -> str:
     url = f"https://api.blockchair.com/{chain}/stats"
 
-    payload = {}  # type: ignore
     headers = {"accept": "application/json"}
 
-    response = requests.request("GET", url, headers=headers, data=payload)
+    response = requests.get(url, headers=headers)
 
-    return response.text
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return f"Error fetching data: {response.status_code}, {response.text}"
 
 
 if __name__ == "__main__":
-    print(fetch_stat("bitcoin"))
+    print(fetch_stat("ethereum"))

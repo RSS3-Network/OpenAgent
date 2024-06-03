@@ -3,7 +3,8 @@ import random
 questions = [
     "What's the current BTC price?",
     "Any latest DeFi news?",
-    "What's the current gas fees?",
+    "What's the ETH block height?",
+    "Gas fees of ethereum now?",
     "Top NFT projects right now?",
     "Any recent blockchain updates?",
     "Current trends in the crypto market?",
