@@ -47,8 +47,6 @@ class OpenAgentBot:
                 final_answer, last_edit_time = await self.handle_stream(
                     final_answer, lc_event, response_msg, last_edit_time
                 )
-            if kind == "on_tool_start":
-                await self.handle_tool(lc_event, response_msg)
             if kind == "on_chain_end" and lc_event["name"] == "Agent":
                 await self.handle_followup(final_answer, response_msg, followup_task)
 
@@ -65,13 +63,6 @@ class OpenAgentBot:
             else:
                 final_answer = new_answer
         return final_answer, last_edit_time
-
-    async def handle_tool(self, lc_event, response_msg):
-        tool_name = lc_event["name"]
-        inputs = lc_event["data"].get("input")
-        formatted_inputs = ", ".join(f"{k}='{v}'" for k, v in inputs.items())
-        output = f"🔧 Starting tool: {tool_name}({formatted_inputs})"
-        await response_msg.edit(output, parse_mode="markdown")
 
     async def handle_followup(self, final_answer, response_msg, followup_task):
         questions = await followup_task
