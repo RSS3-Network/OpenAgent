@@ -35,6 +35,7 @@ psycopg2-binary = "^2.9.9"
 langchain-google-genai = "^1.0.4"
 telethon = "^1.35.0"
 langchain-openai = "^0.1.8"
+grandalf = "^0.8"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
@@ -42,7 +43,7 @@ pre-commit = "^3.7.0"
 mypy = "^1.10.0"
 
 [tool.ruff]
-line-length = 88
+line-length = 188
 indent-width = 4
 exclude = [
     ".bzr",
