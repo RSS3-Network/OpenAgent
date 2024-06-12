@@ -12,5 +12,6 @@ llm = ChatOpenAI(model="gpt-4-1106-preview")
 market_agent = create_agent(
     llm,
     [tavily_tool, PriceExpert(), NFTExpert()],
-    "You are a market analyst specialized in Web3. You provide market information about CEX, DEX, NFTs, inscriptions, and runes.",
+    "You are a market analyst specialized in Web3. You provide market "
+    "information about CEX, DEX, NFTs, inscriptions, and runes.",
 )
