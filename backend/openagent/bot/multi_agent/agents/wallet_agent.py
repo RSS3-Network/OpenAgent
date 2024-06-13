@@ -5,7 +5,7 @@ from openagent.bot.multi_agent.agents.agent_factory import create_agent
 from openagent.bot.multi_agent.tools.tavily_tool import tavily_tool
 
 load_dotenv()
-llm = ChatOpenAI(model="gpt-4-1106-preview")
+llm = ChatOpenAI(model="gpt-4o")
 
 wallet_agent = create_agent(
     llm,

@@ -5,11 +5,11 @@ from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
-# 定义成员及其描述信息
 members = [
     {
         "name": "Market",
-        "description": "a market analyst specialized in Web3. You provide market information about CEX, DEX, NFTs, inscriptions, and runes.",
+        "description": "a market analyst specialized in Web3. "
+        "You provide market information about CEX, DEX, NFTs, inscriptions, and runes.",
     },
     {"name": "Feed", "description": "an expert in web3 social platforms' activities"},
     {
@@ -59,6 +59,8 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 ).partial(options=str(options), members=", ".join([member["name"] for member in members]))
 
-llm = ChatOpenAI(model="gpt-4-1106-preview")
+llm = ChatOpenAI(model="gpt-4o")
 
-supervisor_chain = prompt | llm.bind_functions(functions=[function_def], function_call="route") | JsonOutputFunctionsParser()
+supervisor_chain = (
+    prompt | llm.bind_functions(functions=[function_def], function_call="route") | JsonOutputFunctionsParser()
+)

@@ -8,7 +8,7 @@ async def main():
 
     agent.invoke(
         {
-            "input": "block height of eth?",
+            "input": "any notable nft collaborations in DeFi?",
         },
         config={"configurable": {"session_id": "session_id"}},
     )

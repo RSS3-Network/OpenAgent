@@ -6,7 +6,7 @@ from openagent.bot.multi_agent.tools.tavily_tool import tavily_tool
 from openagent.experts.block_stat_expert import BlockStatExpert
 
 load_dotenv()
-llm = ChatOpenAI(model="gpt-4-1106-preview")
+llm = ChatOpenAI(model="gpt-4o")
 
 block_stat_agent = create_agent(
     llm,

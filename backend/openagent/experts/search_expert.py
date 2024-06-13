@@ -29,14 +29,14 @@ class SearchSchema(BaseModel):
     )
 
 
-async def dune_search(query: str) -> str:
+def dune_search(query: str) -> str:
     url = f"{settings.RSS3_SEARCH_API}/dune/search?keyword={query}"
     headers = {"Accept": "*/*", "Content-Type": "application/x-www-form-urlencoded"}
     response = requests.request("GET", url, headers=headers)
     return response.text
 
 
-async def google_search(query: str, gl: str, hl: str) -> str:
+def google_search(query: str, gl: str, hl: str) -> str:
     search_wrapper = SerpAPIWrapper(
         search_engine="google",
         params={"engine": "google", "gl": gl, "hl": hl},
@@ -49,7 +49,7 @@ class SearchExpert(BaseTool):
     description = """
     A versatile search tool that can perform various types of searches based on the query type:
     - For queries related to charts, data visualization, or dashboards, use Dune search.
-    - For queries about project introductions, current events or real-time information, use Google search."""  # noqa: E501
+    - For queries about project introductions, current events or real-time information, use Google search."""
     args_schema: Type[SearchSchema] = SearchSchema
 
     def _run(
@@ -60,7 +60,12 @@ class SearchExpert(BaseTool):
         hl: Optional[str] = "en",
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
-        raise NotImplementedError
+        if search_type == "google":
+            return google_search(query, gl, hl)
+        elif search_type == "dune":
+            return dune_search(query)
+        else:
+            raise ValueError(f"Unknown search type: {search_type}")
 
     async def _arun(
         self,
@@ -71,8 +76,8 @@ class SearchExpert(BaseTool):
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
         if search_type == "google":
-            return await google_search(query, gl, hl)
+            return google_search(query, gl, hl)
         elif search_type == "dune":
-            return await dune_search(query)
+            return dune_search(query)
         else:
             raise ValueError(f"Unknown search type: {search_type}")

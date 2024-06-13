@@ -7,7 +7,7 @@ from openagent.experts.nft_expert import NFTExpert
 from openagent.experts.price_expert import PriceExpert
 
 load_dotenv()
-llm = ChatOpenAI(model="gpt-4-1106-preview")
+llm = ChatOpenAI(model="gpt-4o")
 
 market_agent = create_agent(
     llm,

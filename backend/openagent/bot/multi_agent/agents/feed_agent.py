@@ -6,7 +6,7 @@ from openagent.bot.multi_agent.tools.tavily_tool import tavily_tool
 from openagent.experts.feed_expert import FeedExpert
 
 load_dotenv()
-llm = ChatOpenAI(model="gpt-4-1106-preview")
+llm = ChatOpenAI(model="gpt-4o")
 
 feed_agent = create_agent(
     llm,
