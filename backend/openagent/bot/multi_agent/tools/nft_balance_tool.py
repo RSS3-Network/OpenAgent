@@ -13,15 +13,13 @@ from openagent.conf.env import settings
 
 
 class ARGS(BaseModel):
-    chain: str = Field(
-        description="chain name,options:btc-mainnet,eth-mainnet,optimism-mainnet,arbitrum-mainnet,bsc-mainnet"
-    )
+    chain: str = Field(description="chain name,options:eth-mainnet,optimism-mainnet,arbitrum-mainnet,bsc-mainnet")
     wallet_address: str = Field(description="wallet address")
 
 
 class BalanceTool(BaseTool):
-    name = "balance"
-    description = "use this tool to get the balance of a wallet."
+    name = "nft-balance"
+    description = "use this tool to get the nft asset of a wallet."
     args_schema: Type[ARGS] = ARGS
 
     def _run(
@@ -43,16 +41,17 @@ class BalanceTool(BaseTool):
 
 def fetch_balance(chain: str, address: str) -> str:
     c = CovalentClient(settings.COVALENT_API_KEY)
-    b = c.balance_service.get_token_balances_for_wallet_address(chain, address)
+    b = c.nft_service.get_nfts_for_address(chain, address)
     if b.error:
         return b.error_message
     return json.dumps(
         list(
             map(
                 lambda x: {
+                    "contract_name": x.contract_name,
                     "contract_ticker_symbol": x.contract_ticker_symbol,
                     "balance": x.balance,
-                    "pretty_quote": x.pretty_quote,
+                    "pretty_floor_price_quote": x.pretty_floor_price_quote,
                 },
                 b.data.items,
             )
