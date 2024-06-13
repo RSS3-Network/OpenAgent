@@ -36,6 +36,7 @@ langchain-google-genai = "^1.0.4"
 telethon = "^1.35.0"
 langchain-openai = "^0.1.8"
 grandalf = "^0.8"
+covalent-api-sdk = "^1.0.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
