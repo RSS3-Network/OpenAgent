@@ -1,4 +1,5 @@
 import json
+import time
 
 from loguru import logger
 from playwright.sync_api import sync_playwright
@@ -11,21 +12,40 @@ class AccessibilityNavigator:
         self.browser = self.playwright.chromium.launch(headless=False)
         self.page = self.browser.new_page()
         self.client = self.page.context.new_cdp_session(self.page)
+        self.id_mapping = {}
         logger.info("Browser launched and new page created.")
 
     def goto(self, url):
         # Navigate to the specified URL and return the accessibility tree
         self.page.goto(url)
-        ax_tree = self.page.accessibility.snapshot()
-        logger.info(f"Navigated to {url} and captured accessibility tree.")
-        return ax_tree
+        logger.info(f"Navigated to {url}.")
+
+    def simplify_tree(self, node, index=0):
+        role = node.get("role")
+        name = node.get("name")
+
+        # Simplified node format
+        simplified_node = [index, role, name]
+        self.id_mapping[index] = simplified_node
+
+        if "children" in node:
+            children = [self.simplify_tree(child, idx) for idx, child in enumerate(node["children"], start=index + 1)]
+            simplified_node.append(children)
+
+        return simplified_node
+
+    def get_accessibility_tree(self):
+        ax_tree = self.page.accessibility.snapshot(interesting_only=True)
+        self.id_mapping = {}
+        simplified_tree = self.simplify_tree(ax_tree)
+        return simplified_tree
 
     def find_node_by_name_and_role(self, node, name, role):
         # Recursively search for a node with the specified name and role
-        if node.get("name") == name and node.get("role") == role:
+        if node[2] == name and node[1] == role:
             return node
-        if "children" in node:
-            for child in node["children"]:
+        if len(node) > 3:
+            for child in node[3]:
                 result = self.find_node_by_name_and_role(child, name, role)
                 if result:
                     return result
@@ -33,7 +53,7 @@ class AccessibilityNavigator:
 
     def click(self, target_name, target_role):
         # Capture the current accessibility tree
-        ax_tree = self.page.accessibility.snapshot()
+        ax_tree = self.get_accessibility_tree()
         # Find the target node by name and role
         target_node = self.find_node_by_name_and_role(ax_tree, target_name, target_role)
         if target_node:
@@ -85,9 +105,13 @@ class AccessibilityNavigator:
 
 if __name__ == "__main__":
     navigator = AccessibilityNavigator()
-    ax_tree = navigator.goto("https://example.com")
-    print(json.dumps(ax_tree, indent=2))
+    navigator.goto("https://google.com")
+    ax_tree = navigator.get_accessibility_tree()
+    print(json.dumps(ax_tree, indent=2, ensure_ascii=False))
 
-    navigator.click("More information...", "link")
+    navigator.click("2024 年男子歐洲足球錦標賽", "link")
+    ax_tree = navigator.get_accessibility_tree()
+    print(json.dumps(ax_tree, ensure_ascii=False))
 
+    time.sleep(10)
     navigator.close()
