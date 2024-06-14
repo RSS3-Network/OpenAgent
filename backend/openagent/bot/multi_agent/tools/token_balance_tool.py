@@ -19,7 +19,7 @@ class ARGS(BaseModel):
     wallet_address: str = Field(description="wallet address")
 
 
-class BalanceTool(BaseTool):
+class TokenBalanceTool(BaseTool):
     name = "token-balance"
     description = "use this tool to get the token balance of a wallet."
     args_schema: Type[ARGS] = ARGS
