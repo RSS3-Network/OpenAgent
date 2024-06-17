@@ -32,7 +32,7 @@ def _fetch_project_sync(keyword: str) -> str:
 class ProjectTool(BaseTool):
     name = "project"
 
-    description = "use this tool to get the project information like investors, team members, social media, etc."
+    description = "get the project information like investors, team members, social media, etc."
     args_schema: Type[ARGS] = ARGS
 
     def _run(

@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     TG_BOT_TOKEN: str = Field(..., env="TG_BOT_TOKEN")
     COVALENT_API_KEY: str = Field(..., env="COVALENT_API_KEY")
     ROOTDATA_API_KEY: str = Field(..., env="ROOTDATA_API_KEY")
+    COINGECKO_API_KEY: str = Field(..., env="COINGECKO_API_KEY")
 
 
 settings = Settings()

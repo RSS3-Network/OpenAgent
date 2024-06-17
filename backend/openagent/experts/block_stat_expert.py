@@ -22,7 +22,7 @@ class ARGS(BaseModel):
 class BlockStatExpert(BaseTool):
     name = "block_chain_stat"
     description = (
-        "Use this tool to get blockchain statistics such as block height, "
+        "get blockchain statistics such as block height, "
         "transaction count, gas fees, and more. "
         "Supported blockchains include ethereum, Bitcoin, Bitcoin Cash, "
         "Litecoin, Bitcoin SV, Dogecoin, Dash, Groestlcoin, Zcash, eCash, "

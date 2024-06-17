@@ -19,7 +19,7 @@ class ARGS(BaseModel):
 
 class NFTBalanceTool(BaseTool):
     name = "nft-balance"
-    description = "use this tool to get the nft asset of a wallet."
+    description = "get the nft asset of a wallet."
     args_schema: Type[ARGS] = ARGS
 
     def _run(
