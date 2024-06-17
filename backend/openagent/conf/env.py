@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     TG_API_HASH: str = Field(..., env="TG_API_HASH")
     TG_BOT_TOKEN: str = Field(..., env="TG_BOT_TOKEN")
     COVALENT_API_KEY: str = Field(..., env="COVALENT_API_KEY")
+    ROOTDATA_API_KEY: str = Field(..., env="ROOTDATA_API_KEY")
 
 
 settings = Settings()
