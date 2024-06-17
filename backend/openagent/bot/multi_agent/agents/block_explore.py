@@ -8,8 +8,12 @@ from openagent.experts.block_stat_expert import BlockStatExpert
 load_dotenv()
 llm = ChatOpenAI(model="gpt-4o")
 
-block_stat_agent = create_agent(
+block_explorer_agent = create_agent(
     llm,
     [BlockStatExpert(), tavily_tool],
-    "You are an expert in blockchain statistics, known the block height, hash, gas fee etc.",
+    """
+    You are BlockExplorer, dedicated to exploring and presenting detailed blockchain information.
+    Help users query transaction details, block data, gas fees, block height, and other blockchain-related information.
+    Use the available tools to gather and display accurate blockchain data.
+""",
 )

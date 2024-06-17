@@ -9,9 +9,11 @@ from openagent.experts.price_expert import PriceExpert
 load_dotenv()
 llm = ChatOpenAI(model="gpt-4o")
 
-market_agent = create_agent(
+market_analysis_agent = create_agent(
     llm,
     [tavily_tool, PriceExpert(), NFTExpert()],
-    "You are a market analyst specialized in Web3. You provide market "
-    "information about CEX, DEX, NFTs, inscriptions, and runes.",
+    """
+    You are MarketAnalyst, responsible for providing market data analysis.
+    Help users understand market dynamics and trends by retrieving real-time price information of tokens.
+""",
 )

@@ -4,10 +4,12 @@ from typing import Annotated, Sequence, TypedDict
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, StateGraph
 
-from openagent.bot.multi_agent.agents.block_stat_agent import block_stat_agent
-from openagent.bot.multi_agent.agents.feed_agent import feed_agent
-from openagent.bot.multi_agent.agents.market_agent import market_agent
-from openagent.bot.multi_agent.agents.wallet_agent import wallet_agent
+from openagent.bot.multi_agent.agents.asset_management import asset_management_agent
+from openagent.bot.multi_agent.agents.block_explore import block_explorer_agent
+from openagent.bot.multi_agent.agents.market_analysis import market_analysis_agent
+from openagent.bot.multi_agent.agents.project_management import research_analyst_agent
+from openagent.bot.multi_agent.agents.social_track import social_track_agent
+from openagent.bot.multi_agent.workflows.member import members
 from openagent.bot.multi_agent.workflows.supervisor_chain import supervisor_chain
 
 
@@ -25,23 +27,26 @@ def create_node(agent, name):
 
 
 def build_workflow():
-    market_node = create_node(market_agent, "Market")
-    feed_node = create_node(feed_agent, "Feed")
-    wallet_node = create_node(wallet_agent, "Wallet")
-    block_stat_node = create_node(block_stat_agent, "Block Stat")
+    market_analysis_agent_node = create_node(market_analysis_agent, "market_analysis_agent")
+    social_track_agent_node = create_node(social_track_agent, "social_track_agent")
+    asset_management_agent_node = create_node(asset_management_agent, "asset_management_agent")
+    block_explorer_agent_node = create_node(block_explorer_agent, "block_explorer_agent")
+    research_analyst_agent_node = create_node(research_analyst_agent, "research_analyst_agent")
 
     workflow = StateGraph(AgentState)
-    workflow.add_node("Market", market_node)
-    workflow.add_node("Feed", feed_node)
-    workflow.add_node("Wallet", wallet_node)
-    workflow.add_node("Block Stat", block_stat_node)
+    workflow.add_node("market_analysis_agent", market_analysis_agent_node)
+    workflow.add_node("social_track_agent", social_track_agent_node)
+    workflow.add_node("asset_management_agent", asset_management_agent_node)
+    workflow.add_node("block_explorer_agent", block_explorer_agent_node)
+    workflow.add_node("research_analyst_agent", research_analyst_agent_node)
     workflow.add_node("supervisor", supervisor_chain)
 
-    members = ["Market", "Feed", "Wallet", "Block Stat"]
-    for member in members:
+    member_names = list(map(lambda x: x["name"], members))
+
+    for member in member_names:
         workflow.add_edge(member, "supervisor")
 
-    conditional_map = {k: k for k in members}
+    conditional_map = {k: k for k in member_names}
     conditional_map["FINISH"] = END
     workflow.add_conditional_edges("supervisor", lambda x: x["next"], conditional_map)
     workflow.set_entry_point("supervisor")

@@ -3,24 +3,10 @@ from langchain_core.output_parsers.openai_functions import JsonOutputFunctionsPa
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 
+from openagent.bot.multi_agent.workflows.member import members
+
 load_dotenv()
 
-members = [
-    {
-        "name": "Market",
-        "description": "a market analyst specialized in Web3. "
-        "You provide market information about CEX, DEX, NFTs, inscriptions, and runes.",
-    },
-    {"name": "Feed", "description": "an expert in web3 social platforms' activities"},
-    {
-        "name": "Wallet",
-        "description": "an expert in web3 wallets, known the asset of a wallet in different chains",
-    },
-    {
-        "name": "Block Stat",
-        "description": "an expert in blockchain statistics, known the block height, hash, gas fee etc.",
-    },
-]
 
 system_prompt = (
     "You are a supervisor tasked with managing a conversation between the"

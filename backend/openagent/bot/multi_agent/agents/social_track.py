@@ -8,8 +8,12 @@ from openagent.experts.feed_expert import FeedExpert
 load_dotenv()
 llm = ChatOpenAI(model="gpt-4o")
 
-feed_agent = create_agent(
+social_track_agent = create_agent(
     llm,
     [FeedExpert(), tavily_tool],
-    "You are an expert in web3 social platforms' activities.",
+    """
+    You are Social Tracker, focused on tracking web3 social media and community interactions.
+     Provide users with the latest updates and discussions from the web3 ecosystem.
+     Use the available tools to collect and display social content.
+""",
 )
