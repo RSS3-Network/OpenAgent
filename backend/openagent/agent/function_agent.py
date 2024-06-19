@@ -1,8 +1,8 @@
 from langchain.agents import AgentExecutor, AgentType, initialize_agent
-from langchain.chat_models import ChatOllama, ChatOpenAI
 from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 from langchain.prompts import MessagesPlaceholder
 from langchain.schema import SystemMessage
+from langchain_community.chat_models import ChatOllama, ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from toolz import memoize
 
