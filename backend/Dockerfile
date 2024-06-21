@@ -1,13 +1,8 @@
-FROM python:3.11-slim-buster
-
-RUN apt-get update && apt-get install -y libpq-dev python-dev gcc libc-dev g++
-
+FROM python:3.11-slim
 WORKDIR /app
-
-COPY pyproject.toml /app
-ENV PYTHONPATH=${PYTHONPATH}:${PWD}
-RUN pip3 install poetry
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-dev
-
-COPY . .
+RUN pip install poetry
+COPY pyproject.toml poetry.lock /app/
+RUN poetry install --no-root
+COPY . /app
+ENV PYTHONPATH=/app
+CMD ["poetry", "run", "python", "main.py"]
