@@ -9,16 +9,15 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    volumes:
-      - .:/app
     depends_on:
       ollama_init:
         condition: service_completed_successfully
     networks:
       - ollama-docker
+
   ollama:
     volumes:
-      - ./ollama/ollama:/root/.ollama
+      - ollama_data:/root/.ollama
     container_name: ollama_v2
     pull_policy: always
     tty: true
@@ -79,10 +78,10 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
 
-
 volumes:
   pgvector_data:
   pg_data:
+  ollama_data:
 
 networks:
   ollama-docker:
