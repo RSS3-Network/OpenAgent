@@ -43,8 +43,8 @@ services:
     depends_on:
       - ollama
     entrypoint: [ "/bin/sh", "-c", "curl -X POST -H 'Content-Type: application/json' -d '{\"name\": \"${MODEL_NAME}\"}' http://ollama:11434/api/pull" ]
-    environment:
-      - MODEL_NAME=llama3
+    env_file:
+      - .env
     networks:
       - ollama-docker
 
