@@ -3,7 +3,7 @@ from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 from langchain.prompts import MessagesPlaceholder
 from langchain.schema import SystemMessage
 from langchain_community.chat_models import ChatOllama, ChatOpenAI
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_vertexai import ChatVertexAI
 from toolz import memoize
 
 from openagent.agent.cache import init_cache
@@ -42,10 +42,7 @@ def create_interpreter(model_name):
             streaming=True,
         )
     elif model_name.startswith("gemini"):
-        return ChatGoogleGenerativeAI(
-            model=model_name,
-            google_api_key=settings.GOOGLE_API_KEY,
-        )
+        return ChatVertexAI(model_name="gemini-pro")
     else:
         return ChatOllama(
             model=model_name,
