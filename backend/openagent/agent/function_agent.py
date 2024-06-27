@@ -1,8 +1,16 @@
-from langchain.agents import AgentExecutor, AgentType, initialize_agent
+import asyncio
+
+from langchain.agents import (
+    AgentExecutor,
+    AgentType,
+    create_tool_calling_agent,
+    initialize_agent,
+)
 from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 from langchain.prompts import MessagesPlaceholder
 from langchain.schema import SystemMessage
 from langchain_community.chat_models import ChatOllama, ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_vertexai import ChatVertexAI
 from toolz import memoize
 
@@ -83,6 +91,8 @@ def get_agent(session_id: str) -> AgentExecutor:
         TransferExpert(),
     ]
 
+    if settings.MODEL_NAME.startswith("gemini"):
+        return build_gemini_agent()
     # Initialize interpreter
     interpreter = create_interpreter(settings.MODEL_NAME)
 
@@ -97,8 +107,46 @@ def get_agent(session_id: str) -> AgentExecutor:
     return create_agent(experts, interpreter, agent_kwargs, memory, agent_type)
 
 
+def build_gemini_agent():
+    llm = ChatVertexAI(model="gemini-pro")
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                "You are a helpful assistant.",
+            ),
+            ("placeholder", "{chat_history}"),
+            ("human", "{input}"),
+            ("placeholder", "{agent_scratchpad}"),
+        ]
+    )
+    experts = [
+        SearchExpert(),
+        FeedExpert(),
+        PriceExpert(),
+        ArticleExpert(),
+        NFTExpert(),
+        SwapExpert(),
+        TransferExpert(),
+    ]
+    # Construct the Tools agent
+    agent = create_tool_calling_agent(llm, experts, prompt)
+    # Create an agent executor by passing in the agent and tools
+    agent_executor = AgentExecutor(agent=agent, tools=experts, verbose=True)
+    return agent_executor
+
+
 # this function is used to get the chat history of a session from Postgres
 def get_msg_history(session_id):
     return PostgresChatMessageHistory(
         session_id=session_id,
     )
+
+
+async def main():
+    agent = build_gemini_agent()
+    await agent.ainvoke({"input": "Swap 1 eth to usdt", "session_id": "123"})
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

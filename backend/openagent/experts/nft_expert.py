@@ -17,11 +17,11 @@ class ARGS(BaseModel):
         description="Specify the operation to perform: 'search' for NFT "
         "collection search, 'rank' for collection ranking"
     )
-    keyword: Optional[str] = Field(
-        default=None,
+    keyword: str = Field(
+        default="",
         description="NFT symbol or collection name, required only for 'action=search'",
     )
-    sort_field: Optional[str] = Field(
+    sort_field: str = Field(
         default="market_cap",
         description="""
 Default is market_cap. Options include: volume_1d, volume_7d, volume_30d,

@@ -19,14 +19,6 @@ class SearchSchema(BaseModel):
         - "google": Google search for current events and real-time information
         - "dune": Search for Dune dashboards"""
     )
-    gl: Optional[str] = Field(
-        default="us",
-        description="Country code for Google search, e.g., 'us', 'cn', 'jp'",
-    )
-    hl: Optional[str] = Field(
-        default="en",
-        description="Language code for Google search, e.g., 'en', 'zh-cn', 'ja'",
-    )
 
 
 async def dune_search(query: str) -> str:
@@ -36,10 +28,10 @@ async def dune_search(query: str) -> str:
     return response.text
 
 
-async def google_search(query: str, gl: str, hl: str) -> str:
+async def google_search(query: str) -> str:
     search_wrapper = SerpAPIWrapper(
         search_engine="google",
-        params={"engine": "google", "gl": gl, "hl": hl},
+        params={"engine": "google"},
     )
     return search_wrapper.run(query)
 
@@ -56,8 +48,6 @@ class SearchExpert(BaseTool):
         self,
         query: str,
         search_type: str,
-        gl: Optional[str] = "us",
-        hl: Optional[str] = "en",
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
@@ -66,12 +56,10 @@ class SearchExpert(BaseTool):
         self,
         query: str,
         search_type: str,
-        gl: Optional[str] = "us",
-        hl: Optional[str] = "en",
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
         if search_type == "google":
-            return await google_search(query, gl, hl)
+            return await google_search(query)
         elif search_type == "dune":
             return await dune_search(query)
         else:
