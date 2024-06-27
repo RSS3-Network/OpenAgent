@@ -16,7 +16,11 @@ from toolz import memoize
 
 from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
-from openagent.agent.system_prompt import SYSTEM_PROMPT, custom_agent_kwargs
+from openagent.agent.system_prompt import (
+    GEMINI_PROMPT,
+    SYSTEM_PROMPT,
+    custom_agent_kwargs,
+)
 from openagent.conf.env import settings
 from openagent.experts.article_expert import ArticleExpert
 from openagent.experts.feed_expert import FeedExpert
@@ -113,7 +117,7 @@ def build_gemini_agent():
         [
             (
                 "system",
-                "You are a helpful assistant.",
+                GEMINI_PROMPT,
             ),
             ("placeholder", "{chat_history}"),
             ("human", "{input}"),
