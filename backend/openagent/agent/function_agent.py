@@ -6,9 +6,10 @@ from langchain.agents import (
     create_tool_calling_agent,
     initialize_agent,
 )
-from langchain.memory import ChatMessageHistory, ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory
 from langchain.prompts import MessagesPlaceholder
 from langchain.schema import SystemMessage
+from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_community.chat_models import ChatOllama, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_vertexai import ChatVertexAI
@@ -54,7 +55,12 @@ def create_interpreter(model_name):
             streaming=True,
         )
     elif model_name.startswith("gemini"):
-        return ChatVertexAI(model_name="gemini-pro")
+        return ChatVertexAI(
+            model=settings.MODEL_NAME,
+            project=settings.PROJECT_ID,
+            temperature=0.3,
+            streaming=True,
+        )
     else:
         return ChatOllama(
             model=model_name,
@@ -112,7 +118,12 @@ def get_agent(session_id: str) -> AgentExecutor:
 
 
 def build_gemini_agent():
-    llm = ChatVertexAI(model="gemini-pro")
+    llm = ChatVertexAI(
+        model=settings.MODEL_NAME,
+        project=settings.PROJECT_ID,
+        temperature=0.3,
+        streaming=True,
+    )
     prompt = ChatPromptTemplate.from_messages(
         [
             (
@@ -150,6 +161,7 @@ def get_msg_history(session_id):
 async def main():
     agent = build_gemini_agent()
     await agent.ainvoke({"input": "Swap 1 eth to usdt", "session_id": "123"})
+    await agent.ainvoke({"input": "What is the price of ETH?", "session_id": "233"})
 
 
 if __name__ == "__main__":

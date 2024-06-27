@@ -29,20 +29,20 @@ like: "BTC", "ETH", "RSS3", "USDT", "USDC" and etc. Default is "ETH"."""
     )
 
     chain_name: str = Field(
+        default="ethereum",
         description="""extract the chain name mentioned in the query,
-like: "ethereum", "binance_smart_chain", "arbitrum" and etc. Default is "ethereum"."""
+like: "ethereum", "binance_smart_chain", "arbitrum" and etc. Default is "ethereum".""",
     )
 
     amount: str = Field(
         description="""extract the amount of cryptocurrencies mentioned in the query,
-like: "0.1", "1", "10" and etc. Default is "1"."""
+like: "0.1", "1", "10" and etc. Default is "1".""",
     )
 
 
 class SwapExpert(BaseTool):
     name = "swap"
-    description = """Use this tool to swap cryptocurrencies.\n\
-"""
+    description = """Use this tool to swap crypto tokens."""
     args_schema: Type[ParamSchema] = ParamSchema
     return_direct = False
 
