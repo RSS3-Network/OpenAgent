@@ -6,6 +6,7 @@ from uuid import UUID
 
 from langchain.callbacks.base import AsyncCallbackHandler
 from langchain.schema import AgentFinish, BaseMessage, LLMResult, _message_to_dict
+from loguru import logger
 
 from openagent.agent.ctx_var import chat_req_ctx, resp_msg_id
 from openagent.db.database import DBSession
@@ -17,6 +18,7 @@ class StreamCallbackHandler(AsyncCallbackHandler):
     queue: asyncio.Queue[CbContent]
 
     done: asyncio.Event
+    is_on_chain_start_called: bool = False
 
     current_llm_block_id: Optional[str] = None
     current_tool_block_id: Optional[str] = None
@@ -72,6 +74,7 @@ class StreamCallbackHandler(AsyncCallbackHandler):
 
     async def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
         if token is not None and token != "":
+            logger.info(f"Token: {token}")
             self.queue.put_nowait(
                 CbContent(
                     content=token,
@@ -91,27 +94,26 @@ class StreamCallbackHandler(AsyncCallbackHandler):
         metadata: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
     ) -> None:
-        with DBSession() as db_session:
-            try:
-                chat_req = chat_req_ctx.get()
-                human_message = BaseMessage(
-                    content=inputs["input"],
-                    type="human",
-                    additional_kwargs={"block_id": str(uuid.uuid4())},
-                )
-                db_session.add(
-                    ChatHistory(
-                        user_id=chat_req.user_id,
-                        message_id=chat_req.message_id,
-                        session_id=chat_req.session_id,
-                        message=json.dumps(_message_to_dict(human_message)),
-                    )
-                )
-                db_session.commit()
-            except Exception as e:
-                from loguru import logger
+        if self.is_on_chain_start_called:
+            return
 
-                logger.error(e)
+        self.is_on_chain_start_called = True
+        with DBSession() as db_session:
+            chat_req = chat_req_ctx.get()
+            human_message = BaseMessage(
+                content=inputs["input"],
+                type="human",
+                additional_kwargs={"block_id": str(uuid.uuid4())},
+            )
+            db_session.add(
+                ChatHistory(
+                    user_id=chat_req.user_id,
+                    message_id=chat_req.message_id,
+                    session_id=chat_req.session_id,
+                    message=json.dumps(_message_to_dict(human_message)),
+                )
+            )
+            db_session.commit()
 
     def show_tool_block(self, tool_name) -> bool:
         if tool_name in [
