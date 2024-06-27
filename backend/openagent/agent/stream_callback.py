@@ -6,7 +6,6 @@ from uuid import UUID
 
 from langchain.callbacks.base import AsyncCallbackHandler
 from langchain.schema import AgentFinish, BaseMessage, LLMResult, _message_to_dict
-from loguru import logger
 
 from openagent.agent.ctx_var import chat_req_ctx, resp_msg_id
 from openagent.db.database import DBSession
@@ -74,7 +73,6 @@ class StreamCallbackHandler(AsyncCallbackHandler):
 
     async def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
         if token is not None and token != "":
-            logger.info(f"Token: {token}")
             self.queue.put_nowait(
                 CbContent(
                     content=token,
