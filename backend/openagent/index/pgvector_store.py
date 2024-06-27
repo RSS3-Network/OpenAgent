@@ -9,7 +9,7 @@ load_dotenv()
 
 def build_vector_store() -> PGVector:
     collection_name = "backend"
-    underlying_embeddings = VertexAIEmbeddings()
+    underlying_embeddings = VertexAIEmbeddings(model_name="textembedding-gecko@003")
     return PGVector(
         embeddings=underlying_embeddings,
         collection_name=collection_name,
