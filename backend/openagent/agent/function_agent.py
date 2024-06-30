@@ -10,9 +10,10 @@ from langchain.memory import ConversationBufferMemory
 from langchain.prompts import MessagesPlaceholder
 from langchain.schema import SystemMessage
 from langchain_community.chat_message_histories import ChatMessageHistory
-from langchain_community.chat_models import ChatOllama, ChatOpenAI
+from langchain_community.chat_models import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_vertexai import ChatVertexAI
+from langchain_openai import ChatOpenAI
 from toolz import memoize
 
 from openagent.agent.cache import init_cache
@@ -31,14 +32,51 @@ from openagent.experts.search_expert import SearchExpert
 from openagent.experts.swap_expert import SwapExpert
 from openagent.experts.transfer_expert import TransferExpert
 
+# Initialize cache
 init_cache()
 
 
-def create_agent(experts, interpreter, agent_kwargs, memory, agent_type):
+# Function to create a ReAct agent
+def create_react_agent(session_id: str):
+    # Initialize message history based on session_id
+    message_history = (
+        get_msg_history(session_id) if session_id else ChatMessageHistory()
+    )
+
+    # Create conversation memory
+    memory = ConversationBufferMemory(
+        memory_key="memory", return_messages=True, chat_memory=message_history
+    )
+
+    # Define agent kwargs
+    agent_kwargs = (
+        {
+            "system_message": SystemMessage(content=SYSTEM_PROMPT),
+            "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
+        }
+        if settings.MODEL_NAME.startswith("gpt")
+        else custom_agent_kwargs
+    )
+
+    # List of experts to be loaded
+    experts = [
+        SearchExpert(),
+        FeedExpert(),
+        PriceExpert(),
+        ArticleExpert(),
+        NFTExpert(),
+        SwapExpert(),
+        TransferExpert(),
+    ]
+
+    # Initialize interpreter
+    interpreter = create_interpreter(settings.MODEL_NAME)
+
+    # Initialize and return the agent
     return initialize_agent(
         experts,
         interpreter,
-        agent=agent_type,
+        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
         verbose=True,
         agent_kwargs=agent_kwargs,
         memory=memory,
@@ -46,6 +84,7 @@ def create_agent(experts, interpreter, agent_kwargs, memory, agent_type):
     )
 
 
+# Function to create an interpreter based on model name
 def create_interpreter(model_name):
     if model_name.startswith("gpt"):
         return ChatOpenAI(
@@ -70,19 +109,18 @@ def create_interpreter(model_name):
 
 @memoize
 def get_agent(session_id: str) -> AgentExecutor:
+    if settings.MODEL_NAME.startswith("gemini") or settings.MODEL_NAME.startswith(
+        "gpt"
+    ):
+        return create_tool_call_agent(session_id)
+    return create_react_agent(session_id)
+
+
+# Function to create a tool calling agent
+def create_tool_call_agent(session_id: str):
     # Initialize message history based on session_id
     message_history = (
         get_msg_history(session_id) if session_id else ChatMessageHistory()
-    )
-
-    # Define agent arguments
-    agent_kwargs = (
-        {
-            "system_message": SystemMessage(content=SYSTEM_PROMPT),
-            "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
-        }
-        if settings.MODEL_NAME.startswith("gpt")
-        else custom_agent_kwargs
     )
 
     # Create conversation memory
@@ -90,40 +128,10 @@ def get_agent(session_id: str) -> AgentExecutor:
         memory_key="memory", return_messages=True, chat_memory=message_history
     )
 
-    # List of experts to be loaded
-    experts = [
-        SearchExpert(),
-        FeedExpert(),
-        PriceExpert(),
-        ArticleExpert(),
-        NFTExpert(),
-        SwapExpert(),
-        TransferExpert(),
-    ]
-
-    if settings.MODEL_NAME.startswith("gemini"):
-        return build_gemini_agent()
-    # Initialize interpreter
+    # Initialize language model
     interpreter = create_interpreter(settings.MODEL_NAME)
 
-    # Define agent type based on model name
-    agent_type = (
-        AgentType.OPENAI_FUNCTIONS
-        if settings.MODEL_NAME.startswith("gpt")
-        else AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION
-    )
-
-    # Return created agent with appropriate arguments
-    return create_agent(experts, interpreter, agent_kwargs, memory, agent_type)
-
-
-def build_gemini_agent():
-    llm = ChatVertexAI(
-        model=settings.MODEL_NAME,
-        project=settings.PROJECT_ID,
-        temperature=0.3,
-        streaming=True,
-    )
+    # Define prompt
     prompt = ChatPromptTemplate.from_messages(
         [
             (
@@ -135,6 +143,8 @@ def build_gemini_agent():
             ("placeholder", "{agent_scratchpad}"),
         ]
     )
+
+    # List of experts
     experts = [
         SearchExpert(),
         FeedExpert(),
@@ -144,24 +154,27 @@ def build_gemini_agent():
         SwapExpert(),
         TransferExpert(),
     ]
+
     # Construct the Tools agent
-    agent = create_tool_calling_agent(llm, experts, prompt)
+    agent = create_tool_calling_agent(interpreter, experts, prompt)
+
     # Create an agent executor by passing in the agent and tools
-    agent_executor = AgentExecutor(agent=agent, tools=experts, verbose=True)
+    agent_executor = AgentExecutor(
+        agent=agent, tools=experts, verbose=True, memory=memory
+    )
     return agent_executor
 
 
-# this function is used to get the chat history of a session from Postgres
+# Function to get the chat history of a session from Postgres
 def get_msg_history(session_id):
-    return PostgresChatMessageHistory(
-        session_id=session_id,
-    )
+    return PostgresChatMessageHistory(session_id=session_id)
 
 
 async def main():
-    agent = build_gemini_agent()
-    await agent.ainvoke({"input": "Swap 1 eth to usdt", "session_id": "123"})
-    await agent.ainvoke({"input": "What is the price of ETH?", "session_id": "233"})
+    # Create a tool call agent and use it to handle some inputs
+    agent = get_agent("123")
+    await agent.ainvoke({"input": "Swap 1 eth to usdt"})
+    await agent.ainvoke({"input": "What is the price of ETH?"})
 
 
 if __name__ == "__main__":
