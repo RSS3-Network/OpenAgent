@@ -1,11 +1,14 @@
+import json
 import logging
 from typing import List
 
 from langchain.schema import (
     BaseChatMessageHistory,
 )
-from langchain.schema.messages import BaseMessage
+from langchain.schema.messages import BaseMessage, messages_from_dict
+from toolz.curried import compose_left, filter, map
 
+from openagent.db.database import DBSession
 from openagent.db.models import ChatHistory
 
 logger = logging.getLogger(__name__)
@@ -22,19 +25,18 @@ class PostgresChatMessageHistory(BaseChatMessageHistory):
 
     @property
     def messages(self) -> List[BaseMessage]:  # type: ignore
-        return []
-        # with DBSession() as db_session:
-        #     histories = (
-        #         db_session.query(ChatHistory)
-        #         .filter(ChatHistory.session_id == self.session_id)
-        #         .all()
-        #     )
-        #     lst = compose_left(
-        #         map(compose_left(lambda x: x.message, json.loads)),
-        #         filter(lambda x: x["type"] in ["ai", "human"]),
-        #         list,
-        #     )(histories)
-        #     return messages_from_dict(lst)
+        with DBSession() as db_session:
+            histories = (
+                db_session.query(ChatHistory)
+                .filter(ChatHistory.session_id == self.session_id)
+                .all()
+            )
+            lst = compose_left(
+                map(compose_left(lambda x: x.message, json.loads)),
+                filter(lambda x: x["type"] in ["ai", "human"]),
+                list,
+            )(histories)
+            return messages_from_dict(lst)
 
     def add_message(self, message: BaseMessage) -> None:
         # saved by stream callback
