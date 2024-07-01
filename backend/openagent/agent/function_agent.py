@@ -19,7 +19,6 @@ from toolz import memoize
 from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
 from openagent.agent.system_prompt import (
-    GEMINI_PROMPT,
     SYSTEM_PROMPT,
     custom_agent_kwargs,
 )
@@ -89,9 +88,7 @@ def create_interpreter(model_name):
     if model_name.startswith("gpt"):
         return ChatOpenAI(
             model=model_name,
-            openai_api_base=settings.LLM_API_BASE,
             temperature=0.3,
-            streaming=True,
         )
     elif model_name.startswith("gemini"):
         return ChatVertexAI(
@@ -136,7 +133,7 @@ def create_tool_call_agent(session_id: str):
         [
             (
                 "system",
-                GEMINI_PROMPT,
+                "You are a helpful assistant.",
             ),
             ("placeholder", "{chat_history}"),
             ("human", "{input}"),
