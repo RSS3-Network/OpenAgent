@@ -5,28 +5,14 @@ services:
     container_name: vec_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: langchain
-      POSTGRES_PASSWORD: langchain
-      POSTGRES_DB: langchain
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vec
     ports:
-      - "6024:5432"
+      - "5434:5432"
     volumes:
       - pgvector_data:/var/lib/postgresql/data
-
-  biz_db:
-    image: postgres:14-alpine
-    container_name: biz_db
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    env_file:
-      - .env
-    environment:
-      POSTGRES_PASSWORD: password
-    volumes:
-      - pg_data:/var/lib/postgresql/data
 
 
 volumes:
   pgvector_data:
-  pg_data:
