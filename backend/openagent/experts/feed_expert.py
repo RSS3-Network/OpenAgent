@@ -9,6 +9,7 @@ from langchain.tools import BaseTool
 from loguru import logger
 from pydantic import BaseModel, Field
 
+from openagent.agent.system_prompt import FEED_PROMPT
 from openagent.conf.env import settings
 
 
@@ -47,4 +48,29 @@ async def fetch_feeds(address: str):
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")
         async with session.get(url, headers=headers) as resp:
-            return await resp.text()
+            data = await resp.json()
+
+    formatted_activities = []
+    for activity in data["data"]:
+        formatted_activity = f"## Transaction on {activity['network']}\n"
+        formatted_activity += f"- **Type**: {activity['type']}\n"
+        formatted_activity += f"- **Status**: {activity['status']}\n"
+        formatted_activity += f"- **Timestamp**: {activity['timestamp']}\n"
+
+        if "actions" in activity:
+            formatted_activity += "### Actions:\n"
+            for action in activity["actions"]:
+                formatted_activity += (
+                    f"- {action['type']} from {action['from']} to {action['to']}\n"
+                )
+                if "metadata" in action:
+                    for key, value in action["metadata"].items():
+                        formatted_activity += f"  - {key}: {value}\n"
+
+        formatted_activities.append(formatted_activity)
+
+    activities_data = "\n\n".join(formatted_activities)
+
+    result = FEED_PROMPT.format(address=address, activities_data=activities_data)
+
+    return result
