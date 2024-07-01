@@ -6,9 +6,9 @@ from openagent.agent.function_agent import get_agent
 question_list = [
     # "Hello?",
     # "What is the price of ETH?",
-    # "What did vitalik.eth do recently?",
+    "What did vitalik.eth do recently?",
     # "Send 0.01 eth to vitalik.eth",
-    "Swap 1 eth to usdt",
+    # "Swap 1 eth to usdt",
     # "What is MODE chain?",
     # "Give me the bitcoin price chart",
     # "List some popular NFTs?",
@@ -26,13 +26,12 @@ async def dummy(_) -> None:
 async def init():
     # langchain.debug=True
     start = time.time()
-    agent = get_agent("")
+    agent = get_agent("11")
     for question in question_list:
         print(f"Question: {question}")
-        # try:
 
         await agent.ainvoke(
-            {"input": question, "session_id": "123"},
+            {"input": question},
             config={
                 "metadata": {"agentName": "openagent-backend", "userId": "123"},
             },
