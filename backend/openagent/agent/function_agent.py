@@ -20,6 +20,7 @@ from openagent.agent.cache import init_cache
 from openagent.agent.postgres_history import PostgresChatMessageHistory
 from openagent.agent.system_prompt import (
     SYSTEM_PROMPT,
+    SYSTEM_PROMPT_V2,
     custom_agent_kwargs,
 )
 from openagent.conf.env import settings
@@ -89,6 +90,7 @@ def create_interpreter(model_name):
         return ChatOpenAI(
             model=model_name,
             temperature=0.3,
+            streaming=True,
         )
     elif model_name.startswith("gemini"):
         return ChatVertexAI(
@@ -133,7 +135,7 @@ def create_tool_call_agent(session_id: str):
         [
             (
                 "system",
-                "You are a helpful assistant.",
+                SYSTEM_PROMPT_V2,
             ),
             ("placeholder", "{chat_history}"),
             ("human", "{input}"),
@@ -172,6 +174,7 @@ async def main():
     agent = get_agent("123")
     await agent.ainvoke({"input": "Swap 1 eth to usdt"})
     await agent.ainvoke({"input": "What is the price of ETH?"})
+    await agent.ainvoke({"input": "What did vitalik.eth do recently?"})
 
 
 if __name__ == "__main__":
