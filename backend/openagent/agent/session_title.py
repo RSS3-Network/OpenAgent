@@ -32,7 +32,7 @@ Session Title:
             temperature=0.5,
         )
     elif settings.MODEL_NAME.startswith("gemini"):
-        model = ChatVertexAI(model_name="gemini-pro")
+        model = ChatVertexAI(model_name=settings.MODEL_NAME)
     else:
         model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.LLM_API_BASE)
     interpreter = LLMChain(llm=model, prompt=prompt)
