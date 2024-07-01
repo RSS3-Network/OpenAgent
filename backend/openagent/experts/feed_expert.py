@@ -43,7 +43,7 @@ blockchain domain name and know what this address has done or doing recently."""
 
 async def fetch_feeds(address: str):
     host = settings.RSS3_DATA_API + "/accounts"
-    url = f"""{host}/{address}/activities?limit=10&action_limit=5&direction=out"""
+    url = f"""{host}/{address}/activities?limit=5&action_limit=5&direction=out"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")
