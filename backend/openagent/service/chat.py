@@ -22,12 +22,14 @@ async def arun_agent(
     agent = get_agent(req.session_id)
     resp_msg_id.set(resp_msg_id0)
     chat_req_ctx.set(req)
-    return await agent.arun(
-        req.body,
-        callbacks=[stream_cb],
-        metadata={
-            "agentName": "openagent-backend",
-            "userId": req.user_id,
+
+    return await agent.ainvoke(
+        {
+            "input": req.body,
+        },
+        config={
+            "metadata": {"agentName": "openagent-backend", "userId": req.user_id},
+            "callbacks": [stream_cb],
         },
     )
 

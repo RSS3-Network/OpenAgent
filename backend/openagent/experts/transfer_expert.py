@@ -17,35 +17,29 @@ from openagent.experts import (
 
 class ParamSchema(BaseModel):
     to_address: str = Field(
-        description="""extract the address mentioned in the query,
-like : "0x1234567890abcdef1234567890abcdef12345678", "vitalk.eth" and etc.
-If the address does not start with '0x' and also does not end with '.eth',
-a '.eth' ending should be added to it.
-"""
+        description="""extract the blockchain address mentioned in the query""",
     )
 
     token: str = Field(
-        description="""extract the cryptocurrencies mentioned in the query,
-like: "BTC", "ETH", "RSS3", "USDT", "USDC" and etc. Default is "ETH"."""
+        description="""extract the token symbol mentioned in the query""",
     )
 
     chain_name: str = Field(
-        description="""extract the chain name mentioned in the query,
-like: "ethereum", "binance_smart_chain", "arbitrum" and etc. Default is "ethereum"."""
+        default="ethereum",
+        description="""extract the blockchain name mentioned in the query,
+if not mentioned, default is "ethereum".""",
     )
 
     amount: str = Field(
+        default="1",
         description="""extract the amount of cryptocurrencies mentioned in the query,
-like: "0.1", "1", "10" and etc. Default is "1"."""
+if not mentioned, default is "1".""",
     )
 
 
 class TransferExpert(BaseTool):
     name = "transfer"
-    description = """Use this tool to transfer cryptocurrencies. for example: \
-"transfer 1 ETH to 0x1234567890abcdef1234567890abcdef12345678", \
-"transfer 1 BTC to vitalk.eth" and etc. \
-"""
+    description = """Use this tool to send cryptocurrencies to another address."""
     args_schema: Type[ParamSchema] = ParamSchema
     return_direct = False
     last_task_id: Optional[str] = None

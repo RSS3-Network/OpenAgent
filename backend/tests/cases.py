@@ -12,7 +12,6 @@ question_list = [
     "What is MODE chain?",
     "Give me the bitcoin price chart",
     "List some popular NFTs?",
-    "Can you recommend me some articles about web3",
     "What's the largest dex with highest trading volume on Solana?",
     "When ETH ETF 19b-4 forms approved?",
     "Who are the main investors of EigenLayer?",
@@ -26,13 +25,17 @@ async def dummy(_) -> None:
 async def init():
     # langchain.debug=True
     start = time.time()
-    agent = get_agent("")
+    agent = get_agent("11")
     for question in question_list:
         print(f"Question: {question}")
-        try:
-            await agent.arun(question)
-        except Exception as e:
-            print(f"Error: {e}")
+
+        await agent.ainvoke(
+            {"input": question},
+            config={
+                "metadata": {"agentName": "openagent-backend", "userId": "123"},
+            },
+        )
+
         time.sleep(1)
 
         print("--------------")
