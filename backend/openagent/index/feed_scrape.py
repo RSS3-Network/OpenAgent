@@ -32,11 +32,10 @@ def fetch_feeds(
     def _fetch_feeds():
         cursor_str = f"&cursor={cursor}" if cursor else ""
         url = (
-            f"{settings.RSS3_DATA_API}/platforms/{platform}/activities?"
-            f"since_timestamp={since_timestamp}&until_timestamp={until_timestamp}&"
-            f"limit={limit}{cursor_str}"
+            f"{settings.RSS3_DATA_API}/decentralized/platform/{platform}?limit={limit}"
+            f"&action_limit=10&since_timestamp={since_timestamp}&type=post&"
+            f"until_timestamp={until_timestamp}{cursor_str}"
         )
-
         payload = {}  # type: ignore
         headers = {}  # type: ignore
 
@@ -52,3 +51,8 @@ def fetch_feeds(
     except Exception as e:
         logger.error(f"Failed to fetch feeds from {platform}: {e}")
         return {}
+
+
+if __name__ == "__main__":
+    feeds = fetch_feeds("Mirror", 0, 0, 1, None, 3)
+    print(json.dumps(feeds))

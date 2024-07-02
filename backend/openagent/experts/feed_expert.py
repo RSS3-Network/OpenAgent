@@ -1,3 +1,4 @@
+import asyncio
 from typing import Optional, Type
 
 import aiohttp
@@ -42,8 +43,10 @@ blockchain domain name and know what this address has done or doing recently."""
 
 
 async def fetch_feeds(address: str):
-    host = settings.RSS3_DATA_API + "/accounts"
-    url = f"""{host}/{address}/activities?limit=5&action_limit=5&direction=out"""
+    url = (
+        f"""{settings.RSS3_DATA_API}/decentralized/{address}?limit=5&action_limit=10"""
+    )
+
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")
@@ -74,3 +77,7 @@ async def fetch_feeds(address: str):
     result = FEED_PROMPT.format(address=address, activities_data=activities_data)
 
     return result
+
+
+if __name__ == "__main__":
+    print(asyncio.run(fetch_feeds("vitalik.eth")))
