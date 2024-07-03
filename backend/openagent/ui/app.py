@@ -1,3 +1,5 @@
+from typing import Optional
+
 import chainlit as cl
 from chainlit.types import ThreadDict
 from langchain.memory import ConversationBufferMemory
@@ -11,15 +13,14 @@ def setup_runnable():
     cl.user_session.set("runnable", agent)
 
 
-# @cl.oauth_callback
-# def oauth_callback(
-#     provider_id: str,
-#     token: str,
-#     raw_user_data: Dict[str, str],
-#     default_user: cl.User,
-# ) -> Optional[cl.User]:
-#     return default_user
-#
+@cl.oauth_callback
+def oauth_callback(
+    provider_id: str,
+    token: str,
+    raw_user_data: dict[str, str],
+    default_user: cl.User,
+) -> Optional[cl.User]:
+    return default_user
 
 
 @cl.on_chat_start
