@@ -7,9 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "^0.100.0"
 python-dotenv = "^1.0.0"
-uvicorn = "^0.23.1"
 sse-starlette = "^1.6.5"
 loguru = "^0.7.0"
 toolz = "^0.12.0"
@@ -38,6 +36,7 @@ langgraph="0.1.1"
 langchain-google-vertexai = "^1.0.6"
 langchain-community = "^0.2.6"
 langchain-openai = "^0.1.13"
+chainlit = "^1.1.305"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
