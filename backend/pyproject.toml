@@ -44,7 +44,7 @@ pre-commit = "^3.7.0"
 mypy = "^1.10.0"
 
 [tool.ruff]
-line-length = 88
+line-length = 150
 indent-width = 4
 exclude = [
     ".bzr",
