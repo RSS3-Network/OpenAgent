@@ -18,12 +18,10 @@ def fetch_iqwiki_feeds(since_timestamp, until_timestamp, limit=10, cursor=None) 
     """
     Fetch feeds from IQWiki.
     """
-    return fetch_feeds("IQ.Wiki", since_timestamp, until_timestamp, limit, cursor)
+    return fetch_feeds("IQWiki", since_timestamp, until_timestamp, limit, cursor)
 
 
-def fetch_feeds(
-    platform, since_timestamp, until_timestamp, limit=10, cursor=None, max_retries=3
-) -> dict:
+def fetch_feeds(platform, since_timestamp, until_timestamp, limit=10, cursor=None, max_retries=3) -> dict:
     """
     Fetch feeds from a platform with retry functionality.
     """
@@ -52,3 +50,8 @@ def fetch_feeds(
     except Exception as e:
         logger.error(f"Failed to fetch feeds from {platform}: {e}")
         return {}
+
+
+if __name__ == "__main__":
+    feeds = fetch_iqwiki_feeds(since_timestamp=0, until_timestamp=0)
+    print(feeds)

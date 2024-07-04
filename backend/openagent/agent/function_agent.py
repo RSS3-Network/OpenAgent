@@ -6,10 +6,8 @@ from langchain.agents import (
     create_tool_calling_agent,
     initialize_agent,
 )
-from langchain.memory import ConversationBufferMemory
 from langchain.prompts import MessagesPlaceholder
 from langchain.schema import SystemMessage
-from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_community.chat_models import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_vertexai import ChatVertexAI
@@ -17,7 +15,6 @@ from langchain_openai import ChatOpenAI
 from toolz import memoize
 
 from openagent.agent.cache import init_cache
-from openagent.agent.postgres_history import PostgresChatMessageHistory
 from openagent.agent.system_prompt import (
     SYSTEM_PROMPT,
     SYSTEM_PROMPT_V2,
@@ -38,16 +35,6 @@ init_cache()
 
 # Function to create a ReAct agent
 def create_react_agent(session_id: str):
-    # Initialize message history based on session_id
-    message_history = (
-        get_msg_history(session_id) if session_id else ChatMessageHistory()
-    )
-
-    # Create conversation memory
-    memory = ConversationBufferMemory(
-        memory_key="memory", return_messages=True, chat_memory=message_history
-    )
-
     # Define agent kwargs
     agent_kwargs = (
         {
@@ -79,7 +66,6 @@ def create_react_agent(session_id: str):
         agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
         verbose=True,
         agent_kwargs=agent_kwargs,
-        memory=memory,
         handle_parsing_errors=True,
     )
 
@@ -108,25 +94,13 @@ def create_interpreter(model_name):
 
 @memoize
 def get_agent(session_id: str) -> AgentExecutor:
-    if settings.MODEL_NAME.startswith("gemini") or settings.MODEL_NAME.startswith(
-        "gpt"
-    ):
+    if settings.MODEL_NAME.startswith("gemini") or settings.MODEL_NAME.startswith("gpt"):
         return create_tool_call_agent(session_id)
     return create_react_agent(session_id)
 
 
 # Function to create a tool calling agent
 def create_tool_call_agent(session_id: str):
-    # Initialize message history based on session_id
-    message_history = (
-        get_msg_history(session_id) if session_id else ChatMessageHistory()
-    )
-
-    # Create conversation memory
-    memory = ConversationBufferMemory(
-        memory_key="memory", return_messages=True, chat_memory=message_history
-    )
-
     # Initialize language model
     interpreter = create_interpreter(settings.MODEL_NAME)
 
@@ -158,15 +132,11 @@ def create_tool_call_agent(session_id: str):
     agent = create_tool_calling_agent(interpreter, experts, prompt)
 
     # Create an agent executor by passing in the agent and tools
-    agent_executor = AgentExecutor(
-        agent=agent, tools=experts, verbose=True, memory=memory
-    )
+    agent_executor = AgentExecutor(agent=agent, tools=experts, verbose=True)
     return agent_executor
 
 
 # Function to get the chat history of a session from Postgres
-def get_msg_history(session_id):
-    return PostgresChatMessageHistory(session_id=session_id)
 
 
 async def main():

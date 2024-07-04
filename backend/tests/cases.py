@@ -4,7 +4,7 @@ import time
 from openagent.agent.function_agent import get_agent
 
 question_list = [
-    "Hello?",
+    "show some web3 articles?",
     "What is the price of ETH?",
     "What did vitalik.eth do recently?",
     "Send 0.01 eth to vitalik.eth",
@@ -23,6 +23,8 @@ async def dummy(_) -> None:
 
 
 async def init():
+    # vertexai.init(project='openagent-422907')
+
     # langchain.debug=True
     start = time.time()
     agent = get_agent("11")
