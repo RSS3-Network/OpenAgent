@@ -1,5 +1,14 @@
 version: '3.4'
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    depends_on:
+      - vec_db
   vec_db:
     image: pgvector/pgvector:pg16
     container_name: vec_db
@@ -9,10 +18,10 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: vec
     ports:
-      - "5434:5432"
+      - "5432:5432"
     volumes:
-      - pgvector_data:/var/lib/postgresql/data
+      - vec_data:/var/lib/postgresql/data
 
 
 volumes:
-  pgvector_data:
+  vec_data:
