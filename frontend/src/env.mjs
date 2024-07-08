@@ -15,12 +15,12 @@ export const env = createEnv({
 	},
 	server: {
 		API_EXECUTOR_URL: z.string().url(),
-		AUTH_DISCORD_CLIENT_ID: z.string().min(1),
-		AUTH_DISCORD_CLIENT_SECRET: z.string().min(1),
-		AUTH_GMAIL_PASS: z.string().min(1),
-		AUTH_GMAIL_USER: z.string().min(1),
-		AUTH_GOOGLE_CLIENT_ID: z.string().min(1),
-		AUTH_GOOGLE_CLIENT_SECRET: z.string().min(1),
+		AUTH_DISCORD_CLIENT_ID: z.string().optional(),
+		AUTH_DISCORD_CLIENT_SECRET: z.string().optional(),
+		AUTH_GMAIL_PASS: z.string().optional(),
+		AUTH_GMAIL_USER: z.string().optional(),
+		AUTH_GOOGLE_CLIENT_ID: z.string().optional(),
+		AUTH_GOOGLE_CLIENT_SECRET: z.string().optional(),
 		BACKEND_URL: z.string().url(),
 		NEXTAUTH_URL: z.string().url(),
 		NODE_ENV: z
@@ -29,3 +29,14 @@ export const env = createEnv({
 		POSTGRES_DATABASE_URL: z.string().url(),
 	},
 });
+
+// at least one AUTH_* env var must be set
+if (
+	!env.AUTH_DISCORD_CLIENT_ID &&
+	!env.AUTH_GMAIL_PASS &&
+	!env.AUTH_GOOGLE_CLIENT_ID
+) {
+	throw new Error(
+		"At least one AUTH_* env var must be set so users can log in"
+	);
+}
