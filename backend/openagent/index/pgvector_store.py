@@ -17,7 +17,7 @@ def build_vector_store() -> PGVector:
     return PGVector(
         embeddings=underlying_embeddings,
         collection_name=collection_name,
-        connection=settings.VEC_DB_CONNECTION,
+        connection=settings.DB_CONNECTION,
         use_jsonb=True,
     )
 
