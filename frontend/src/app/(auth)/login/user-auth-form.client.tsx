@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/trpc/client";
 import { userAuthSchema } from "@/lib/validations/auth";
 import { valibotResolver } from "@/lib/validations/resolver";
 import { Box, Button, Divider, Stack, TextInput } from "@mantine/core";
@@ -30,6 +31,8 @@ export function UserAuthForm() {
 	const [isDiscordLoading, setIsDiscordLoading] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 
+	const authProviders = api.system.authProviders.useQuery();
+
 	const isLoading = isEmailLoading || isDiscordLoading || isGoogleLoading;
 
 	async function handleSubmitEmail(values: FormData) {
@@ -59,67 +62,73 @@ export function UserAuthForm() {
 
 	return (
 		<Box mx="auto" px="xs" w="100%">
-			<form onSubmit={form.onSubmit(handleSubmitEmail)}>
-				<TextInput
-					autoCapitalize="none"
-					autoComplete="email"
-					autoCorrect="off"
-					disabled={isLoading}
-					id="email"
-					placeholder="name@example.com"
-					size="lg"
-					type="email"
-					{...form.getInputProps("email")}
-				/>
+			{authProviders.data?.providers.email && (
+				<form onSubmit={form.onSubmit(handleSubmitEmail)}>
+					<TextInput
+						autoCapitalize="none"
+						autoComplete="email"
+						autoCorrect="off"
+						disabled={isLoading}
+						id="email"
+						placeholder="name@example.com"
+						size="lg"
+						type="email"
+						{...form.getInputProps("email")}
+					/>
 
-				<Button
-					className="mt-3"
-					disabled={isLoading}
-					fullWidth
-					loaderProps={{ type: "dots" }}
-					loading={isEmailLoading}
-					size="lg"
-					type="submit"
-				>
-					<IconMail />
-					&nbsp; Continue with Email
-				</Button>
-			</form>
+					<Button
+						className="mt-3"
+						disabled={isLoading}
+						fullWidth
+						loaderProps={{ type: "dots" }}
+						loading={isEmailLoading}
+						size="lg"
+						type="submit"
+					>
+						<IconMail />
+						&nbsp; Continue with Email
+					</Button>
+				</form>
+			)}
 
 			<Divider label="OR" labelPosition="center" my="xs" />
 
 			<Stack>
-				<Button
-					color="gray"
-					disabled={isLoading}
-					fullWidth
-					loaderProps={{ type: "dots" }}
-					loading={isGoogleLoading}
-					onClick={() => {
-						setIsGoogleLoading(true);
-						signIn("google");
-					}}
-					size="lg"
-				>
-					<IconBrandGoogle />
-					&nbsp; Continue with Google
-				</Button>
+				{authProviders.data?.providers.google && (
+					<Button
+						color="gray"
+						disabled={isLoading}
+						fullWidth
+						loaderProps={{ type: "dots" }}
+						loading={isGoogleLoading}
+						onClick={() => {
+							setIsGoogleLoading(true);
+							signIn("google");
+						}}
+						size="lg"
+					>
+						<IconBrandGoogle />
+						&nbsp; Continue with Google
+					</Button>
+				)}
 
-				<Button
-					color="gray"
-					disabled={isLoading}
-					fullWidth
-					loaderProps={{ type: "dots" }}
-					loading={isDiscordLoading}
-					onClick={() => {
-						setIsDiscordLoading(true);
-						signIn("discord");
-					}}
-					size="lg"
-				>
-					<IconBrandDiscord />
-					&nbsp; Continue with Discord
-				</Button>
+				{authProviders.data?.providers.discord && (
+					<Button
+						color="gray"
+						disabled={isLoading}
+						fullWidth
+						loaderProps={{ type: "dots" }}
+						loading={isDiscordLoading}
+						onClick={() => {
+							setIsDiscordLoading(true);
+							signIn("discord");
+						}}
+						size="lg"
+					>
+						<IconBrandDiscord />
+						&nbsp; Continue with Discord
+					</Button>
+				)}
 			</Stack>
 		</Box>
 	);

@@ -15,12 +15,12 @@ export const env = createEnv({
 	},
 	server: {
 		API_EXECUTOR_URL: z.string().url(),
-		AUTH_DISCORD_CLIENT_ID: z.string().min(1),
-		AUTH_DISCORD_CLIENT_SECRET: z.string().min(1),
-		AUTH_GMAIL_PASS: z.string().min(1),
-		AUTH_GMAIL_USER: z.string().min(1),
-		AUTH_GOOGLE_CLIENT_ID: z.string().min(1),
-		AUTH_GOOGLE_CLIENT_SECRET: z.string().min(1),
+		AUTH_DISCORD_CLIENT_ID: z.string().min(1).optional(),
+		AUTH_DISCORD_CLIENT_SECRET: z.string().min(1).optional(),
+		AUTH_GMAIL_PASS: z.string().min(1).optional(),
+		AUTH_GMAIL_USER: z.string().min(1).optional(),
+		AUTH_GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+		AUTH_GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
 		BACKEND_URL: z.string().url(),
 		NEXTAUTH_URL: z.string().url(),
 		NODE_ENV: z
