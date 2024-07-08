@@ -32,9 +32,9 @@ export const env = createEnv({
 
 // at least one AUTH_* env var must be set
 if (
-	!process.env.server.AUTH_DISCORD_CLIENT_ID &&
-	!process.env.server.AUTH_GMAIL_PASS &&
-	!process.env.server.AUTH_GOOGLE_CLIENT_ID
+	!env.AUTH_DISCORD_CLIENT_ID &&
+	!env.AUTH_GMAIL_PASS &&
+	!env.AUTH_GOOGLE_CLIENT_ID
 ) {
 	throw new Error(
 		"At least one AUTH_* env var must be set so users can log in"
