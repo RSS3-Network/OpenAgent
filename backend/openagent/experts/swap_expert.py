@@ -42,7 +42,7 @@ like: "0.1", "1", "10" and etc. Default is "1".""",
 
 class SwapExpert(BaseTool):
     name = "swap"
-    description = """Use this tool to swap crypto tokens."""
+    description = """Use this tool to generate a swap widget for the user to swap cryptocurrencies."""
     args_schema: Type[ParamSchema] = ParamSchema
     return_direct = False
 
