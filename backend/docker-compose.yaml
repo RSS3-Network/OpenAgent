@@ -18,7 +18,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: vec
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - vec_data:/var/lib/postgresql/data
 
