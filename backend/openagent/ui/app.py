@@ -72,7 +72,7 @@ async def handle_function_message(message: FunctionMessage, msg: cl.Message):
         from_amount = swap_dict["amount"]
 
         widget = (
-            f"""<iframe src="http://localhost:8001/swap?fromAmount={from_amount}&"""
+            f"""<iframe src="{settings.WIDGET_URL}/swap?fromAmount={from_amount}&"""
             f"""fromChain={from_chain}&fromToken={from_token_}&toChain={to_chain}&"""
             f"""toToken={to_token}" width="400" height="700"></iframe>"""
         )
