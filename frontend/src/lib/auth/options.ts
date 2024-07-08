@@ -10,6 +10,17 @@ import GoogleProvider from "next-auth/providers/google";
 import { db } from "../db";
 // import "server-only";
 
+// at least one AUTH_* env var must be set
+if (
+	!env.AUTH_DISCORD_CLIENT_ID &&
+	!env.AUTH_GMAIL_PASS &&
+	!env.AUTH_GOOGLE_CLIENT_ID
+) {
+	throw new Error(
+		"At least one AUTH_* env var must be set so users can log in"
+	);
+}
+
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
