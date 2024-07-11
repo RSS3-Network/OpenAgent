@@ -13,7 +13,7 @@ from openagent.index.pgvector_store import store
 
 load_dotenv()
 
-record_manager = SQLRecordManager("backend", db_url=settings.VEC_DB_CONNECTION)
+record_manager = SQLRecordManager("backend", db_url=settings.DB_CONNECTION)
 record_manager.create_schema()
 
 
@@ -42,9 +42,7 @@ def index_feed(fetch_function, feed_name):
 
     cursor = None
     logger.info(
-        f"Starting to index feed '{feed_name}' from "
-        f"{since_date.strftime('%Y-%m-%d %H:%M:%S')} to"
-        f" {curr_date.strftime('%Y-%m-%d %H:%M:%S')}"
+        f"Starting to index feed '{feed_name}' from " f"{since_date.strftime('%Y-%m-%d %H:%M:%S')} to" f" {curr_date.strftime('%Y-%m-%d %H:%M:%S')}"
     )
     while True:
         resp = fetch_function(since_ts, curr_ts, cursor=cursor)
@@ -52,10 +50,7 @@ def index_feed(fetch_function, feed_name):
             logger.info(f"no meta in response, done with {feed_name}!")
             break
         cursor = resp["meta"]["cursor"]
-        logger.info(
-            f"fetched {len(resp['data'])} records from {feed_name},"
-            f" next cursor: {cursor}"
-        )
+        logger.info(f"fetched {len(resp['data'])} records from {feed_name}," f" next cursor: {cursor}")
 
         records = resp.get("data", [])
         if len(records) == 0:
@@ -92,10 +87,7 @@ def build_docs(record):
     body = record["actions"][0]["metadata"]["body"]
     txt = f"<h1>{title}</h1>{body}"
     chunks = text_splitter.split_text(txt)
-    return [
-        Document(page_content=chunk, metadata={"id": record["id"], "full": record})
-        for chunk in chunks
-    ]
+    return [Document(page_content=chunk, metadata={"id": record["id"], "full": record}) for chunk in chunks]
 
 
 if __name__ == "__main__":
