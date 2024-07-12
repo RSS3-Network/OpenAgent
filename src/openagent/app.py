@@ -36,7 +36,7 @@ async def swap_root():
 
 app.mount("/assets", StaticFiles(directory="dist/assets"), name="widget")
 
-mount_chainlit(app=app, target="openagent/ui/app.py", path="/chainlit")
+mount_chainlit(app=app, target="openagent/ui/app.py", path="/ui")
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
