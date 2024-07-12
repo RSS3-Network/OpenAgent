@@ -1,9 +1,0 @@
-{
-	"$schema": "https://json.schemastore.org/eslintrc",
-	"root": true,
-	"extends": [
-		"next/core-web-vitals",
-		"plugin:tailwindcss/recommended",
-		"plugin:perfectionist/recommended-natural"
-	]
-}

@@ -1,2 +1,0 @@
-@openzeppelin/=node_modules/@openzeppelin/
-forge-std/=lib/forge-std/src/

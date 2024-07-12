@@ -1,1 +1,0 @@
-export { WagmiProvider } from "./provider";

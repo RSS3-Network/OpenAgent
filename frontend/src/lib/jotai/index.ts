@@ -1,1 +1,0 @@
-export { JotaiProvider } from "./provider";
