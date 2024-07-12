@@ -1,1 +1,0 @@
-export { IconLogo } from "./logo";

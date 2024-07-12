@@ -1,1 +1,0 @@
-export { TrpcProvider } from "./provider";
