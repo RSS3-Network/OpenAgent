@@ -51,10 +51,10 @@ auto_tag_thread = true
 
 [UI]
 # Name of the assistant.
-name = "Assistant"
+name = "OpenAgent"
 
 # Description of the assistant. This is used for HTML tags.
-# description = ""
+ description = "OpenAgent is a conversational AI assistant that can help you with your web3 queries."
 
 # Large size content are by default collapsed for a cleaner ui
 default_collapse_content = true
