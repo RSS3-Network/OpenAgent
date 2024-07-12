@@ -1,5 +1,6 @@
 import os
 
+from chainlit.utils import mount_chainlit
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,27 +28,17 @@ app.include_router(chat_router)
 app.include_router(session_router)
 
 
-@app.get("/swap")
-async def swap():
+@app.get("/widget/swap")
+async def swap_root():
+    print("swap_root")
     return FileResponse(os.path.join("dist", "index.html"))
 
 
-@app.get("/swap/select-wallet")
-async def swap_select_wallet():
-    print("swap_select_wallet")
-    return FileResponse(os.path.join("dist", "index.html"))
+app.mount("/assets", StaticFiles(directory="dist/assets"), name="widget")
 
-
-@app.get("/swap/settings")
-async def swap_setting():
-    print("swap_setting")
-
-    return FileResponse(os.path.join("dist", "index.html"))
+mount_chainlit(app=app, target="openagent/ui/app.py", path="/chainlit")
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
 async def health_check():
     return JSONResponse(content={"status": "ok"})
-
-
-app.mount("/", StaticFiles(directory="dist", html=True), name="static")
