@@ -15,6 +15,3 @@ Base.metadata.create_all(bind=engine)  # type: ignore
 DBSession = sessionmaker(bind=engine)
 
 
-if __name__ == "__main__":
-    with DBSession() as sess:
-        print(sess.query(User).all())
