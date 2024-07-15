@@ -23,6 +23,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.get("/health", status_code=status.HTTP_200_OK)
+async def health_check():
+    return JSONResponse(content={"status": "ok"})
+
+
 app.include_router(onboarding_router)
 app.include_router(chat_router)
 app.include_router(session_router)
@@ -34,11 +40,6 @@ async def swap_root():
     return FileResponse(os.path.join("dist", "index.html"))
 
 
-app.mount("/assets", StaticFiles(directory="dist/assets"), name="widget")
+app.mount("/static", StaticFiles(directory="dist/static"), name="widget")
 
-mount_chainlit(app=app, target="openagent/ui/app.py", path="/ui")
-
-
-@app.get("/health", status_code=status.HTTP_200_OK)
-async def health_check():
-    return JSONResponse(content={"status": "ok"})
+mount_chainlit(app=app, target="openagent/ui/app.py", path="")
