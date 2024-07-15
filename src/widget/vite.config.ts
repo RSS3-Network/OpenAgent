@@ -10,7 +10,14 @@ export default defineConfig({
         target: 'esnext',
     },
     build: {
-        outDir: '../dist'
+        outDir: '../dist',
+        rollupOptions: {
+            output: {
+                assetFileNames: 'static/[name].[hash].[ext]',
+                chunkFileNames: 'static/[name].[hash].js',
+                entryFileNames: 'static/[name].[hash].js',
+            }
+        }
     },
 
     server: {
