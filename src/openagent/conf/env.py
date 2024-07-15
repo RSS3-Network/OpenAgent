@@ -28,6 +28,10 @@ class Settings(BaseSettings):
                                          description="RSS3 Data API with a default value")
     RSS3_SEARCH_API: Optional[str] = Field(default="https://devnet.rss3.io/search", env="RSS3_SEARCH_API",
                                            description="RSS3 Search API with a default value")
+    COVALENT_API_KEY: Optional[str] = Field(..., env="COVALENT_API_KEY")
+    ROOTDATA_API_KEY: Optional[str] = Field(..., env="ROOTDATA_API_KEY")
+    COINGECKO_API_KEY: Optional[str] = Field(..., env="COINGECKO_API_KEY")
+
 
     # Validator to split comma-separated string into a list
     @field_validator("OLLAMA_MODEL", mode="before")
