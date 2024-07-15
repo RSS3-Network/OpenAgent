@@ -38,6 +38,7 @@ langchain-community = "^0.2.6"
 langchain-openai = "^0.1.13"
 chainlit = "^1.1.305"
 greenlet = "^3.0.3"
+covalent-api-sdk = "^1.0.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
