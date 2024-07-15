@@ -7,11 +7,13 @@ from chainlit.cli import run_chainlit
 from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 from langchain.memory import ConversationBufferMemory
 from langchain.schema.runnable.config import RunnableConfig
-from langchain_core.messages import FunctionMessage
+from langchain_core.messages import FunctionMessage, HumanMessage
 from loguru import logger
 
-from openagent.agent.function_agent import get_agent
 from openagent.conf.env import settings
+from openagent.conf.llm_provider import get_available_providers, set_current_llm
+from openagent.ui.profile import profile_name_to_provider_key, provider_to_profile
+from openagent.workflows.workflow import build_workflow
 
 # Set up the data layer
 cl_data._data_layer = SQLAlchemyDataLayer(conninfo=settings.DB_CONNECTION)
@@ -19,7 +21,7 @@ cl_data._data_layer = SQLAlchemyDataLayer(conninfo=settings.DB_CONNECTION)
 
 def setup_runnable():
     """Set up the runnable agent."""
-    agent = get_agent("")
+    agent = build_workflow()
     cl.user_session.set("runnable", agent)
 
 
@@ -30,20 +32,35 @@ def initialize_memory() -> ConversationBufferMemory:
 
 @cl.oauth_callback
 def oauth_callback(
-    provider_id: str,
-    token: str,
-    raw_user_data: Dict[str, str],
-    default_user: cl.User,
+        provider_id: str,
+        token: str,
+        raw_user_data: Dict[str, str],
+        default_user: cl.User,
 ) -> Optional[cl.User]:
     """OAuth callback function."""
     return default_user
+
+
+@cl.set_chat_profiles
+async def chat_profile():
+    providers = get_available_providers()
+    profiles = list(map(provider_to_profile, providers.keys()))
+    profiles = [profile for profile in profiles if profile is not None]
+
+    return profiles
 
 
 @cl.on_chat_start
 async def on_chat_start():
     """Callback function when chat starts."""
     cl.user_session.set("memory", initialize_memory())
+    profile = cl.user_session.get("chat_profile")
+    provider_key = profile_name_to_provider_key(profile)
+    set_current_llm(provider_key)
     setup_runnable()
+    await cl.Message(
+        content=f"starting chat using the {profile} chat profile"
+    ).send()
 
 
 @cl.on_chat_resume
@@ -58,6 +75,9 @@ async def on_chat_resume(thread: cl_data.ThreadDict):
             memory.chat_memory.add_ai_message(message["output"])
 
     cl.user_session.set("memory", memory)
+    profile = cl.user_session.get("chat_profile")
+    provider_key = profile_name_to_provider_key(profile)
+    set_current_llm(provider_key)
     setup_runnable()
 
 
@@ -85,20 +105,26 @@ async def on_message(message: cl.Message):
     memory = cl.user_session.get("memory")  # type: ConversationBufferMemory
     runnable = cl.user_session.get("runnable")
 
+    profile = cl.user_session.get("chat_profile")
+    provider_key = profile_name_to_provider_key(profile)
+    set_current_llm(provider_key)
+
     msg = cl.Message(content="")
 
-    try:
-        async for chunk in runnable.astream(
-            {"input": message.content}, config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)])
-        ):
-            if "output" in chunk:
-                await msg.stream_token(chunk["output"])
+    # try:
+    async for chunk in runnable.astream(
+            {"messages": [HumanMessage(content=message.content)]},
+            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)])
+    ):
+        try:
+            if 'fallback_agent' in chunk:
+                await msg.stream_token(chunk["fallback_agent"]['messages'][0].content)
             elif "messages" in chunk:
                 for message in chunk["messages"]:
                     if isinstance(message, FunctionMessage):
                         await handle_function_message(message, msg)
-    except Exception as e:
-        logger.error(f"Error processing message: {e}")
+        except Exception as e:
+            logger.error(f"Error processing message: {e}")
 
     await msg.send()
     memory.chat_memory.add_user_message(message.content)
