@@ -1,8 +1,8 @@
-iframe{
+iframe {
     border: none;
     width: 100%;
 }
 
-div.MuiBox-root > div.MuiBox-root > div.MuiStack-root.watermark{
+div.MuiBox-root > div.MuiBox-root > div.MuiStack-root.watermark {
     display: none;
 }

@@ -9,6 +9,7 @@ class Swap(BaseModel):
     chain_id: str
     amount: str
     type: str = "swap"
+    chain_name: str
 
 
 class Transfer(BaseModel):
