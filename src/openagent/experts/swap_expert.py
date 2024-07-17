@@ -98,14 +98,10 @@ async def fetch_swap(from_token: str, to_token: str, from_chain: ChainEnum, to_c
     """
     from_chain_id = chain_name_to_id(from_chain.value)
     to_chain_id = chain_name_to_id(to_chain.value)
-    res = {
-        "from": from_token,
-        "to": to_token,
-        "amount": amount,
-    }
+
     results = [
-        await select_best_token(res["from"], from_chain_id),
-        await select_best_token(res["to"], to_chain_id),
+        await select_best_token(from_token, from_chain_id),
+        await select_best_token(to_token, to_chain_id),
     ]
     swap = Swap(
         from_token=get_token_data_by_key(results[0], "symbol"),
@@ -114,6 +110,6 @@ async def fetch_swap(from_token: str, to_token: str, from_chain: ChainEnum, to_c
         to_token_address=get_token_data_by_key(results[1], "address"),
         from_chain_name=from_chain.value,
         to_chain_name=to_chain.value,
-        amount=res.get("amount", "1"),
+        amount=amount
     )
     return swap.model_dump_json()
