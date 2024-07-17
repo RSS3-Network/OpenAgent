@@ -6,10 +6,10 @@ class Swap(BaseModel):
     from_token_address: str
     to_token: str
     to_token_address: str
-    chain_id: str
     amount: str
     type: str = "swap"
-    chain_name: str
+    from_chain_name: str
+    to_chain_name: str
 
 
 class Transfer(BaseModel):

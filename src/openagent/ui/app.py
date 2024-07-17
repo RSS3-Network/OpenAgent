@@ -70,8 +70,8 @@ async def handle_function_message(message: FunctionMessage, msg: cl.Message):
     if message.name == "swap":
         swap_dict = json.loads(message.content)
         logger.info(swap_dict)
-        from_chain = swap_dict["chain_name"]
-        to_chain = swap_dict["chain_name"]
+        from_chain = swap_dict["from_chain_name"]
+        to_chain = swap_dict["to_chain_name"]
         from_token_ = swap_dict["from_token"]
         from_token_address = swap_dict["from_token_address"]
         to_token = swap_dict["to_token"]
@@ -106,7 +106,7 @@ async def on_message(message: cl.Message):
                     if isinstance(message, FunctionMessage):
                         await handle_function_message(message, msg)
     except Exception as e:
-        logger.error(f"Error processing message: {e}")
+        logger.exception(e)
 
     await msg.send()
     memory.chat_memory.add_user_message(message.content)
