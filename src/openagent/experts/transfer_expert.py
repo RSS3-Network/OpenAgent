@@ -8,11 +8,7 @@ from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
 from openagent.dto.mutation import Transfer
-from openagent.experts import (
-    chain_name_to_id,
-    get_token_data_by_key,
-    select_best_token,
-)
+from openagent.experts.token_util import chain_name_to_id, select_best_token, get_token_data_by_key
 
 
 class ParamSchema(BaseModel):
