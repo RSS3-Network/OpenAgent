@@ -1,5 +1,6 @@
+import asyncio
 from enum import Enum
-from typing import Optional, Dict, List, Type
+from typing import Optional, Type
 
 import aiohttp
 from aiocache import Cache
@@ -99,15 +100,17 @@ async def fetch_swap(from_token: str, to_token: str, from_chain: ChainEnum, to_c
     from_chain_id = chain_name_to_id(from_chain.value)
     to_chain_id = chain_name_to_id(to_chain.value)
 
-    results = [
-        await select_best_token(from_token, from_chain_id),
-        await select_best_token(to_token, to_chain_id),
-    ]
+    # Fetch token data concurrently
+    from_token_data, to_token_data = await asyncio.gather(
+        select_best_token(from_token, from_chain_id),
+        select_best_token(to_token, to_chain_id)
+    )
+
     swap = Swap(
-        from_token=get_token_data_by_key(results[0], "symbol"),
-        from_token_address=get_token_data_by_key(results[0], "address"),
-        to_token=get_token_data_by_key(results[1], "symbol"),
-        to_token_address=get_token_data_by_key(results[1], "address"),
+        from_token=get_token_data_by_key(from_token_data, "symbol"),
+        from_token_address=get_token_data_by_key(from_token_data, "address"),
+        to_token=get_token_data_by_key(to_token_data, "symbol"),
+        to_token_address=get_token_data_by_key(to_token_data, "address"),
         from_chain_name=from_chain.value,
         to_chain_name=to_chain.value,
         amount=amount
