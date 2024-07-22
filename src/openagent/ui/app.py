@@ -122,27 +122,28 @@ async def on_message(message: cl.Message):
 
         kind = event["event"]
         logger.info(event)
+        if kind == "on_tool_end":
+            if event["name"] == "swap":
+                output = event['data']['output']
+                swap_dict = json.loads(output)
+                from_chain = swap_dict["chain_id"]
+                to_chain = swap_dict["chain_id"]
+                from_token_ = swap_dict["from_token_address"]
+                to_token = swap_dict["to_token_address"]
+                from_amount = swap_dict["amount"]
+
+                widget = (
+                    f"""<iframe src="/widget/swap?fromAmount={from_amount}&"""
+                    f"""fromChain={from_chain}&fromToken={from_token_}&toChain={to_chain}&"""
+                    f"""toToken={to_token}" width="400" height="700"></iframe>"""
+                )
+                await msg.stream_token(widget)
+
         if kind == "on_chat_model_stream":
             if event["metadata"]["langgraph_node"] in agent_names:
                 content = event["data"]["chunk"].content
                 if content:
                     await msg.stream_token(content)
-                    # calls_ = event["data"]["chunk"].additional_kwargs['tool_calls']
-                    # for call in calls_:
-                    #     if call['function']['name'] == 'swap':
-                    #         swap_dict = json.loads(message.content)
-                    #         from_chain = swap_dict["chain_id"]
-                    #         to_chain = swap_dict["chain_id"]
-                    #         from_token_ = swap_dict["from_token_address"]
-                    #         to_token = swap_dict["to_token_address"]
-                    #         from_amount = swap_dict["amount"]
-                    #
-                    #         widget = (
-                    #             f"""<iframe src="/widget/swap?fromAmount={from_amount}&"""
-                    #             f"""fromChain={from_chain}&fromToken={from_token_}&toChain={to_chain}&"""
-                    #             f"""toToken={to_token}" width="400" height="700"></iframe>"""
-                    #         )
-                    #         await msg.stream_token(widget)
 
     await msg.send()
     memory.chat_memory.add_user_message(message.content)
