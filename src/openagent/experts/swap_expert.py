@@ -2,19 +2,25 @@ import asyncio
 from enum import Enum
 from typing import Optional, Type
 
-import aiohttp
-from aiocache import Cache
-from aiocache.decorators import cached
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
-from loguru import logger
 from pydantic import BaseModel, Field
 
-from openagent.dto.mutation import Swap
 from openagent.experts.token_util import chain_name_to_id, get_token_data_by_key, select_best_token
+
+
+class Swap(BaseModel):
+    from_token: str
+    from_token_address: str
+    to_token: str
+    to_token_address: str
+    amount: str
+    type: str = "swap"
+    from_chain_name: str
+    to_chain_name: str
 
 
 class ChainEnum(str, Enum):
@@ -64,12 +70,12 @@ class SwapExpert(BaseTool):
             self,
             from_token: str,
             to_token: str,
-            from_chain: ChainEnum,
-            to_chain: ChainEnum,
             amount: str,
+            from_chain: ChainEnum = ChainEnum.ETH,
+            to_chain: ChainEnum = ChainEnum.ETH,
             run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
-        raise NotImplementedError
+        return asyncio.run(fetch_swap(from_token, to_token, from_chain, to_chain, amount))
 
     async def _arun(
             self,

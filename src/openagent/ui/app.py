@@ -7,7 +7,7 @@ from chainlit.cli import run_chainlit
 from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 from langchain.memory import ConversationBufferMemory
 from langchain.schema.runnable.config import RunnableConfig
-from langchain_core.messages import FunctionMessage, HumanMessage
+from langchain_core.messages import HumanMessage
 from loguru import logger
 
 from openagent.conf.env import settings
@@ -86,27 +86,6 @@ def build_token(token_symbol: str, token_address: str):
     return f"{token_symbol}{'--' + token_address.lower() if not token_symbol == 'ETH' else ''}"
 
 
-async def handle_function_message(message: FunctionMessage, msg: cl.Message):
-    """Handle FunctionMessage type of messages."""
-    if message.name == "swap":
-        swap_dict = json.loads(message.content)
-        logger.info(swap_dict)
-        from_chain = swap_dict["from_chain_name"]
-        to_chain = swap_dict["to_chain_name"]
-        from_token_ = swap_dict["from_token"]
-        from_token_address = swap_dict["from_token_address"]
-        to_token = swap_dict["to_token"]
-        to_token_address = swap_dict["to_token_address"]
-        from_amount = swap_dict["amount"]
-
-        widget = (
-            f"""<iframe style="swap" src="https://widget.rango.exchange/?fromBlockchain={from_chain}&"""
-            f"""fromToken={build_token(from_token_, from_token_address)}&toBlockchain={to_chain}&"""
-            f"""toToken={build_token(to_token, to_token_address)}&fromAmount={from_amount}" width="400" height="700"></iframe>"""
-        )
-        await msg.stream_token(widget)
-
-
 @cl.on_message
 async def on_message(message: cl.Message):
     """Callback function to handle user messages."""
@@ -128,23 +107,8 @@ async def on_message(message: cl.Message):
     ):
 
         kind = event["event"]
-        logger.info(event)
         if kind == "on_tool_end":
-            if event["name"] == "swap":
-                output = event['data']['output']
-                swap_dict = json.loads(output)
-                from_chain = swap_dict["chain_id"]
-                to_chain = swap_dict["chain_id"]
-                from_token_ = swap_dict["from_token_address"]
-                to_token = swap_dict["to_token_address"]
-                from_amount = swap_dict["amount"]
-
-                widget = (
-                    f"""<iframe src="/widget/swap?fromAmount={from_amount}&"""
-                    f"""fromChain={from_chain}&fromToken={from_token_}&toChain={to_chain}&"""
-                    f"""toToken={to_token}" width="400" height="700"></iframe>"""
-                )
-                await msg.stream_token(widget)
+            await handle_tool_end(event, msg)
 
         if kind == "on_chat_model_stream":
             if event["metadata"]["langgraph_node"] in agent_names:
@@ -155,6 +119,28 @@ async def on_message(message: cl.Message):
     await msg.send()
     memory.chat_memory.add_user_message(message.content)
     memory.chat_memory.add_ai_message(msg.content)
+
+
+async def handle_tool_end(event, msg):
+    if event["name"] == "swap":
+        output = event['data']['output']
+        swap_dict = json.loads(output)
+        logger.info(swap_dict)
+        from_chain = swap_dict["from_chain_name"]
+        to_chain = swap_dict["to_chain_name"]
+        from_token_ = swap_dict["from_token"]
+        from_token_address = swap_dict["from_token_address"]
+        to_token = swap_dict["to_token"]
+        to_token_address = swap_dict["to_token_address"]
+        from_amount = swap_dict["amount"]
+
+        widget = (
+            f"""<iframe style="swap" src="https://widget.rango.exchange/?fromBlockchain={from_chain}&"""
+            f"""fromToken={build_token(from_token_, from_token_address)}&toBlockchain={to_chain}&"""
+            f"""toToken={build_token(to_token, to_token_address)}&fromAmount={from_amount}"
+             width="400" height="700"></iframe>"""
+        )
+        await msg.stream_token(widget)
 
 
 def start_ui():
