@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { LiFiWidget } from '@lifi/widget';
 
 function getQueryParams() {
   const params = new URLSearchParams(window.location.search);
