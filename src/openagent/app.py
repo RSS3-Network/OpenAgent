@@ -8,9 +8,6 @@ from starlette import status
 from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
-from openagent.router.chat import chat_router
-from openagent.router.onboarding import onboarding_router
-from openagent.router.session import session_router
 
 load_dotenv()
 app = FastAPI(title="OpenAgent", description="")
@@ -28,10 +25,6 @@ app.add_middleware(
 async def health_check():
     return JSONResponse(content={"status": "ok"})
 
-
-app.include_router(onboarding_router)
-app.include_router(chat_router)
-app.include_router(session_router)
 
 
 @app.get("/widget/swap")
