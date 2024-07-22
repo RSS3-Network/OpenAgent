@@ -32,7 +32,7 @@ class Settings(BaseSettings):
 
     # Validator to split comma-separated string into a list
     @field_validator("OLLAMA_MODEL", mode="before")
-    def split_string(self, v):
+    def split_string(cls, v):
         if isinstance(v, str):
             return v.split(",")
         return v
