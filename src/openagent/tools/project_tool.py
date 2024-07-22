@@ -36,9 +36,7 @@ def _fetch_project_sync(keyword: str) -> str:
 class ProjectTool(BaseTool):
     name = "project"
 
-    description = (
-        "get the project information like investors, team members, social media, etc."
-    )
+    description = "get the project information like investors, team members, social media, etc."
     args_schema: Type[ARGS] = ARGS
 
     def _run(
@@ -61,9 +59,7 @@ class ProjectTool(BaseTool):
 
 async def fetch_project_detail(session, project_id: int) -> dict:
     url = "https://api.rootdata.com/open/get_item"
-    payload = json.dumps(
-        {"project_id": project_id, "include_team": True, "include_investors": True}
-    )
+    payload = json.dumps({"project_id": project_id, "include_team": True, "include_investors": True})
 
     async with session.post(url, headers=HEADERS, data=payload) as response:
         response_text = await response.text()
@@ -75,16 +71,12 @@ async def fetch_project(keyword: str) -> list:
     url = "https://api.rootdata.com/open/ser_inv"
     payload = json.dumps({"query": keyword, "variables": {}})
 
-    async with aiohttp.ClientSession() as session, session.post(
-        url, headers=HEADERS, data=payload
-    ) as response:
+    async with aiohttp.ClientSession() as session, session.post(url, headers=HEADERS, data=payload) as response:
         response_text = await response.text()
         data = json.loads(response_text)["data"]
         project_ids = [item["id"] for item in data if item["type"] == 1][0:2]
 
-        tasks = [
-            fetch_project_detail(session, project_id) for project_id in project_ids
-        ]
+        tasks = [fetch_project_detail(session, project_id) for project_id in project_ids]
         return list(await asyncio.gather(*tasks))
 
 

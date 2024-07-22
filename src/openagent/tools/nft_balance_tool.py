@@ -13,9 +13,7 @@ from openagent.conf.env import settings
 
 
 class ARGS(BaseModel):
-    chain: str = Field(
-        description="chain name,options:eth-mainnet,optimism-mainnet,arbitrum-mainnet,bsc-mainnet"
-    )
+    chain: str = Field(description="chain name,options:eth-mainnet,optimism-mainnet,arbitrum-mainnet,bsc-mainnet")
     wallet_address: str = Field(description="wallet address")
 
 

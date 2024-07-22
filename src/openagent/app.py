@@ -8,7 +8,6 @@ from starlette import status
 from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
-
 load_dotenv()
 app = FastAPI(title="OpenAgent", description="")
 
@@ -24,7 +23,6 @@ app.add_middleware(
 @app.get("/health", status_code=status.HTTP_200_OK)
 async def health_check():
     return JSONResponse(content={"status": "ok"})
-
 
 
 @app.get("/widget/swap")

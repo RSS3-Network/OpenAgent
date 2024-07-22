@@ -60,9 +60,7 @@ async def fetch_feeds(address: str):
         if "actions" in activity:
             formatted_activity += "### Actions:\n"
             for action in activity["actions"]:
-                formatted_activity += (
-                    f"- {action['type']} from {action['from']} to {action['to']}\n"
-                )
+                formatted_activity += f"- {action['type']} from {action['from']} to {action['to']}\n"
                 if "metadata" in action:
                     for key, value in action["metadata"].items():
                         formatted_activity += f"  - {key}: {value}\n"

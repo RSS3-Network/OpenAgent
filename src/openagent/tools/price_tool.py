@@ -19,10 +19,11 @@ class PriceTool(BaseTool):
     name = "price"
     description = "use this tool to get the price of a token."
     args_schema: Type[ARGS] = ARGS
+
     def _run(
-            self,
-            token: str,
-            run_manager: Optional[CallbackManagerForToolRun] = None,
+        self,
+        token: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         try:
             return f"The price of {token} is {asyncio.run(fetch_price(token))}"
@@ -30,9 +31,9 @@ class PriceTool(BaseTool):
             return f"error: {e}"
 
     async def _arun(
-            self,
-            token: str,
-            run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+        self,
+        token: str,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
         try:
             return f"The price of {token} is {await fetch_price(token)}"

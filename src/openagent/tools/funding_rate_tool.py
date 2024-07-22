@@ -12,9 +12,7 @@ from pydantic import BaseModel, Field
 
 
 class ARGS(BaseModel):
-    exchange: str = Field(
-        description="Name of the exchange (ccxt supported), e.g., 'binance'"
-    )
+    exchange: str = Field(description="Name of the exchange (ccxt supported), e.g., 'binance'")
     symbol: str = Field(description="Trading pair symbol, e.g., 'BTC/USDT:USDT'")
 
 
@@ -53,9 +51,9 @@ def fetch_funding_rate(exchange_name: str, symbol: str) -> float:
 
         funding_rate = exchange.fetch_funding_rate(symbol)
         return funding_rate
-    except Exception as e:  # noqa
+    except Exception as e:
         logger.warning(f"Fetch funding rate error from {exchange_name}: {e}")
-        raise Exception(f"No funding rate found for {symbol} on {exchange_name}")
+        raise e
 
 
 if __name__ == "__main__":

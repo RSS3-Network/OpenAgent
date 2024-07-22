@@ -33,10 +33,10 @@ def initialize_memory() -> ConversationBufferMemory:
 
 @cl.oauth_callback
 def oauth_callback(
-        provider_id: str,
-        token: str,
-        raw_user_data: Dict[str, str],
-        default_user: cl.User,
+    provider_id: str,
+    token: str,
+    raw_user_data: Dict[str, str],
+    default_user: cl.User,
 ) -> Optional[cl.User]:
     """OAuth callback function."""
     return default_user
@@ -59,9 +59,7 @@ async def on_chat_start():
     provider_key = profile_name_to_provider_key(profile)
     set_current_llm(provider_key)
     setup_runnable()
-    await cl.Message(
-        content=f"starting chat using the {profile} chat profile"
-    ).send()
+    await cl.Message(content=f"starting chat using the {profile} chat profile").send()
 
 
 @cl.on_chat_resume
@@ -83,7 +81,7 @@ async def on_chat_resume(thread: cl_data.ThreadDict):
 
 
 def build_token(token_symbol: str, token_address: str):
-    return f"{token_symbol}{'--' + token_address.lower() if not token_symbol == 'ETH' else ''}"
+    return f"{token_symbol}{'--' + token_address.lower() if token_symbol != 'ETH' else ''}"
 
 
 @cl.on_message
@@ -97,20 +95,18 @@ async def on_message(message: cl.Message):
     set_current_llm(provider_key)
 
     msg = cl.Message(content="")
-    agent_names = [member['name'] for member in members]
+    agent_names = [member["name"] for member in members]
 
     # try:
     async for event in runnable.astream_events(
-            {"messages": [HumanMessage(content=message.content)]},
-            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
-            version="v1",
+        {"messages": [HumanMessage(content=message.content)]},
+        config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
+        version="v1",
     ):
-
         kind = event["event"]
         if kind == "on_tool_end":
             await handle_tool_end(event, msg)
-
-        if kind == "on_chat_model_stream":
+        elif kind == "on_chat_model_stream":  # noqa
             if event["metadata"]["langgraph_node"] in agent_names:
                 content = event["data"]["chunk"].content
                 if content:
@@ -123,7 +119,7 @@ async def on_message(message: cl.Message):
 
 async def handle_tool_end(event, msg):
     if event["name"] == "swap":
-        output = event['data']['output']
+        output = event["data"]["output"]
         swap_dict = json.loads(output)
         logger.info(swap_dict)
         from_chain = swap_dict["from_chain_name"]

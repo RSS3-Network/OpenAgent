@@ -13,11 +13,7 @@ system_prompt = (
     " respond with the worker to act next. Each worker will perform a"
     " task and respond with their results and status. When finished,"
     " respond with FINISH."
-).format(
-    members=", ".join(
-        [f"{member['name']} ({member['description']})" for member in members]
-    )
-)
+).format(members=", ".join([f"{member['name']} ({member['description']})" for member in members]))
 
 options = ["FINISH"] + [member["name"] for member in members]
 function_def = {
@@ -43,18 +39,11 @@ prompt = ChatPromptTemplate.from_messages(
         MessagesPlaceholder(variable_name="messages"),
         (
             "system",
-            "Given the conversation above, who should act next?"
-            " Or should we FINISH? Select one of: {options}",
+            "Given the conversation above, who should act next?" " Or should we FINISH? Select one of: {options}",
         ),
     ]
-).partial(
-    options=str(options), members=", ".join([member["name"] for member in members])
-)
+).partial(options=str(options), members=", ".join([member["name"] for member in members]))
 
 llm = get_current_llm()
 
-supervisor_chain = (
-        prompt
-        | llm.bind_functions(functions=[function_def], function_call="route")
-        | JsonOutputFunctionsParser()
-)
+supervisor_chain = prompt | llm.bind_functions(functions=[function_def], function_call="route") | JsonOutputFunctionsParser()

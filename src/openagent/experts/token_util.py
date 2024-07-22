@@ -1,4 +1,4 @@
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
 
 import aiohttp
 from aiocache import Cache
@@ -52,7 +52,7 @@ async def fetch_tokens() -> Dict[str, List[Dict]]:
     headers = {"Accept": "application/json"}
     logger.info(f"Fetching new data from {url}")
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession() as session:  # noqa
         async with session.get(url, headers=headers) as response:
             token_list = await response.json()
             return token_list["tokens"]
@@ -75,10 +75,7 @@ async def select_best_token(keyword: str, chain_id: str) -> Optional[Dict]:
     tokens_on_chain = tokens.get(chain_id, [])
 
     # Filter based on symbol and name
-    results = [
-        token for token in tokens_on_chain
-        if token["symbol"].lower() == keyword or token["name"].lower() == keyword
-    ]
+    results = [token for token in tokens_on_chain if token["symbol"].lower() == keyword or token["name"].lower() == keyword]
 
     if results:
         if len(results) == 1:

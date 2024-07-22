@@ -1,13 +1,11 @@
 import uuid
 
-from sqlalchemy import ARRAY, JSON, Boolean, Column, DateTime, Integer, String, Text
+from sqlalchemy import ARRAY, JSON, Boolean, Column, Integer, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.sql import func
-
-from openagent.dto.task import TaskStatus
 
 Base = declarative_base()  # type: ignore
+
 
 class User(Base):  # type: ignore
     __tablename__ = "users"

@@ -1,12 +1,9 @@
 import operator
 from typing import Annotated, Sequence, TypedDict
 
-from langchain_core.messages import BaseMessage
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, StateGraph
 from loguru import logger
-
-
 
 
 class AgentState(TypedDict):
@@ -32,19 +29,12 @@ def build_workflow():
     from openagent.agents.social_track import social_track_agent
     from openagent.workflows.member import members
     from openagent.workflows.supervisor_chain import supervisor_chain
-    market_analysis_agent_node = create_node(
-        market_analysis_agent, "market_analysis_agent"
-    )
+
+    market_analysis_agent_node = create_node(market_analysis_agent, "market_analysis_agent")
     social_track_agent_node = create_node(social_track_agent, "social_track_agent")
-    asset_management_agent_node = create_node(
-        asset_management_agent, "asset_management_agent"
-    )
-    block_explorer_agent_node = create_node(
-        block_explorer_agent, "block_explorer_agent"
-    )
-    research_analyst_agent_node = create_node(
-        research_analyst_agent, "research_analyst_agent"
-    )
+    asset_management_agent_node = create_node(asset_management_agent, "asset_management_agent")
+    block_explorer_agent_node = create_node(block_explorer_agent, "block_explorer_agent")
+    research_analyst_agent_node = create_node(research_analyst_agent, "research_analyst_agent")
 
     workflow = StateGraph(AgentState)
     workflow.add_node("market_analysis_agent", market_analysis_agent_node)

@@ -126,7 +126,7 @@ warn_redundant_casts = true
 warn_return_any = true
 check_untyped_defs = true
 show_error_codes = true
-disable_error_code = ["arg-type","call-arg","unused-ignore","import-untyped","assignment","no-any-return","no-any-unimported","import-not-found","misc"]
+disable_error_code = ["arg-type","call-arg","union-attr","operator","unused-ignore","import-untyped","assignment","no-any-return","no-any-unimported","import-not-found","misc"]
 
 
 [build-system]

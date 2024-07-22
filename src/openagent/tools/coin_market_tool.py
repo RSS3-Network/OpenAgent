@@ -14,8 +14,7 @@ from openagent.conf.env import settings
 
 class ARGS(BaseModel):
     order: str = Field(
-        description="sort result by field, default: market_cap_desc. options: market_cap_desc,"
-        "market_cap_asc,volume_desc,volume_asc"
+        description="sort result by field, default: market_cap_desc. options: market_cap_desc," "market_cap_asc,volume_desc,volume_asc"
     )
     size: int = Field(description="number of coins to return, default: 20")
 

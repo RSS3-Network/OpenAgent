@@ -1,10 +1,9 @@
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
 
 from openagent.agents.agent_factory import create_agent
 from openagent.conf.llm_provider import get_current_llm
-from openagent.tools.tavily_tool import tavily_tool
 from openagent.tools.block_stat_tool import BlockStatTool
+from openagent.tools.tavily_tool import tavily_tool
 
 load_dotenv()
 
