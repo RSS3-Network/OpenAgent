@@ -13,8 +13,20 @@ from loguru import logger
 from openagent.agent.function_agent import get_agent
 from openagent.conf.env import settings
 
-# Set up the data layer
-cl_data._data_layer = SQLAlchemyDataLayer(conninfo=settings.DB_CONNECTION)
+
+def enable_auth():
+    auth_settings = [
+        settings.CHAINLIT_AUTH_SECRET,
+        settings.OAUTH_AUTH0_CLIENT_ID,
+        settings.OAUTH_AUTH0_CLIENT_SECRET,
+        settings.OAUTH_AUTH0_DOMAIN
+    ]
+    return all(arg is not None for arg in auth_settings)
+
+
+if enable_auth():
+    # Set up the data layer
+    cl_data._data_layer = SQLAlchemyDataLayer(conninfo=settings.DB_CONNECTION)
 
 
 def setup_runnable():
@@ -28,15 +40,16 @@ def initialize_memory() -> ConversationBufferMemory:
     return ConversationBufferMemory(return_messages=True)
 
 
-@cl.oauth_callback
-def oauth_callback(
-        provider_id: str,
-        token: str,
-        raw_user_data: Dict[str, str],
-        default_user: cl.User,
-) -> Optional[cl.User]:
-    """OAuth callback function."""
-    return default_user
+if enable_auth():
+    @cl.oauth_callback
+    def oauth_callback(
+            provider_id: str,
+            token: str,
+            raw_user_data: Dict[str, str],
+            default_user: cl.User,
+    ) -> Optional[cl.User]:
+        """OAuth callback function."""
+        return default_user
 
 
 @cl.on_chat_start
@@ -46,19 +59,20 @@ async def on_chat_start():
     setup_runnable()
 
 
-@cl.on_chat_resume
-async def on_chat_resume(thread: cl_data.ThreadDict):
-    """Callback function when chat resumes."""
-    memory = initialize_memory()
-    root_messages = [m for m in thread["steps"]]
-    for message in root_messages:
-        if message["type"] == "user_message":
-            memory.chat_memory.add_user_message(message["output"])
-        else:
-            memory.chat_memory.add_ai_message(message["output"])
+if enable_auth():
+    @cl.on_chat_resume
+    async def on_chat_resume(thread: cl_data.ThreadDict):
+        """Callback function when chat resumes."""
+        memory = initialize_memory()
+        root_messages = [m for m in thread["steps"]]
+        for message in root_messages:
+            if message["type"] == "user_message":
+                memory.chat_memory.add_user_message(message["output"])
+            else:
+                memory.chat_memory.add_ai_message(message["output"])
 
-    cl.user_session.set("memory", memory)
-    setup_runnable()
+        cl.user_session.set("memory", memory)
+        setup_runnable()
 
 
 def build_token(token_symbol: str, token_address: str):

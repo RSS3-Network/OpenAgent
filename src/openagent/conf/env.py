@@ -16,5 +16,9 @@ class Settings(BaseSettings):
     RSS3_DATA_API: str = Field(default="https://testnet.rss3.io/data", env="RSS3_DATA_API")
     RSS3_SEARCH_API: str = Field(default="https://devnet.rss3.io/search", env="RSS3_SEARCH_API")
 
+    CHAINLIT_AUTH_SECRET: Optional[str] = Field(default=None, env="CHAINLIT_AUTH_SECRET")
+    OAUTH_AUTH0_CLIENT_ID: Optional[str] = Field(default=None, env="OAUTH_AUTH0_CLIENT_ID")
+    OAUTH_AUTH0_CLIENT_SECRET: Optional[str] = Field(default=None, env="OAUTH_AUTH0_CLIENT_SECRET")
+    OAUTH_AUTH0_DOMAIN: Optional[str] = Field(default=None, env="OAUTH_AUTH0_DOMAIN")
 
 settings = Settings()
