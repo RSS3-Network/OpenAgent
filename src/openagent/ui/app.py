@@ -3,7 +3,6 @@ from typing import Dict, Optional
 
 import chainlit as cl
 import chainlit.data as cl_data
-from chainlit.cli import run_chainlit
 from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 from langchain.memory import ConversationBufferMemory
 from langchain.schema.runnable.config import RunnableConfig
@@ -125,11 +124,3 @@ async def on_message(message: cl.Message):
     await msg.send()
     memory.chat_memory.add_user_message(message.content)
     memory.chat_memory.add_ai_message(msg.content)
-
-
-def start_ui():
-    run_chainlit(__file__)
-
-
-if __name__ == "__main__":
-    start_ui()
