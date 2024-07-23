@@ -46,7 +46,7 @@ services:
           devices:
             - driver: nvidia
               count: 1
-              capabilities: [ gpu ]
+              capabilities: [gpu]
 
   ollama_init:
     image: curlimages/curl:latest
