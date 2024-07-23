@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     MODEL_NAME: str = Field(default="gemini-1.5-pro", env="MODEL_NAME")
     LLM_API_BASE: Optional[str] = Field(default=None)
     PROJECT_ID: Optional[str] = Field(default=None)
+    GOOGLE_API_KEY: Optional[str] = Field(default=None)
     NFTSCAN_API_KEY: str = Field(..., env="NFTSCAN_API_KEY")
     DB_CONNECTION: str = Field(..., env="DB_CONNECTION")
     RSS3_DATA_API: str = Field(default="https://testnet.rss3.io/data", env="RSS3_DATA_API")
