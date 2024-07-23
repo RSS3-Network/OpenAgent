@@ -6,8 +6,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    environment:
+        - MODEL_NAME=deepseek-coder-v2
+        - LLM_API_BASE=http://ollama:11434
+        - DB_CONNECTION=postgresql://postgres:password@vec_db:5432/vec
     depends_on:
       - vec_db
       - ollama_init
@@ -55,8 +57,8 @@ services:
     depends_on:
       - ollama
     entrypoint: [ "/bin/sh", "-c", "curl -X POST -H 'Content-Type: application/json' -d '{\"name\": \"${MODEL_NAME}\"}' http://ollama:11434/api/pull" ]
-    env_file:
-      - .env
+    environment:
+        - MODEL_NAME=deepseek-coder-v2
     networks:
       - ollama-docker
 

@@ -21,4 +21,5 @@ class Settings(BaseSettings):
     OAUTH_AUTH0_CLIENT_SECRET: Optional[str] = Field(default=None, env="OAUTH_AUTH0_CLIENT_SECRET")
     OAUTH_AUTH0_DOMAIN: Optional[str] = Field(default=None, env="OAUTH_AUTH0_DOMAIN")
 
+
 settings = Settings()
