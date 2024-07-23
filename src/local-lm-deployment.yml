@@ -1,0 +1,67 @@
+version: '3.4'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - vec_db
+    networks:
+      - ollama-docker
+  vec_db:
+    image: pgvector/pgvector:pg16
+    container_name: vec_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vec
+    ports:
+      - "5433:5432"
+    volumes:
+      - vec_data:/var/lib/postgresql/data
+    networks:
+      - ollama-docker
+  ollama:
+    volumes:
+      - ollama_data:/root/.ollama
+    container_name: ollama_v2
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    ports:
+      - "9006:11434"
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    networks:
+      - ollama-docker
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
+  ollama_init:
+    image: curlimages/curl:latest
+    container_name: ollama_init
+    depends_on:
+      - ollama
+    entrypoint: [ "/bin/sh", "-c", "curl -X POST -H 'Content-Type: application/json' -d '{\"name\": \"${MODEL_NAME}\"}' http://ollama:11434/api/pull" ]
+    env_file:
+      - .env
+    networks:
+      - ollama-docker
+
+volumes:
+  vec_data:
+  ollama_data:
+networks:
+  ollama-docker:
+    external: false
