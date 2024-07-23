@@ -6,8 +6,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    environment:
+        - MODEL_NAME=deepseek-coder-v2
+        - LLM_API_BASE=http://ollama:11434
+        - DB_CONNECTION=postgresql://postgres:password@vec_db:5432/vec
     depends_on:
       - vec_db
+      - ollama_init
+    networks:
+      - openagent-network
+
   vec_db:
     image: pgvector/pgvector:pg16
     container_name: vec_db
@@ -19,8 +27,46 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - vec_data:/var/lib/postgresql/data
+      - vector_data:/var/lib/postgresql/data
+    networks:
+      - openagent-network
 
+  ollama:
+    volumes:
+      - ollama_data:/root/.ollama
+    container_name: ollama_v2
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    ports:
+      - "9006:11434"
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    networks:
+      - openagent-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  ollama_init:
+    image: curlimages/curl:latest
+    container_name: ollama_init
+    depends_on:
+      - ollama
+    entrypoint: [ "/bin/sh", "-c", "curl -X POST -H 'Content-Type: application/json' -d '{\"name\": \"${MODEL_NAME}\"}' http://ollama:11434/api/pull" ]
+    environment:
+        - MODEL_NAME=deepseek-coder-v2
+    networks:
+      - openagent-network
 
 volumes:
-  vec_data:
+  vector_data:
+  ollama_data:
+networks:
+  openagent-network:
+    external: false
