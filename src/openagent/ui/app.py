@@ -7,6 +7,7 @@ from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 from langchain.memory import ConversationBufferMemory
 from langchain.schema.runnable.config import RunnableConfig
 from langchain_core.messages import FunctionMessage
+from langchain_core.utils.json import parse_json_markdown
 from loguru import logger
 
 from openagent.agent.function_agent import get_agent
@@ -118,9 +119,33 @@ async def on_message(message: cl.Message):
                 for message in chunk["messages"]:
                     if isinstance(message, FunctionMessage):
                         await handle_function_message(message, msg)
+                    await react_tool_call_handle(message, msg)
     except Exception as e:
         logger.exception(e)
 
     await msg.send()
     memory.chat_memory.add_user_message(message.content)
     memory.chat_memory.add_ai_message(msg.content)
+
+
+async def react_tool_call_handle(message, msg):
+    try:
+        swap_dict = parse_json_markdown(message.content)
+        if 'type' in swap_dict and swap_dict['type'] == "swap":
+            logger.info(swap_dict)
+            from_chain = swap_dict["from_chain_name"]
+            to_chain = swap_dict["to_chain_name"]
+            from_token_ = swap_dict["from_token"]
+            from_token_address = swap_dict["from_token_address"]
+            to_token = swap_dict["to_token"]
+            to_token_address = swap_dict["to_token_address"]
+            from_amount = swap_dict["amount"]
+
+            widget = (
+                f"""<iframe style="swap" src="https://widget.rango.exchange/?fromBlockchain={from_chain}&"""
+                f"""fromToken={build_token(from_token_, from_token_address)}&toBlockchain={to_chain}&"""
+                f"""toToken={build_token(to_token, to_token_address)}&fromAmount={from_amount}" width="400" height="700"></iframe>"""
+            )
+            await msg.stream_token(widget)
+    except Exception as e:
+        logger.warning("Failed to handle react tool call message", e)
