@@ -12,10 +12,10 @@ load_dotenv()
 def build_vector_store() -> PGVector:
     collection_name = "backend"
     if settings.MODEL_NAME.startswith("gemini"):
-        if settings.GOOGLE_API_KEY is not None:
-            underlying_embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=settings.GOOGLE_API_KEY)
+        if settings.GOOGLE_GEMINI_API_KEY is not None:
+            underlying_embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=settings.GOOGLE_GEMINI_API_KEY)
         else:
-            underlying_embeddings = VertexAIEmbeddings(model_name="textembedding-gecko@003", project=settings.PROJECT_ID)
+            underlying_embeddings = VertexAIEmbeddings(model_name="textembedding-gecko@003", project=settings.GOOGLE_CLOUD_PROJECT_ID)
     else:
         underlying_embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
     return PGVector(

@@ -80,20 +80,17 @@ def create_interpreter(model_name):
             streaming=True,
         )
     elif model_name.startswith("gemini"):
-        print(settings.GOOGLE_API_KEY)
-        print(settings.GOOGLE_API_KEY)
-        print(settings.GOOGLE_API_KEY)
-        if settings.GOOGLE_API_KEY is not None:
+        if settings.GOOGLE_GEMINI_API_KEY is not None:
             return ChatGoogleGenerativeAI(
                 model=model_name,
-                google_api_key=settings.GOOGLE_API_KEY,
+                google_api_key=settings.GOOGLE_GEMINI_API_KEY,
                 temperature=0.3,
                 streaming=True,
             )
         else:
             return ChatVertexAI(
                 model=settings.MODEL_NAME,
-                project=settings.PROJECT_ID,
+                project=settings.GOOGLE_CLOUD_PROJECT_ID,
                 temperature=0.3,
                 streaming=True,
                 verbose=True,
