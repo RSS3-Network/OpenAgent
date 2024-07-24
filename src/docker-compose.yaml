@@ -6,10 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    environment:
-        - MODEL_NAME=deepseek-coder-v2
-        - LLM_API_BASE=http://ollama:11434
-        - DB_CONNECTION=postgresql://postgres:password@vec_db:5432/vec
+    env_file:
+      - .env
     depends_on:
       - vec_db
       - ollama_init
@@ -34,8 +32,7 @@ services:
   ollama:
     volumes:
       - ollama_data:/root/.ollama
-    container_name: ollama_v2
-    pull_policy: always
+    container_name: ollama
     tty: true
     restart: unless-stopped
     image: ollama/ollama:latest
@@ -59,8 +56,8 @@ services:
     depends_on:
       - ollama
     entrypoint: [ "/bin/sh", "-c", "curl -X POST -H 'Content-Type: application/json' -d '{\"name\": \"${MODEL_NAME}\"}' http://ollama:11434/api/pull" ]
-    environment:
-        - MODEL_NAME=deepseek-coder-v2
+    env_file:
+      - .env
     networks:
       - openagent-network
 
