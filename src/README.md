@@ -4,6 +4,8 @@
 
 - [Prerequisites](#prerequisites)
 - [Deployment](#deployment)
+  - [Local Model Deployment](#local-model-deployment)
+  - [API-Based Model Deployment](#api-based-model-deployment)
 - [Configuration](#configuration)
 - [GPU Support](#gpu-support)
 
@@ -17,8 +19,6 @@ Before deploying OpenAgent, ensure you have:
 
 ## Deployment
 
-Follow these steps to deploy OpenAgent:
-
 1. Clone the repository:
    ```bash
    git clone https://github.com/RSS3-Network/OpenAgent
@@ -31,17 +31,27 @@ Follow these steps to deploy OpenAgent:
    ```
    Open the `.env` file and fill in the required variables (see [Configuration](#configuration) section).
 
-3. Deploy the containers:
-   
-   For CPU-only deployment:
-   ```bash
-   docker compose up -d
-   ```
-   
-   For deployment with GPU support (on compatible systems):
-   ```bash
-   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
-   ```
+### Local Model Deployment
+
+To deploy OpenAgent with a local large model:
+
+For CPU-only deployment:
+```bash
+docker compose up -d
+```
+
+For deployment with GPU support (on compatible systems):
+```bash
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+```
+
+### API-Based Model Deployment
+
+If you prefer to use a model provided by an external API (e.g., OpenAI, Google Vertex AI), you can deploy only the app and vec_db services:
+
+```bash
+docker compose up -d app vec_db
+```
 
 ## Configuration
 
@@ -89,5 +99,5 @@ To enable GPU support:
 
 1. Ensure NVIDIA GPU drivers are installed.
 2. Install the Nvidia container toolkit. Follow the [Nvidia Container Toolkit Installation Guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#installation).
-3. Use the GPU-enabled deployment command mentioned in the [Deployment](#deployment) section.
+3. Use the GPU-enabled deployment command mentioned in the [Local Model Deployment](#local-model-deployment) section.
 

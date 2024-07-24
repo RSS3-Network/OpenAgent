@@ -10,7 +10,6 @@ services:
       - .env
     depends_on:
       - vec_db
-      - ollama_init
     networks:
       - openagent-network
 
