@@ -1,9 +1,8 @@
 version: '3.4'
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: rss3/openagent:latest
+    container_name: openagent
     ports:
       - "8000:8000"
     env_file:
@@ -27,6 +26,13 @@ services:
       - vector_data:/var/lib/postgresql/data
     networks:
       - openagent-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
   ollama:
     volumes:
@@ -39,17 +45,6 @@ services:
       - "11434:11434"
     environment:
       - OLLAMA_KEEP_ALIVE=24h
-    networks:
-      - openagent-network
-
-  ollama_init:
-    image: curlimages/curl:latest
-    container_name: ollama_init
-    depends_on:
-      - ollama
-    entrypoint: [ "/bin/sh", "-c", "curl -X POST -H 'Content-Type: application/json' -d '{\"name\": \"${MODEL_NAME}\"}' http://ollama:11434/api/pull" ]
-    env_file:
-      - .env
     networks:
       - openagent-network
 
