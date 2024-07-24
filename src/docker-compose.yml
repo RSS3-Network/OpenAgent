@@ -4,7 +4,7 @@ services:
     image: rss3/openagent:latest
     container_name: openagent
     ports:
-      - "8000:8000"
+      - "18000:8000"
     env_file:
       - .env
     depends_on:
@@ -21,7 +21,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: vec
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - vector_data:/var/lib/postgresql/data
     networks:
@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     image: ollama/ollama:latest
     ports:
-      - "11434:11434"
+      - "21434:11434"
     environment:
       - OLLAMA_KEEP_ALIVE=24h
     networks:
