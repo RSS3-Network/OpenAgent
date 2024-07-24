@@ -19,6 +19,11 @@ class ParamSchema(BaseModel):
 hint: vitalik's address is vitalik.eth"""
     )
 
+    type: str = Field(
+        description="""Retrieve activities for the specified type,
+for example: all, post, comment, share."""
+    )
+
 
 class FeedExpert(BaseTool):
     name = "feed"
@@ -29,6 +34,7 @@ blockchain domain name and know what this address has done or doing recently."""
     def _run(
         self,
         address: str,
+        type: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
@@ -36,38 +42,22 @@ blockchain domain name and know what this address has done or doing recently."""
     async def _arun(
         self,
         address: str,
+        type: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
-        return await fetch_feeds(address)
+        return await fetch_feeds(address, type)
 
 
-async def fetch_feeds(address: str):
-    url = f"""{settings.RSS3_DATA_API}/decentralized/{address}?limit=5&action_limit=10"""
+async def fetch_feeds(address: str, type: str):
+    url = f"{settings.RSS3_DATA_API}/decentralized/{address}?limit=5&action_limit=10&tag=social"
+    if type != "all":
+        url += f"&type={type}"
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")
         async with session.get(url, headers=headers) as resp:
             data = await resp.json()
 
-    formatted_activities = []
-    for activity in data["data"]:
-        formatted_activity = f"## Transaction on {activity['network']}\n"
-        formatted_activity += f"- **Type**: {activity['type']}\n"
-        formatted_activity += f"- **Status**: {activity['status']}\n"
-        formatted_activity += f"- **Timestamp**: {activity['timestamp']}\n"
-
-        if "actions" in activity:
-            formatted_activity += "### Actions:\n"
-            for action in activity["actions"]:
-                formatted_activity += f"- {action['type']} from {action['from']} to {action['to']}\n"
-                if "metadata" in action:
-                    for key, value in action["metadata"].items():
-                        formatted_activity += f"  - {key}: {value}\n"
-
-        formatted_activities.append(formatted_activity)
-
-    activities_data = "\n\n".join(formatted_activities)
-
-    result = FEED_PROMPT.format(address=address, activities_data=activities_data)
+    result = FEED_PROMPT.format(activities_data=data)
 
     return result
