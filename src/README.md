@@ -47,7 +47,7 @@ docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
 
 ### API-Based Model Deployment
 
-If you prefer to use a model provided by an external API (e.g., OpenAI, Google Vertex AI), you can deploy only the app and vec_db services:
+If you prefer to use a model provided by an external API (e.g., OpenAI, Google Gemini), you can deploy only the app and vec_db services:
 
 ```bash
 docker compose up -d app vec_db
@@ -60,7 +60,7 @@ The `.env` file contains crucial configuration settings. Here are the key sectio
 ### Basic Configuration
 
 - `ENV`: Set to either "dev" or "prod"
-- `MODEL_NAME`: Specify the AI model to be used (e.g., "llama3")
+- `MODEL_NAME`: Specify the AI model to be used (e.g., "deepseek-coder-v2")
 - `LLM_API_BASE`: API base for LLM requests (default: http://ollama:11434)
 - `DB_CONNECTION`: Database connection string
 
