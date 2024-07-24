@@ -23,7 +23,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: vec
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - vector_data:/var/lib/postgresql/data
     networks:
@@ -37,18 +37,11 @@ services:
     restart: unless-stopped
     image: ollama/ollama:latest
     ports:
-      - "9006:11434"
+      - "11434:11434"
     environment:
       - OLLAMA_KEEP_ALIVE=24h
     networks:
       - openagent-network
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
 
   ollama_init:
     image: curlimages/curl:latest
