@@ -1,17 +1,17 @@
-import os
+import json
 
 from chainlit.utils import mount_chainlit
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
+from pydantic import BaseModel
+from sse_starlette import EventSourceResponse
 from starlette import status
-from starlette.responses import FileResponse, JSONResponse
+from starlette.responses import JSONResponse
 from starlette.staticfiles import StaticFiles
 
-from openagent.router.chat import chat_router
-from openagent.router.onboarding import onboarding_router
-from openagent.router.session import session_router
+from openagent.agent.function_agent import get_agent
 
 load_dotenv()
 app = FastAPI(title="OpenAgent", description="")
@@ -30,15 +30,24 @@ async def health_check():
     return JSONResponse(content={"status": "ok"})
 
 
-app.include_router(onboarding_router)
-app.include_router(chat_router)
-app.include_router(session_router)
+class Input(BaseModel):
+    text: str
 
 
-@app.get("/widget/swap")
-async def swap_root():
-    print("swap_root")
-    return FileResponse(os.path.join("dist", "index.html"))
+@app.post(
+    "/api/stream_chat",
+    description="streaming chat api for openagent"
+)
+async def outline_creation(req: Input):
+    agent = get_agent("openagent")
+
+    async def stream():
+        async for event in agent.astream_events({"input": req.text}, version="v1"):
+            kind = event["event"]
+            if kind == "on_chat_model_stream":
+                yield json.dumps(event['data']['chunk'].dict(), ensure_ascii=False)
+
+    return EventSourceResponse(stream(), media_type="text/event-stream")
 
 
 # Check and create static files directory
