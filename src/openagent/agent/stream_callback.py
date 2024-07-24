@@ -32,9 +32,7 @@ class StreamCallbackHandler(AsyncCallbackHandler):
         self.queue = asyncio.Queue()
         self.done = asyncio.Event()
 
-    async def on_llm_start(
-        self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any
-    ) -> None:
+    async def on_llm_start(self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any) -> None:
         # If two calls are made in a row, this resets the state
         self.done.clear()
         self.current_llm_block_id = str(uuid.uuid4())
@@ -234,9 +232,7 @@ class StreamCallbackHandler(AsyncCallbackHandler):
         **kwargs: Any,
     ) -> None:
         self.done.set()
-        return await super().on_llm_error(
-            error, run_id=run_id, parent_run_id=parent_run_id, tags=tags, **kwargs
-        )
+        return await super().on_llm_error(error, run_id=run_id, parent_run_id=parent_run_id, tags=tags, **kwargs)
 
     # TODO implement the other methods
 

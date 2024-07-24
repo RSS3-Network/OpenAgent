@@ -44,10 +44,10 @@ def generate_stream():
     tokens = re.findall(r"\S+\s*", introduction_text)
 
     for token in tokens:
-        yield f'{{"message_id":"{unique_message_id}","block_id":null,"type":"natural_language","body":{json.dumps(token)}}}'  # noqa: E501
+        yield f'{{"message_id":"{unique_message_id}","block_id":null,"type":"natural_language","body":{json.dumps(token)}}}'
 
     questions_json = json.dumps(suggested_questions)
-    yield f'{{"message_id":"{unique_message_id}","block_id":null,"type":"suggested_questions","body":{questions_json}}}'  # noqa: E501
+    yield f'{{"message_id":"{unique_message_id}","block_id":null,"type":"suggested_questions","body":{questions_json}}}'
 
 
 @onboarding_router.post("/onboarding/", response_model=ChatResp)

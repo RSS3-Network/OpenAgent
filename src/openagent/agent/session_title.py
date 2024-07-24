@@ -44,8 +44,6 @@ Session Title:
     output = output.strip("'").strip('"')
     logger.info(f"session title generated: {output}")
     with DBSession() as db_session:
-        db_session.query(ChatSession).filter(
-            ChatSession.session_id == session_id
-        ).update({ChatSession.title: output})
+        db_session.query(ChatSession).filter(ChatSession.session_id == session_id).update({ChatSession.title: output})
         db_session.commit()
     return output

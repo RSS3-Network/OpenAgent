@@ -30,9 +30,7 @@ session_router = APIRouter(tags=["Session"])
 
 
 @session_router.get("/sessions/tab/recent", response_model=list[ChatSession])
-async def get_recent_sessions(
-    user_id: str = Query(example="jackma"), offset: int = 0, limit: int = 50
-) -> list[str]:
+async def get_recent_sessions(user_id: str = Query(example="jackma"), offset: int = 0, limit: int = 50) -> list[str]:
     logger.info(f"Received request: user_id={user_id}, offset={offset}, limit={limit}")
     return get_recent_sessions0(user_id, offset, limit)
 
@@ -43,12 +41,8 @@ async def get_favorite_session_tree(user_id: str = Query(example="jackma")):
     return get_session_tree0(user_id)
 
 
-@session_router.get(
-    "/sessions/{user_id}/{session_id}", response_model=ChatHistory | ErrorResp
-)
-async def get_session_chat_history(
-    user_id: str, session_id: str, offset: int = 0, limit: int = 50
-):
+@session_router.get("/sessions/{user_id}/{session_id}", response_model=ChatHistory | ErrorResp)
+async def get_session_chat_history(user_id: str, session_id: str, offset: int = 0, limit: int = 50):
     logger.info(
         f"Received request: user_id={user_id}, session_id={session_id},\
 offset={offset}, limit={limit}"

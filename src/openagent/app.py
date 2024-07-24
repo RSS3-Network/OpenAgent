@@ -1,4 +1,5 @@
 import json
+import os
 
 from chainlit.utils import mount_chainlit
 from dotenv import load_dotenv
@@ -34,10 +35,7 @@ class Input(BaseModel):
     text: str
 
 
-@app.post(
-    "/api/stream_chat",
-    description="streaming chat api for openagent"
-)
+@app.post("/api/stream_chat", description="streaming chat api for openagent")
 async def outline_creation(req: Input):
     agent = get_agent("openagent")
 
@@ -45,7 +43,7 @@ async def outline_creation(req: Input):
         async for event in agent.astream_events({"input": req.text}, version="v1"):
             kind = event["event"]
             if kind == "on_chat_model_stream":
-                yield json.dumps(event['data']['chunk'].dict(), ensure_ascii=False)
+                yield json.dumps(event["data"]["chunk"].dict(), ensure_ascii=False)
 
     return EventSourceResponse(stream(), media_type="text/event-stream")
 

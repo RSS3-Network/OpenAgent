@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional, Type
 
 import aiohttp
@@ -28,24 +27,22 @@ blockchain domain name and know what this address has done or doing recently."""
     args_schema: Type[ParamSchema] = ParamSchema
 
     def _run(
-            self,
-            address: str,
-            run_manager: Optional[CallbackManagerForToolRun] = None,
+        self,
+        address: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
-            self,
-            address: str,
-            run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+        self,
+        address: str,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
         return await fetch_feeds(address)
 
 
 async def fetch_feeds(address: str):
-    url = (
-        f"""{settings.RSS3_DATA_API}/decentralized/{address}?limit=5&action_limit=10"""
-    )
+    url = f"""{settings.RSS3_DATA_API}/decentralized/{address}?limit=5&action_limit=10"""
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
         logger.info(f"fetching {url}")
@@ -62,9 +59,7 @@ async def fetch_feeds(address: str):
         if "actions" in activity:
             formatted_activity += "### Actions:\n"
             for action in activity["actions"]:
-                formatted_activity += (
-                    f"- {action['type']} from {action['from']} to {action['to']}\n"
-                )
+                formatted_activity += f"- {action['type']} from {action['from']} to {action['to']}\n"
                 if "metadata" in action:
                     for key, value in action["metadata"].items():
                         formatted_activity += f"  - {key}: {value}\n"

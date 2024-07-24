@@ -57,17 +57,11 @@ def get_recent_sessions(user_id: str, offset: int, limit: int):
         return compose_left(map(ChatSessionDto.from_orm), list)(all0)
 
 
-def get_histories(
-    user_id: str, session_id: str, offset: int, limit: int
-) -> ChatHistoryDto:
+def get_histories(user_id: str, session_id: str, offset: int, limit: int) -> ChatHistoryDto:
     with DBSession() as db_sess:
         all0 = (
             db_sess.query(ChatHistory)
-            .filter(
-                and_(
-                    ChatHistory.session_id == session_id, ChatHistory.user_id == user_id
-                )
-            )
+            .filter(and_(ChatHistory.session_id == session_id, ChatHistory.user_id == user_id))
             .order_by(desc("send_at"))
             .limit(limit)
             .offset(offset)
@@ -76,11 +70,7 @@ def get_histories(
 
         msgs = ChatMessageDto.from_orm(all0)
 
-        one = (
-            db_sess.query(ChatSession)
-            .filter(ChatSession.session_id == session_id)
-            .one()
-        )
+        one = db_sess.query(ChatSession).filter(ChatSession.session_id == session_id).one()
         return ChatHistoryDto(
             title=one.title,
             messages=msgs,

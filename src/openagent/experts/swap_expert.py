@@ -1,5 +1,5 @@
 import asyncio
-from typing import Optional, Type, Literal
+from typing import Literal, Optional, Type
 
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
@@ -18,53 +18,43 @@ class ParamSchema(BaseModel):
     """
     Schema for the parameters required for a token swap.
     """
-    from_token: str = Field(
-        description="Symbol of the token to swap from, e.g., 'BTC', 'ETH', 'RSS3', 'USDT', 'USDC'. Default: 'ETH'."
-    )
-    to_token: str = Field(
-        description="Symbol of the token to swap to, e.g., 'BTC', 'ETH', 'RSS3', 'USDT', 'USDC'. Default: 'ETH'."
-    )
-    from_chain: ChainLiteral = Field(
-        default="ETH",
-        description="Blockchain network to swap from. Default: 'ETH'."
-    )
-    to_chain: ChainLiteral = Field(
-        default="ETH",
-        description="Blockchain network to swap to. Default: 'ETH'."
-    )
-    amount: str = Field(
-        description="Amount of the from-side token to swap, e.g., '0.1', '1', '10'. Default: '1'."
-    )
+
+    from_token: str = Field(description="Symbol of the token to swap from, e.g., 'BTC', 'ETH', 'RSS3', 'USDT', 'USDC'. Default: 'ETH'.")
+    to_token: str = Field(description="Symbol of the token to swap to, e.g., 'BTC', 'ETH', 'RSS3', 'USDT', 'USDC'. Default: 'ETH'.")
+    from_chain: ChainLiteral = Field(default="ETH", description="Blockchain network to swap from. Default: 'ETH'.")
+    to_chain: ChainLiteral = Field(default="ETH", description="Blockchain network to swap to. Default: 'ETH'.")
+    amount: str = Field(description="Amount of the from-side token to swap, e.g., '0.1', '1', '10'. Default: '1'.")
 
 
 class SwapExpert(BaseTool):
     """
     Tool for generating a swap widget for cryptocurrency swaps.
     """
+
     name = "swap"
     description = "Use this tool to generate a swap widget for the user to swap cryptocurrencies."
     args_schema: Type[ParamSchema] = ParamSchema
     return_direct = False
 
     def _run(
-            self,
-            from_token: str,
-            to_token: str,
-            from_chain: ChainLiteral,
-            to_chain: ChainLiteral,
-            amount: str,
-            run_manager: Optional[CallbackManagerForToolRun] = None,
+        self,
+        from_token: str,
+        to_token: str,
+        from_chain: ChainLiteral,
+        to_chain: ChainLiteral,
+        amount: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
-            self,
-            from_token: str,
-            to_token: str,
-            from_chain: ChainLiteral = "ETH",
-            to_chain: ChainLiteral = "ETH",
-            amount: str = "1",
-            run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+        self,
+        from_token: str,
+        to_token: str,
+        from_chain: ChainLiteral = "ETH",
+        to_chain: ChainLiteral = "ETH",
+        amount: str = "1",
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
         return await fetch_swap(from_token, to_token, from_chain, to_chain, amount)
 
@@ -87,10 +77,7 @@ async def fetch_swap(from_token: str, to_token: str, from_chain: ChainLiteral, t
     to_chain_id = chain_name_to_id(to_chain)
 
     # Fetch token data concurrently
-    from_token_data, to_token_data = await asyncio.gather(
-        select_best_token(from_token, from_chain_id),
-        select_best_token(to_token, to_chain_id)
-    )
+    from_token_data, to_token_data = await asyncio.gather(select_best_token(from_token, from_chain_id), select_best_token(to_token, to_chain_id))
 
     swap = Swap(
         from_token=get_token_data_by_key(from_token_data, "symbol"),
@@ -99,6 +86,6 @@ async def fetch_swap(from_token: str, to_token: str, from_chain: ChainLiteral, t
         to_token_address=get_token_data_by_key(to_token_data, "address"),
         from_chain_name=from_chain,
         to_chain_name=to_chain,
-        amount=amount
+        amount=amount,
     )
     return swap.model_dump_json()

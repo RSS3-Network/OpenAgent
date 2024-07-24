@@ -15,12 +15,7 @@ from openagent.conf.env import settings
 
 
 def enable_auth():
-    auth_settings = [
-        settings.CHAINLIT_AUTH_SECRET,
-        settings.OAUTH_AUTH0_CLIENT_ID,
-        settings.OAUTH_AUTH0_CLIENT_SECRET,
-        settings.OAUTH_AUTH0_DOMAIN
-    ]
+    auth_settings = [settings.CHAINLIT_AUTH_SECRET, settings.OAUTH_AUTH0_CLIENT_ID, settings.OAUTH_AUTH0_CLIENT_SECRET, settings.OAUTH_AUTH0_DOMAIN]
     return all(arg is not None for arg in auth_settings)
 
 
@@ -41,12 +36,13 @@ def initialize_memory() -> ConversationBufferMemory:
 
 
 if enable_auth():
+
     @cl.oauth_callback
     def oauth_callback(
-            provider_id: str,
-            token: str,
-            raw_user_data: Dict[str, str],
-            default_user: cl.User,
+        provider_id: str,
+        token: str,
+        raw_user_data: Dict[str, str],
+        default_user: cl.User,
     ) -> Optional[cl.User]:
         """OAuth callback function."""
         return default_user
@@ -60,6 +56,7 @@ async def on_chat_start():
 
 
 if enable_auth():
+
     @cl.on_chat_resume
     async def on_chat_resume(thread: cl_data.ThreadDict):
         """Callback function when chat resumes."""
@@ -76,7 +73,7 @@ if enable_auth():
 
 
 def build_token(token_symbol: str, token_address: str):
-    return f"{token_symbol}{'--' + token_address.lower() if not token_symbol == 'ETH' else ''}"
+    return f"{token_symbol}{'--' + token_address.lower() if token_symbol != 'ETH' else ''}"
 
 
 async def handle_function_message(message: FunctionMessage, msg: cl.Message):
@@ -112,8 +109,7 @@ async def on_message(message: cl.Message):
 
     try:
         async for chunk in runnable.astream(
-                {"input": message.content},
-                config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)])
+            {"input": message.content}, config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)])
         ):
             if "output" in chunk:
                 await msg.stream_token(chunk["output"])
@@ -134,7 +130,7 @@ async def on_message(message: cl.Message):
 async def react_tool_call_handle(message, msg):
     try:
         swap_dict = parse_json_markdown(message.content)
-        if 'type' in swap_dict and swap_dict['type'] == "swap":
+        if "type" in swap_dict and swap_dict["type"] == "swap":
             await do_stream_swap_widget(msg, swap_dict)
     except Exception as e:
         logger.warning("Failed to handle react tool call message", e)

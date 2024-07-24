@@ -21,9 +21,7 @@ def fetch_iqwiki_feeds(since_timestamp, until_timestamp, limit=10, cursor=None) 
     return fetch_feeds("IQ.Wiki", since_timestamp, until_timestamp, limit, cursor)
 
 
-def fetch_feeds(
-    platform, since_timestamp, until_timestamp, limit=10, cursor=None, max_retries=3
-) -> dict:
+def fetch_feeds(platform, since_timestamp, until_timestamp, limit=10, cursor=None, max_retries=3) -> dict:
     """
     Fetch feeds from a platform with retry functionality.
     """
@@ -55,4 +53,4 @@ def fetch_feeds(
 
 if __name__ == "__main__":
     feeds = fetch_feeds("Mirror", 0, 0, 1, None, 3)
-    print(json.dumps(feeds,ensure_ascii=False))
+    print(json.dumps(feeds, ensure_ascii=False))
