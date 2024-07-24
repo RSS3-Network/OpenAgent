@@ -4,6 +4,7 @@ from chainlit.utils import mount_chainlit
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
 from starlette import status
 from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
@@ -40,6 +41,20 @@ async def swap_root():
     return FileResponse(os.path.join("dist", "index.html"))
 
 
-app.mount("/static", StaticFiles(directory="dist/static"), name="widget")
+# Check and create static files directory
+static_dir = os.path.join("dist", "static")
+if not os.path.exists(static_dir):
+    try:
+        os.makedirs(static_dir)
+        logger.info(f"Created directory: {static_dir}")
+    except OSError as e:
+        logger.error(f"Error creating directory {static_dir}: {e}")
+
+# Mount static files directory
+try:
+    app.mount("/static", StaticFiles(directory=static_dir), name="widget")
+    logger.info(f"Successfully mounted static files from {static_dir}")
+except Exception as e:
+    logger.error(f"Error mounting static files: {e}")
 
 mount_chainlit(app=app, target="openagent/ui/app.py", path="")
