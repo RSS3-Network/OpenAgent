@@ -1,6 +1,6 @@
 version: '3.4'
 services:
-  app:
+  openagent:
     image: rss3/openagent:latest
     container_name: openagent
     ports:
@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - vec_db
+      - vector_db
     networks:
       - openagent-network
 
