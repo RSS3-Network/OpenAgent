@@ -41,7 +41,7 @@ class SearchExpert(BaseTool):
     description = """
     A versatile search tool that can perform various types of searches based on the query type:
     - For queries related to charts, data visualization, or dashboards, use Dune search.
-    - For queries about project introductions, current events or real-time information, use Google search."""  # noqa: E501
+    - For queries about project introductions, current events or real-time information, use Google search."""
     args_schema: Type[SearchSchema] = SearchSchema
 
     def _run(

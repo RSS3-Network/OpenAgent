@@ -13,10 +13,7 @@ from openagent.conf.env import settings
 
 
 class ARGS(BaseModel):
-    action: str = Field(
-        description="Specify the operation to perform: 'search' for NFT "
-        "collection search, 'rank' for collection ranking"
-    )
+    action: str = Field(description="Specify the operation to perform: 'search' for NFT " "collection search, 'rank' for collection ranking")
     keyword: str = Field(
         default="",
         description="NFT symbol or collection name, required only for 'action=search'",
@@ -53,10 +50,7 @@ class NFTExpert(BaseTool):
         elif action == "rank":
             return self.collection_ranking(sort_field)
         else:
-            return (
-                "Error: Unknown operation type. "
-                "Please specify 'action' as 'search' or 'rank'."
-            )
+            return "Error: Unknown operation type. " "Please specify 'action' as 'search' or 'rank'."
 
     async def _arun(
         self,

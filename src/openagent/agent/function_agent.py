@@ -10,6 +10,7 @@ from langchain.prompts import MessagesPlaceholder
 from langchain.schema import SystemMessage
 from langchain_community.chat_models import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_vertexai import ChatVertexAI
 from langchain_openai import ChatOpenAI
 from toolz import memoize
@@ -53,7 +54,7 @@ def create_react_agent(session_id: str):
         ArticleExpert(),
         NFTExpert(),
         TransferExpert(),
-        SwapExpert()
+        SwapExpert(),
     ]
 
     # Initialize interpreter
@@ -79,12 +80,21 @@ def create_interpreter(model_name):
             streaming=True,
         )
     elif model_name.startswith("gemini"):
-        return ChatVertexAI(
-            model=settings.MODEL_NAME,
-            project=settings.PROJECT_ID,
-            temperature=0.3,
-            streaming=True,
-        )
+        if settings.GOOGLE_GEMINI_API_KEY is not None:
+            return ChatGoogleGenerativeAI(
+                model=model_name,
+                google_api_key=settings.GOOGLE_GEMINI_API_KEY,
+                temperature=0.3,
+                streaming=True,
+            )
+        else:
+            return ChatVertexAI(
+                model=settings.MODEL_NAME,
+                project=settings.GOOGLE_CLOUD_PROJECT_ID,
+                temperature=0.3,
+                streaming=True,
+                verbose=True,
+            )
     else:
         return ChatOllama(
             model=model_name,
@@ -125,7 +135,7 @@ def create_tool_call_agent(session_id: str):
         ArticleExpert(),
         NFTExpert(),
         TransferExpert(),
-        SwapExpert()
+        SwapExpert(),
     ]
 
     # Construct the Tools agent
@@ -142,7 +152,7 @@ def create_tool_call_agent(session_id: str):
 async def main():
     # Create a tool call agent and use it to handle some inputs
     agent = get_agent("123")
-    await agent.ainvoke({"input": "Swap 1 eth to usdt"})
+    await agent.ainvoke({"input": "Swap 1 eth to usdt, from ethereumn to arb"})
     await agent.ainvoke({"input": "What is the price of ETH?"})
     await agent.ainvoke({"input": "What did vitalik.eth do recently?"})
 

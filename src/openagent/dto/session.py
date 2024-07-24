@@ -14,13 +14,9 @@ class SessionTreeNodeDTOType(str, Enum):
 
 class SessionTreeNodeDTO(BaseModel):
     session_id: str = Field(description="session id")
-    parent_id: str | None = Field(
-        example=None, default=None, description="parent id, if null, is root folder"
-    )
+    parent_id: str | None = Field(example=None, default=None, description="parent id, if null, is root folder")
     title: str | None = Field(default=None, description="session title")
-    order: int = Field(
-        description="order in parent folder, session will sort by order desc"
-    )
+    order: int = Field(description="order in parent folder, session will sort by order desc")
     created_at: datetime = Field(description="create time")
     children: list | None = []
     type: SessionTreeNodeDTOType = SessionTreeNodeDTOType.folder
@@ -51,9 +47,7 @@ def build_session_tree_node(node: ChatSession) -> SessionTreeNodeDTO:
 class NewSessionFolderDTO(BaseModel):
     user_id: str = Field(example="jackma")
     title: str = Field(example="folder1")
-    order: int = Field(
-        example=1, description="order in parent folder, session will sort by order desc"
-    )
+    order: int = Field(example=1, description="order in parent folder, session will sort by order desc")
     parent_id: str | None = Field(
         example=None,
         default=None,
@@ -61,9 +55,7 @@ class NewSessionFolderDTO(BaseModel):
     )
 
     class Config:
-        json_schema_extra: ClassVar = {
-            "example": {"user_id": "jackma", "title": "folder1", "order": 0}
-        }
+        json_schema_extra: ClassVar = {"example": {"user_id": "jackma", "title": "folder1", "order": 0}}
 
 
 class SessionTab(str, Enum):
@@ -100,14 +92,11 @@ class MoveSessionDTO(BaseModel):
     user_id: str = Field(description="user id", example="jackma")
     from_session_id: str = Field(description="source session id", example="1234567890")
     to_session_tab: SessionTab = Field(
-        description="target tab, favorite or recent. "
-        "if recent, to_session_id will be ignored",
+        description="target tab, favorite or recent. " "if recent, to_session_id will be ignored",
         example="favorite",
     )
     to_session_id: str | None = Field(
-        description="target parent session id, only valid when"
-        " to_session_tab is favorite, if null, "
-        "will move to root folder",
+        description="target parent session id, only valid when" " to_session_tab is favorite, if null, " "will move to root folder",
         example="0987654321",
         default=None,
     )

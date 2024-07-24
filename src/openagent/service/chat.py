@@ -16,9 +16,7 @@ from openagent.dto.chat_req import ChatReq
 from openagent.dto.chat_resp import ChatResp, ChatRespType
 
 
-async def arun_agent(
-    req: ChatReq, stream_cb: StreamCallbackHandler, resp_msg_id0: str
-) -> Any:
+async def arun_agent(req: ChatReq, stream_cb: StreamCallbackHandler, resp_msg_id0: str) -> Any:
     agent = get_agent(req.session_id)
     resp_msg_id.set(resp_msg_id0)
     chat_req_ctx.set(req)
@@ -38,9 +36,7 @@ async def answer(req: ChatReq) -> AsyncIterable[str]:
     try:
         create_session = await need_create_session(req)
     except Exception as e:
-        yield ChatResp(
-            type=ChatRespType.error, message_id=None, body=e.__str__()
-        ).model_dump_json()
+        yield ChatResp(type=ChatRespType.error, message_id=None, body=e.__str__()).model_dump_json()
         return
 
     stream_cb = StreamCallbackHandler()
@@ -49,15 +45,11 @@ async def answer(req: ChatReq) -> AsyncIterable[str]:
 
     chat_task = asyncio.create_task(arun_agent(req, stream_cb, resp_msg_id0))
 
-    suggested_questions_task = asyncio.create_task(
-        agen_suggested_questions(req.user_id, req.body)
-    )
+    suggested_questions_task = asyncio.create_task(agen_suggested_questions(req.user_id, req.body))
 
     session_title_task = None
     if create_session:
-        session_title_task = asyncio.create_task(
-            agen_session_title(req.user_id, req.session_id, req.body)
-        )
+        session_title_task = asyncio.create_task(agen_session_title(req.user_id, req.session_id, req.body))
 
     try:
         is_suggested_questions_done = False
@@ -67,9 +59,7 @@ async def answer(req: ChatReq) -> AsyncIterable[str]:
 
             if suggested_questions_task.done() and not is_suggested_questions_done:
                 is_suggested_questions_done = True
-                yield await gen_suggested_questions(
-                    suggested_questions_task, resp_msg_id0
-                )
+                yield await gen_suggested_questions(suggested_questions_task, resp_msg_id0)
 
             if (
                 create_session
@@ -133,19 +123,10 @@ async def need_create_session(req: ChatReq) -> bool:
     session_id = req.session_id
     with DBSession() as db_session:
         try:
-            session = (
-                db_session.query(ChatSession)
-                .filter(ChatSession.session_id == session_id)
-                .one()
-            )
+            session = db_session.query(ChatSession).filter(ChatSession.session_id == session_id).one()
             if session.deleted_at is not None:
                 raise ValueError("Session is deleted")
-            if (
-                db_session.query(ChatHistory)
-                .filter(ChatHistory.message_id == req.message_id)
-                .count()
-                > 0
-            ):
+            if db_session.query(ChatHistory).filter(ChatHistory.message_id == req.message_id).count() > 0:
                 raise ValueError("Message id already exists")
         except NoResultFound:
             db_session.add(

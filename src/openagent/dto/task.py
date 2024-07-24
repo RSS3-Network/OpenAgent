@@ -54,9 +54,7 @@ class TransferQueryDTO(BaseModel):
         example="0x4d2bf3A34a2311dB4b3D20D4719209EDaDBf69b6",
     )
     token: str = Field(description="token", example="ETH")
-    logoURI: str | None = Field(
-        description="logo uri", example="https://li.quest/logo.png"
-    )
+    logoURI: str | None = Field(description="logo uri", example="https://li.quest/logo.png")
     decimals: int | None = Field(description="decimals", example=18)
 
 

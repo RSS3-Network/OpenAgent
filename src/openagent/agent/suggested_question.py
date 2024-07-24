@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_vertexai import ChatVertexAI
 from langchain_openai import ChatOpenAI
 from loguru import logger
@@ -36,7 +37,7 @@ A:
 -----------------------------------------------------------------
 Q:
 {history}
-A:""",  # noqa
+A:""",
         input_variables=["history"],
     )
     if settings.MODEL_NAME.startswith("gpt"):
@@ -46,9 +47,10 @@ A:""",  # noqa
             temperature=0.5,
         )
     elif settings.MODEL_NAME.startswith("gemini"):
-        model = ChatVertexAI(
-            model_name=settings.MODEL_NAME, project=settings.PROJECT_ID, temperature=0.5
-        )
+        if settings.GOOGLE_GEMINI_API_KEY is not None:
+            model = ChatGoogleGenerativeAI(model=settings.MODEL_NAME, google_api_key=settings.GOOGLE_GEMINI_API_KEY, temperature=0.5)
+        else:
+            model = ChatVertexAI(model_name=settings.MODEL_NAME, project=settings.GOOGLE_CLOUD_PROJECT_ID, temperature=0.5)
     else:
         model = ChatOllama(model=settings.MODEL_NAME, base_url=settings.LLM_API_BASE)
     interpreter = LLMChain(llm=model, prompt=prompt)

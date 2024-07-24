@@ -15,9 +15,7 @@ from openagent.dto.session import (
 )
 
 
-def create_session_folder(
-    user_id: str, title: str, parent_folder_id: str | None, order
-):
+def create_session_folder(user_id: str, title: str, parent_folder_id: str | None, order):
     with DBSession() as db_session:
         if parent_folder_id is not None:
             try:
@@ -89,10 +87,7 @@ def update_session(
                     )
                     .one()
                 )
-                if (
-                    parent_session.type == SessionTreeNodeDTOType.session
-                    and session.type == SessionTreeNodeDTOType.folder
-                ):
+                if parent_session.type == SessionTreeNodeDTOType.session and session.type == SessionTreeNodeDTOType.folder:
                     raise ValueError("Can't move folder to session")
                 if parent_session.parent_id == session_id:
                     raise ValueError("Can't move folder to child")
@@ -153,10 +148,7 @@ def move_session_folder(
             db_session.commit()
             return
 
-        if (
-            direction is SessionMoveDirection.f2f
-            or direction is SessionMoveDirection.r2f
-        ):
+        if direction is SessionMoveDirection.f2f or direction is SessionMoveDirection.r2f:
             if to_session_id is None:
                 from_session.parent_id = None
                 from_session.tab = to_session_tab
@@ -227,28 +219,18 @@ def do_build_folder_tree(nodes, parent_id):
     return tree
 
 
-def build_sorted_children(
-    old_children: list[SessionTreeNodeDTO], new_children: list[SessionTreeNodeDTO]
-):
+def build_sorted_children(old_children: list[SessionTreeNodeDTO], new_children: list[SessionTreeNodeDTO]):
     old_children = old_children or []
     new_children = new_children or []
     unique_children = list(set(old_children + new_children))
-    sorted_children = sorted(
-        unique_children, key=lambda x: (x.order, x.created_at), reverse=True
-    )
+    sorted_children = sorted(unique_children, key=lambda x: (x.order, x.created_at), reverse=True)
     return sorted_children
 
 
 def get_session_tree(user_id: str) -> list[SessionTreeNodeDTO]:
     with DBSession() as db_session:
-        sessions = (
-            db_session.query(ChatSession)
-            .filter_by(user_id=user_id, deleted_at=None, tab=SessionTab.favorite)
-            .all()
-        )
-        session_tree_nodes: list[SessionTreeNodeDTO] = compose_left(
-            map(build_session_tree_node), list
-        )(sessions)
+        sessions = db_session.query(ChatSession).filter_by(user_id=user_id, deleted_at=None, tab=SessionTab.favorite).all()
+        session_tree_nodes: list[SessionTreeNodeDTO] = compose_left(map(build_session_tree_node), list)(sessions)
 
         tree = build_folder_tree(session_tree_nodes)
         return tree

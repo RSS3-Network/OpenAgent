@@ -26,11 +26,7 @@ class PostgresChatMessageHistory(BaseChatMessageHistory):
     @property
     def messages(self) -> List[BaseMessage]:  # type: ignore
         with DBSession() as db_session:
-            histories = (
-                db_session.query(ChatHistory)
-                .filter(ChatHistory.session_id == self.session_id)
-                .all()
-            )
+            histories = db_session.query(ChatHistory).filter(ChatHistory.session_id == self.session_id).all()
             lst = compose_left(
                 map(compose_left(lambda x: x.message, json.loads)),
                 filter(lambda x: x["type"] in ["ai", "human"]),
