@@ -12,7 +12,7 @@ services:
     networks:
       - openagent-network
 
-  vec_db:
+  vector_db:
     image: pgvector/pgvector:pg16
     container_name: vec_db
     restart: unless-stopped
