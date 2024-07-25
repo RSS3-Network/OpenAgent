@@ -31,7 +31,7 @@ class SwapExpert(BaseTool):
     Tool for generating a swap widget for cryptocurrency swaps.
     """
 
-    name = "swap"
+    name = "SwapExecutor"
     description = "Use this tool to generate a swap widget for the user to swap cryptocurrencies."
     args_schema: Type[ParamSchema] = ParamSchema
     return_direct = False
