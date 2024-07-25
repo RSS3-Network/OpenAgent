@@ -34,7 +34,7 @@ if not mentioned, default is "1".""",
 
 
 class TransferExpert(BaseTool):
-    name = "transfer"
+    name = "TransferExecutor"
     description = """Use this tool to send cryptocurrencies to another address."""
     args_schema: Type[ParamSchema] = ParamSchema
     return_direct = False

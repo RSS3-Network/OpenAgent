@@ -78,7 +78,7 @@ def build_token(token_symbol: str, token_address: str):
 
 async def handle_function_message(message: FunctionMessage, msg: cl.Message):
     """Handle FunctionMessage type of messages."""
-    if message.name == "swap":
+    if message.name == "SwapExecutor":
         swap_dict = json.loads(message.content)
         await do_stream_swap_widget(msg, swap_dict)
 
@@ -130,7 +130,7 @@ async def on_message(message: cl.Message):
 async def react_tool_call_handle(message, msg):
     try:
         swap_dict = parse_json_markdown(message.content)
-        if "type" in swap_dict and swap_dict["type"] == "swap":
+        if "type" in swap_dict and swap_dict["type"] == "SwapExecutor":
             await do_stream_swap_widget(msg, swap_dict)
     except Exception as e:
         logger.warning("Failed to handle react tool call message", e)

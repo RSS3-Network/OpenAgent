@@ -18,7 +18,7 @@ class ARGS(BaseModel):
 
 
 class ArticleExpert(BaseTool):
-    name = "article"
+    name = "ArticleExecutor"
     description = (
         "A tool for searching web3-related articles. If you lack knowledge about web3, "
         "you can use this tool to find relevant articles that can help answer "

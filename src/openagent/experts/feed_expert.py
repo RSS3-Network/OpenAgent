@@ -21,12 +21,12 @@ hint: vitalik's address is vitalik.eth"""
 
     type: str = Field(
         description="""Retrieve activities for the specified type,
-for example: all, post, comment, share."""
+eg. : all, post, comment, share."""
     )
 
 
 class FeedExpert(BaseTool):
-    name = "feed"
+    name = "FeedExecutor"
     description = """Use this tool to get the activities of a wallet address or \
 blockchain domain name and know what this address has done or doing recently."""
     args_schema: Type[ParamSchema] = ParamSchema
@@ -50,7 +50,7 @@ blockchain domain name and know what this address has done or doing recently."""
 
 async def fetch_feeds(address: str, type: str):
     url = f"{settings.RSS3_DATA_API}/decentralized/{address}?limit=5&action_limit=10&tag=social"
-    if type != "all":
+    if type in ["post", "comment", "share"]:
         url += f"&type={type}"
     headers = {"Accept": "application/json"}
     async with aiohttp.ClientSession() as session:
