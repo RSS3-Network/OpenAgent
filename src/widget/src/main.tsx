@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
-import {Route, BrowserRouter as Router, Routes} from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import {Swap} from "./components/Swap";
+import {PriceChart} from "./components/PriceChart";
 
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -13,6 +14,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Routes>
                 <Route path="/" element={<App/>}/>
                 <Route path="/swap/*" element={<Swap/>}/>
+                <Route path="/price-chart/*" element={<PriceChart/>}/>
             </Routes>
         </Router>
 

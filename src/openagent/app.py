@@ -27,7 +27,11 @@ async def health_check():
 
 @app.get("/widget/swap")
 async def swap_root():
-    print("swap_root")
+    return FileResponse(os.path.join("dist", "index.html"))
+
+
+@app.get("/widget/price-chart")
+async def chart_price_root():
     return FileResponse(os.path.join("dist", "index.html"))
 
 

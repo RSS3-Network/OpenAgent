@@ -3,7 +3,6 @@ from typing import Dict, Optional
 
 import chainlit as cl
 import chainlit.data as cl_data
-from chainlit.cli import run_chainlit
 from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 from langchain.memory import ConversationBufferMemory
 from langchain.schema.runnable.config import RunnableConfig
@@ -33,10 +32,10 @@ def initialize_memory() -> ConversationBufferMemory:
 
 @cl.oauth_callback
 def oauth_callback(
-    provider_id: str,
-    token: str,
-    raw_user_data: Dict[str, str],
-    default_user: cl.User,
+        provider_id: str,
+        token: str,
+        raw_user_data: Dict[str, str],
+        default_user: cl.User,
 ) -> Optional[cl.User]:
     """OAuth callback function."""
     return default_user
@@ -99,9 +98,9 @@ async def on_message(message: cl.Message):
 
     # try:
     async for event in runnable.astream_events(
-        {"messages": [HumanMessage(content=message.content)]},
-        config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
-        version="v1",
+            {"messages": [HumanMessage(content=message.content)]},
+            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
+            version="v1",
     ):
         kind = event["event"]
         if kind == "on_tool_end":
@@ -138,10 +137,10 @@ async def handle_tool_end(event, msg):
         )
         await msg.stream_token(widget)
 
-
-def start_ui():
-    run_chainlit(__file__)
-
-
-if __name__ == "__main__":
-    start_ui()
+    if event["name"] == "price":
+        output = event["data"]["output"]
+        price_dict = json.loads(output)
+        widget = (
+            f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="400"></iframe>"""
+        )
+        await msg.stream_token(widget)

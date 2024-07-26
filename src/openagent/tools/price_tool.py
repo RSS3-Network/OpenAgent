@@ -1,14 +1,16 @@
 import asyncio
+import json
 from typing import Optional, Type
 
-import ccxt
+import requests
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
-from loguru import logger
 from pydantic import BaseModel, Field
+
+from openagent.conf.env import settings
 
 
 class ARGS(BaseModel):
@@ -17,39 +19,50 @@ class ARGS(BaseModel):
 
 class PriceTool(BaseTool):
     name = "price"
-    description = "use this tool to get the price of a token."
+    description = "use this tool to get the price widget of a token."
     args_schema: Type[ARGS] = ARGS
 
     def _run(
-        self,
-        token: str,
-        run_manager: Optional[CallbackManagerForToolRun] = None,
+            self,
+            token: str,
+            run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
-        try:
-            return f"The price of {token} is {asyncio.run(fetch_price(token))}"
-        except Exception as e:
-            return f"error: {e}"
+        return asyncio.run(fetch_price(token))
 
     async def _arun(
-        self,
-        token: str,
-        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+            self,
+            token: str,
+            run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
-        try:
-            return f"The price of {token} is {await fetch_price(token)}"
-        except Exception as e:
-            return f"error: {e}"
+        return await fetch_price(token)
 
 
-_exchanges = [ccxt.binance(), ccxt.okx(), ccxt.gateio(), ccxt.mexc()]
+async def fetch_price(token: str) -> str:
+    url = f"https://pro-api.coingecko.com/api/v3/search?query={token}"
+
+    key = settings.COINGECKO_API_KEY
+    headers = {
+        "accept": "application/json",
+        "x-cg-pro-api-key": key
+    }
+
+    response = requests.get(url, headers=headers)
+    token = json.loads(response.text)['coins'][0]
+    token_id_ = token['id']
+
+    url = (f"https://pro-api.coingecko.com/api/v3/simple/price?ids={token_id_}&"
+           f"vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&"
+           f"include_24hr_change=true&include_last_updated_at=true")
+
+    headers = {
+        "accept": "application/json",
+        "x-cg-pro-api-key": key
+    }
+
+    response = requests.get(url, headers=headers)
+
+    return response.text
 
 
-async def fetch_price(base: str, quote: str = "USDT") -> float:
-    for exchange in _exchanges:
-        try:
-            trades = exchange.fetch_trades(f"{base.upper()}/{quote}", limit=1)
-            last = trades[0]["price"]
-            return last
-        except Exception as e:  # noqa
-            logger.warning(f"fetch price error from {exchange.id}: {e}")
-    raise Exception(f"no market found for {base}")
+if __name__ == '__main__':
+    print(asyncio.run(fetch_price('eth')))
