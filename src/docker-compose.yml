@@ -19,7 +19,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: vec
+      POSTGRES_DB: openagent
     ports:
       - "15432:5432"
     volumes:

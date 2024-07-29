@@ -3,12 +3,14 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_openai import OpenAIEmbeddings
 from langchain_postgres.vectorstores import PGVector
+from toolz import memoize
 
 from openagent.conf.env import settings
 
 load_dotenv()
 
 
+@memoize
 def build_vector_store() -> PGVector:
     collection_name = "backend"
     if settings.MODEL_NAME.startswith("gemini"):
@@ -24,6 +26,3 @@ def build_vector_store() -> PGVector:
         connection=settings.DB_CONNECTION,
         use_jsonb=True,
     )
-
-
-store = build_vector_store()
