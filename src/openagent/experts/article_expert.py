@@ -8,7 +8,7 @@ from langchain.callbacks.manager import (
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
-from openagent.index.pgvector_store import store
+from openagent.index.pgvector_store import build_vector_store
 
 
 class ARGS(BaseModel):
@@ -45,6 +45,7 @@ class ArticleExpert(BaseTool):
 
     @staticmethod
     def search_articles(keyword: str) -> str:
+        store = build_vector_store()
         retriever = store.as_retriever(
             search_type="similarity_score_threshold",
             search_kwargs={"score_threshold": 0.8, "k": 3},

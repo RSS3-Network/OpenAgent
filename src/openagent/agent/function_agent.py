@@ -152,7 +152,7 @@ def create_tool_call_agent(session_id: str):
 async def main():
     # Create a tool call agent and use it to handle some inputs
     agent = get_agent("123")
-    await agent.ainvoke({"input": "Swap 1 eth to usdt, from ethereumn to arb"})
+    await agent.ainvoke({"input": "Swap 1 eth to usdt, from ethereum to arb"})
     await agent.ainvoke({"input": "What is the price of ETH?"})
     await agent.ainvoke({"input": "What did vitalik.eth do recently?"})
 

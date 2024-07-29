@@ -21,8 +21,13 @@ class ParamSchema(BaseModel):
 
     from_token: str = Field(description="Symbol of the token to swap from, e.g., 'BTC', 'ETH', 'RSS3', 'USDT', 'USDC'. Default: 'ETH'.")
     to_token: str = Field(description="Symbol of the token to swap to, e.g., 'BTC', 'ETH', 'RSS3', 'USDT', 'USDC'. Default: 'ETH'.")
-    from_chain: ChainLiteral = Field(default="ETH", description="Blockchain network to swap from. Default: 'ETH'.")
-    to_chain: ChainLiteral = Field(default="ETH", description="Blockchain network to swap to. Default: 'ETH'.")
+    from_chain: ChainLiteral = Field(
+        default="ETH",
+        description="Blockchain network to swap from, support networks: 'ETH', 'BSC', 'ARBITRUM', 'OPTIMISM', 'POLYGON'. Default: 'ETH'.",
+    )
+    to_chain: ChainLiteral = Field(
+        default="ETH", description="Blockchain network to swap to, support networks: 'ETH', 'BSC', 'ARBITRUM', 'OPTIMISM', 'POLYGON'. Default: 'ETH'."
+    )
     amount: str = Field(description="Amount of the from-side token to swap, e.g., '0.1', '1', '10'. Default: '1'.")
 
 
