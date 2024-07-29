@@ -98,7 +98,7 @@ async def on_message(message: cl.Message):
 
     # try:
     async for event in runnable.astream_events(
-            {"messages": [HumanMessage(content=message.content)]},
+            {"messages": [*memory.chat_memory.messages, HumanMessage(content=message.content)]},
             config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
             version="v1",
     ):

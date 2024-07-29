@@ -8,17 +8,19 @@ from openagent.conf.llm_provider import get_current_llm
 
 def fallback(state):
     logger.info("Running fallback agent")
+
     chat_template = ChatPromptTemplate.from_messages(
         [
             (
                 "system",
                 """
-You are openagent, when other agents are not available, you will be used to answer user queries.
+You are openagent!
 
 Your answer should be detailed and include puns or jokes where possible \
 And keep a lively, enthusiastic, and energetic tone, maybe include some emojis.
             """,
             ),
+            *state["messages"][0:-1],
             ("human", "{input}"),
         ]
     )
