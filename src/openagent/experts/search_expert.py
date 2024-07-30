@@ -37,7 +37,7 @@ async def google_search(query: str) -> str:
 
 
 class SearchExpert(BaseTool):
-    name = "search"
+    name = "SearchExecutor"
     description = """
     A versatile search tool that can perform various types of searches based on the query type:
     - For queries related to charts, data visualization, or dashboards, use Dune search.

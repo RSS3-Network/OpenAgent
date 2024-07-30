@@ -9,7 +9,7 @@ from loguru import logger
 
 from openagent.conf.env import settings
 from openagent.index.feed_scrape import fetch_iqwiki_feeds, fetch_mirror_feeds
-from openagent.index.pgvector_store import store
+from openagent.index.pgvector_store import build_vector_store
 
 load_dotenv()
 
@@ -18,7 +18,7 @@ record_manager.create_schema()
 
 
 def _clear():
-    index([], record_manager, store, cleanup="incremental", source_id_key="id")
+    index([], record_manager, build_vector_store(), cleanup="incremental", source_id_key="id")
 
 
 def build_index():
@@ -66,7 +66,7 @@ def save_records(records):
     indexing_result = index(
         final_docs,
         record_manager,
-        store,
+        build_vector_store(),
         cleanup="incremental",
         source_id_key="id",
     )

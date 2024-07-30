@@ -15,7 +15,7 @@ class ARGS(BaseModel):
 
 
 class PriceExpert(BaseTool):
-    name = "price"
+    name = "PriceExecutor"
     description = "use this tool to get the price of a token."
     args_schema: Type[ARGS] = ARGS
 

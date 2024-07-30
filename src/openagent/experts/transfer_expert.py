@@ -7,18 +7,8 @@ from langchain.callbacks.manager import (
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
+from openagent.dto.mutation import Transfer
 from openagent.experts.token_util import chain_name_to_id, get_token_data_by_key, select_best_token
-
-
-class Transfer(BaseModel):
-    # task_id: str
-    to_address: str
-    token: str
-    token_address: str
-    chain_id: str
-    amount: str
-    logoURI: str  # noqa
-    decimals: int
 
 
 class ParamSchema(BaseModel):
@@ -44,7 +34,7 @@ if not mentioned, default is "1".""",
 
 
 class TransferExpert(BaseTool):
-    name = "transfer"
+    name = "TransferExecutor"
     description = """Use this tool to send cryptocurrencies to another address."""
     args_schema: Type[ParamSchema] = ParamSchema
     return_direct = False
