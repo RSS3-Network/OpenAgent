@@ -18,7 +18,7 @@ class ARGS(BaseModel):
 
 
 class PriceTool(BaseTool):
-    name = "price"
+    name = "PriceExecutor"
     description = "use this tool to get the price widget of a token."
     args_schema: Type[ARGS] = ARGS
 

@@ -20,7 +20,7 @@ class ARGS(BaseModel):
 
 
 class BlockStatTool(BaseTool):
-    name = "block_chain_stat"
+    name = "BlockChainStatExecutor"
     description = (
         "get blockchain statistics such as block height, "
         "transaction count, gas fees, and more. "

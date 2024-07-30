@@ -17,7 +17,7 @@ class ARGS(BaseModel):
 
 
 class FundingRateTool(BaseTool):
-    name = "funding_rate"
+    name = "FundingRateExecutor"
     description = "Use this tool to get the funding rate of a trading pair."
     args_schema: Type[ARGS] = ARGS
 

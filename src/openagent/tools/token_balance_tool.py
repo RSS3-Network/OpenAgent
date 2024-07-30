@@ -18,7 +18,7 @@ class ARGS(BaseModel):
 
 
 class TokenBalanceTool(BaseTool):
-    name = "token-balance"
+    name = "TokenBalanceExecutor"
     description = "get the token balance of a wallet."
     args_schema: Type[ARGS] = ARGS
 

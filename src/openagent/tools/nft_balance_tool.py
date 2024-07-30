@@ -18,7 +18,7 @@ class ARGS(BaseModel):
 
 
 class NFTBalanceTool(BaseTool):
-    name = "nft-balance"
+    name = "NFTBalanceExecutor"
     description = "get the nft asset of a wallet."
     args_schema: Type[ARGS] = ARGS
 

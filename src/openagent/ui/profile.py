@@ -7,8 +7,8 @@ provider_key_to_profile_info = {
         "icon": "https://custom.typingmind.com/assets/models/gpt-35.webp",
     },
     "gpt-4o": {
-        "name": "GPT-4",
-        "markdown_description": "The underlying LLM model is **GPT-4**.",
+        "name": "GPT-4o",
+        "markdown_description": "The underlying LLM model is **GPT-4o**.",
         "icon": "https://custom.typingmind.com/assets/models/gpt-4.webp",
     },
     "gemini-1.5-pro": {

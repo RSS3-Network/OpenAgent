@@ -10,7 +10,7 @@ llm = get_current_llm()
 
 social_track_agent = create_agent(
     llm,
-    [FeedTool(), tavily_tool],
+    [tavily_tool],
     """
 
 You are Social Tracker, focused on tracking web3 social media and community interactions.

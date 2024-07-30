@@ -1,3 +1,4 @@
+import traceback
 from contextvars import ContextVar
 
 import ollama
@@ -11,13 +12,17 @@ from openagent.conf.env import settings
 
 
 def get_available_ollama_providers():
-    ollama_list = ollama.list()
-    models_ = list(map(lambda x: x['name'],
-                       ollama_list['models']))
-    all_ = ['llama3.1:latest']
+    try:
+        ollama_list = ollama.list()
+        models_ = list(map(lambda x: x['name'],
+                           ollama_list['models']))
+        all_ = ['llama3.1:latest']
 
-    available_models = list(filter(lambda x: x in all_, models_))
-    return available_models
+        available_models = list(filter(lambda x: x in all_, models_))
+        return available_models
+    except Exception as e:
+        logger.error(f"Failed to get available ollama providers: {e}")
+        return []
 
 
 def get_available_providers():

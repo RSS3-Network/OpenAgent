@@ -32,7 +32,7 @@ floor_price, market_cap. Required only for 'action=rank'
 
 
 class NFTTool(BaseTool):
-    name = "NFT"
+    name = "NFTExecutor"
     description = "A tool for searching NFT collections or getting collection rankings."
     args_schema: Type[ARGS] = ARGS
 
