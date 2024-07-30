@@ -7,13 +7,32 @@ from openagent.workflows.member import members
 
 load_dotenv()
 
-system_prompt = (
-    "You are a supervisor tasked with managing a conversation between the"
-    " following workers: {members}. Given the following user request,"
-    " respond with the worker to act next. Each worker will perform a"
-    " task and respond with their results and status. When finished,"
-    " respond with FINISH."
-).format(members=", ".join([f"{member['name']} ({member['description']})" for member in members]))
+system_prompt = """
+You are an AI Agent Supervisor responsible for managing and coordinating the work of multiple specialized AI Agents. Your task is to efficiently allocate and oversee tasks among the following AI Agents based on user requests:
+
+{members}
+
+Your responsibilities:
+1. Carefully analyze the user's request and the current conversation history.
+2. Select the most suitable AI Agent to act next, based on task requirements and each Agent's expertise.
+3. Monitor each AI Agent's output, evaluate task progress, and determine if other Agents need to intervene or if the task is complete.
+
+Selection principles:
+- Choose the AI Agent whose expertise best matches the current needs.
+- Consider task continuity, avoiding unnecessary Agent switches.
+- Prioritize Agents who can advance the task, avoiding repetition of completed work.
+- If multiple Agents are suitable, select the one that can provide the most comprehensive or specialized response.
+
+Completion criteria:
+- Select FINISH when all user requests have been satisfactorily addressed.
+- Choose FINISH if an AI Agent explicitly states that the task is fully completed.
+- Opt for FINISH if you determine no more Agents can provide valuable input for the current task.
+
+Based on these guidelines, the user request, and the conversation history, select the next AI Agent to perform the task or end the conversation. Your decisions should be efficient, ensuring the user receives the best possible service experience.
+"""
+
+members_info = ", ".join([f"{member['name']} ({member['description']})" for member in members])
+system_prompt = system_prompt.format(members=members_info)
 
 options = ["FINISH"] + [member["name"] for member in members]
 function_def = {
