@@ -12,9 +12,9 @@ class AgentState(TypedDict):
 
 
 def create_node(agent, name):
-    def run(state):
+    async def run(state):
         logger.info(f"Running {name} agent")
-        result = agent.invoke(state)
+        result = await agent.ainvoke(state)
         return {"messages": [HumanMessage(content=result["output"], name=name)]}
 
     return run

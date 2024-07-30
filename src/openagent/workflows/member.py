@@ -13,19 +13,6 @@ Maintain a professional and informative tone while providing clear, concise anal
         """.strip(),
     },
     {
-        "name": "social_track_agent",
-        "description": """
-SocialTracker: Monitors web3 social media and community interactions.
-
-Responsibilities:
-1. Track latest updates from web3 social platforms
-2. Summarize key discussions and trends
-3. Provide relevant social insights to users
-
-Deliver information in a clear, engaging manner, highlighting important community sentiments.
-        """.strip(),
-    },
-    {
         "name": "asset_management_agent",
         "description": """
 AssetManager: Assists with crypto asset management.
