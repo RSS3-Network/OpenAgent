@@ -1,4 +1,3 @@
-import ollama
 from langchain_core.messages import HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -34,4 +33,3 @@ And keep a lively, enthusiastic, and energetic tone, maybe include some emojis.
             )
         ]
     }
-

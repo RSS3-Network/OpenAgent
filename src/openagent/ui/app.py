@@ -32,10 +32,10 @@ def initialize_memory() -> ConversationBufferMemory:
 
 @cl.oauth_callback
 def oauth_callback(
-        provider_id: str,
-        token: str,
-        raw_user_data: Dict[str, str],
-        default_user: cl.User,
+    provider_id: str,
+    token: str,
+    raw_user_data: Dict[str, str],
+    default_user: cl.User,
 ) -> Optional[cl.User]:
     """OAuth callback function."""
     return default_user
@@ -98,9 +98,9 @@ async def on_message(message: cl.Message):
 
     # try:
     async for event in runnable.astream_events(
-            {"messages": [*memory.chat_memory.messages, HumanMessage(content=message.content)]},
-            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
-            version="v1",
+        {"messages": [*memory.chat_memory.messages, HumanMessage(content=message.content)]},
+        config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
+        version="v1",
     ):
         kind = event["event"]
         if kind == "on_tool_end":
@@ -140,7 +140,5 @@ async def handle_tool_end(event, msg):
     if event["name"] == "PriceExecutor":
         output = event["data"]["output"]
         price_dict = json.loads(output)
-        widget = (
-            f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="400"></iframe>"""
-        )
+        widget = f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="400"></iframe>"""  # noqa
         await msg.stream_token(widget)

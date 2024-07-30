@@ -23,16 +23,16 @@ class PriceTool(BaseTool):
     args_schema: Type[ARGS] = ARGS
 
     def _run(
-            self,
-            token: str,
-            run_manager: Optional[CallbackManagerForToolRun] = None,
+        self,
+        token: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         return asyncio.run(fetch_price(token))
 
     async def _arun(
-            self,
-            token: str,
-            run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+        self,
+        token: str,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
         return await fetch_price(token)
 
@@ -41,28 +41,24 @@ async def fetch_price(token: str) -> str:
     url = f"https://pro-api.coingecko.com/api/v3/search?query={token}"
 
     key = settings.COINGECKO_API_KEY
-    headers = {
-        "accept": "application/json",
-        "x-cg-pro-api-key": key
-    }
+    headers = {"accept": "application/json", "x-cg-pro-api-key": key}
 
     response = requests.get(url, headers=headers)
-    token = json.loads(response.text)['coins'][0]
-    token_id_ = token['id']
+    token_: dict = json.loads(response.text)["coins"][0]
+    token_id_ = token_["id"]
 
-    url = (f"https://pro-api.coingecko.com/api/v3/simple/price?ids={token_id_}&"
-           f"vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&"
-           f"include_24hr_change=true&include_last_updated_at=true")
+    url = (
+        f"https://pro-api.coingecko.com/api/v3/simple/price?ids={token_id_}&"
+        f"vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&"
+        f"include_24hr_change=true&include_last_updated_at=true"
+    )
 
-    headers = {
-        "accept": "application/json",
-        "x-cg-pro-api-key": key
-    }
+    headers = {"accept": "application/json", "x-cg-pro-api-key": key}
 
     response = requests.get(url, headers=headers)
 
     return response.text
 
 
-if __name__ == '__main__':
-    print(asyncio.run(fetch_price('eth')))
+if __name__ == "__main__":
+    print(asyncio.run(fetch_price("eth")))

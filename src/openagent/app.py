@@ -9,7 +9,7 @@ from loguru import logger
 from pydantic import BaseModel
 from sse_starlette import EventSourceResponse
 from starlette import status
-from starlette.responses import JSONResponse, FileResponse
+from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
 from openagent.workflows.workflow import build_workflow

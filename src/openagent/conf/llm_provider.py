@@ -1,4 +1,3 @@
-import traceback
 from contextvars import ContextVar
 
 import ollama
@@ -14,9 +13,8 @@ from openagent.conf.env import settings
 def get_available_ollama_providers():
     try:
         ollama_list = ollama.list()
-        models_ = list(map(lambda x: x['name'],
-                           ollama_list['models']))
-        all_ = ['llama3.1:latest']
+        models_ = list(map(lambda x: x["name"], ollama_list["models"]))
+        all_ = ["llama3.1:latest"]
 
         available_models = list(filter(lambda x: x in all_, models_))
         return available_models
@@ -55,7 +53,7 @@ def get_current_llm() -> BaseChatModel | None:
     if llm is None:
         available_providers = get_available_providers()
         if len(available_providers) > 0:
-            llm = list(available_providers.values())[0]
+            llm = list(available_providers.values())[0]  # noqa
         else:
             logger.error("No LLM provider is available.")
             raise ValueError("No LLM provider is available.")
