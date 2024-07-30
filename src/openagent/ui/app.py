@@ -117,7 +117,7 @@ async def on_message(message: cl.Message):
 
 
 async def handle_tool_end(event, msg):
-    if event["name"] == "swap":
+    if event["name"] == "SwapExecutor":
         output = event["data"]["output"]
         swap_dict = json.loads(output)
         logger.info(swap_dict)
@@ -137,7 +137,7 @@ async def handle_tool_end(event, msg):
         )
         await msg.stream_token(widget)
 
-    if event["name"] == "price":
+    if event["name"] == "PriceExecutor":
         output = event["data"]["output"]
         price_dict = json.loads(output)
         widget = (
