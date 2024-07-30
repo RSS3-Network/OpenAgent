@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     VERTEX_PROJECT_ID: Optional[str] = Field(default=None, description="Google Cloud Vertex project ID (optional)")
     OPENAI_API_KEY: Optional[str] = Field(default=None, description="OpenAI API Key (optional)")
     GOOGLE_GEMINI_API_KEY: Optional[str] = Field(default=None, description="Google Gemini API Key (optional)")
-    OLLAMA_API_BASE: Optional[str] = Field(default=None, description="OLLAMA API Base URL (optional)")
+    OLLAMA_HOST: Optional[str] = Field(default=None, description="OLLAMA API Base URL (optional)")
 
     # API keys for various tools; some features will be disabled if not set
     NFTSCAN_API_KEY: Optional[str] = Field(default=None, description="NFTScan API Key (optional)")

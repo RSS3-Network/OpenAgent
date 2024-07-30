@@ -16,6 +16,11 @@ provider_key_to_profile_info = {
         "markdown_description": "The underlying LLM model is **Gemini 1.5 Pro**.",
         "icon": "https://custom.typingmind.com/assets/models/gemini.png",
     },
+    "llama3.1:latest": {
+        "name": "LLAMA 3.1",
+        "markdown_description": "The underlying LLM model is **LLAMA 3.1**.",
+        "icon": "https://custom.typingmind.com/assets/models/llama.png",
+    },
 }
 
 

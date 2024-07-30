@@ -1,11 +1,23 @@
 from contextvars import ContextVar
 
+import ollama
 from langchain_core.language_models import BaseChatModel
 from langchain_google_vertexai import ChatVertexAI
+from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from loguru import logger
 
 from openagent.conf.env import settings
+
+
+def get_available_ollama_providers():
+    ollama_list = ollama.list()
+    models_ = list(map(lambda x: x['name'],
+                       ollama_list['models']))
+    all_ = ['llama3.1:latest']
+
+    available_models = list(filter(lambda x: x in all_, models_))
+    return available_models
 
 
 def get_available_providers():
@@ -15,6 +27,12 @@ def get_available_providers():
         providers["gpt-4o"] = ChatOpenAI(model="gpt-4o")
     if settings.VERTEX_PROJECT_ID:
         providers["gemini-1.5-pro"] = ChatVertexAI(model="gemini-1.5-pro")
+
+    if settings.OLLAMA_HOST:
+        ollama_providers = get_available_ollama_providers()
+        print(ollama_providers)
+        for model in ollama_providers:
+            providers[model] = ChatOllama(model=model)
     return providers
 
 
