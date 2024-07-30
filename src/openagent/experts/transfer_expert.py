@@ -7,8 +7,18 @@ from langchain.callbacks.manager import (
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
-from openagent.dto.mutation import Transfer
 from openagent.experts.token_util import chain_name_to_id, get_token_data_by_key, select_best_token
+
+
+class Transfer(BaseModel):
+    # task_id: str
+    to_address: str
+    token: str
+    token_address: str
+    chain_id: str
+    amount: str
+    logoURI: str  # noqa
+    decimals: int
 
 
 class ParamSchema(BaseModel):
@@ -41,22 +51,22 @@ class TransferExpert(BaseTool):
     last_task_id: Optional[str] = None
 
     def _run(
-        self,
-        to_address: str,
-        token: str,
-        chain_name: str,
-        amount: str,
-        run_manager: Optional[CallbackManagerForToolRun] = None,
+            self,
+            to_address: str,
+            token: str,
+            chain_name: str,
+            amount: str,
+            run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
-        self,
-        to_address: str,
-        token: str,
-        chain_name: str = "ethereum",
-        amount: str = "1",
-        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+            self,
+            to_address: str,
+            token: str,
+            chain_name: str = "ethereum",
+            amount: str = "1",
+            run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
         return await fetch_transfer(to_address, token, chain_name, amount)
 

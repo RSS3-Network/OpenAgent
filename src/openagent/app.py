@@ -9,10 +9,10 @@ from loguru import logger
 from pydantic import BaseModel
 from sse_starlette import EventSourceResponse
 from starlette import status
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, FileResponse
 from starlette.staticfiles import StaticFiles
 
-from openagent.agent.function_agent import get_agent
+from openagent.workflows.workflow import build_workflow
 
 load_dotenv()
 app = FastAPI(title="OpenAgent", description="")
@@ -39,13 +39,15 @@ async def swap_root():
 @app.get("/widget/price-chart")
 async def chart_price_root():
     return FileResponse(os.path.join("dist", "index.html"))
+
+
 class Input(BaseModel):
     text: str
 
 
 @app.post("/api/stream_chat", description="streaming chat api for openagent")
 async def outline_creation(req: Input):
-    agent = get_agent("openagent")
+    agent = build_workflow()
 
     async def stream():
         async for event in agent.astream_events({"input": req.text}, version="v1"):
@@ -65,11 +67,7 @@ if not os.path.exists(static_dir):
     except OSError as e:
         logger.error(f"Error creating directory {static_dir}: {e}")
 
-# Mount static files directory
-try:
-    app.mount("/static", StaticFiles(directory=static_dir), name="widget")
-    logger.info(f"Successfully mounted static files from {static_dir}")
-except Exception as e:
-    logger.error(f"Error mounting static files: {e}")
+app.mount("/static", StaticFiles(directory=static_dir), name="widget")
+
 
 mount_chainlit(app=app, target="openagent/ui/app.py", path="")

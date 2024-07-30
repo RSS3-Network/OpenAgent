@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from dotenv import load_dotenv
 from pydantic import Field
@@ -8,29 +8,28 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
-    DB_CONNECTION: str = Field(..., env="DB_CONNECTION")
+    # Database connection string (required)
+    DB_CONNECTION: str = Field(..., description="Database connection string (required)")
 
-    # Online LLM API KEY
-    VERTEX_PROJECT_ID: Optional[str] = Field(default=None, description="Google cloud vertex project id (optional)")
-    OPENAI_API_KEY: Optional[str] = Field(default=None, env="OPENAI_API_KEY", description="OpenAI API Key (optional)")
-    # Local LLM configuration
-    OLLAMA_MODEL: Optional[List[str]] = Field(default=None, env="OLLAMA_MODEL", description="OLLAMA Model list (optional)")
-    OLLAMA_MODEL_URL: Optional[str] = Field(default=None, env="OLLAMA_MODEL_URL", description="OLLAMA Model URL (optional)")
+    # LLM provider settings: at least one provider must be set
+    VERTEX_PROJECT_ID: Optional[str] = Field(default=None, description="Google Cloud Vertex project ID (optional)")
+    OPENAI_API_KEY: Optional[str] = Field(default=None, description="OpenAI API Key (optional)")
+    GOOGLE_GEMINI_API_KEY: Optional[str] = Field(default=None, description="Google Gemini API Key (optional)")
+    OLLAMA_API_BASE: Optional[str] = Field(default=None, description="OLLAMA API Base URL (optional)")
 
+    # API keys for various tools; some features will be disabled if not set
+    NFTSCAN_API_KEY: Optional[str] = Field(default=None, description="NFTScan API Key (optional)")
+    COVALENT_API_KEY: Optional[str] = Field(default=None, description="Covalent API Key (optional)")
+    ROOTDATA_API_KEY: Optional[str] = Field(default=None, description="RootData API Key (optional)")
+    COINGECKO_API_KEY: Optional[str] = Field(default=None, description="CoinGecko API Key (optional)")
+    RSS3_DATA_API: str = Field(default="https://gi.rss3.io", description="RSS3 Data API URL (optional)")
+    RSS3_SEARCH_API: str = Field(default="https://devnet.rss3.io/search", description="RSS3 Search API URL (optional)")
 
-    GOOGLE_GEMINI_API_KEY: Optional[str] = Field(default=None)
-
-    NFTSCAN_API_KEY: Optional[str] = Field(..., env="NFTSCAN_API_KEY", description="NFTScan API Key (optional)")
-    COVALENT_API_KEY: Optional[str] = Field(..., env="COVALENT_API_KEY")
-    ROOTDATA_API_KEY: Optional[str] = Field(..., env="ROOTDATA_API_KEY")
-    COINGECKO_API_KEY: Optional[str] = Field(..., env="COINGECKO_API_KEY")
-    RSS3_DATA_API: str = Field(default="https://gi.rss3.io", env="RSS3_DATA_API")
-    RSS3_SEARCH_API: str = Field(default="https://devnet.rss3.io/search", env="RSS3_SEARCH_API")
-
-    CHAINLIT_AUTH_SECRET: Optional[str] = Field(default=None, env="CHAINLIT_AUTH_SECRET")
-    OAUTH_AUTH0_CLIENT_ID: Optional[str] = Field(default=None, env="OAUTH_AUTH0_CLIENT_ID")
-    OAUTH_AUTH0_CLIENT_SECRET: Optional[str] = Field(default=None, env="OAUTH_AUTH0_CLIENT_SECRET")
-    OAUTH_AUTH0_DOMAIN: Optional[str] = Field(default=None, env="OAUTH_AUTH0_DOMAIN")
+    # Chainlit OAuth settings; either all fields are None or all are set
+    CHAINLIT_AUTH_SECRET: Optional[str] = Field(default=None, description="Chainlit Auth Secret")
+    OAUTH_AUTH0_CLIENT_ID: Optional[str] = Field(default=None, description="OAuth Auth0 Client ID")
+    OAUTH_AUTH0_CLIENT_SECRET: Optional[str] = Field(default=None, description="OAuth Auth0 Client Secret")
+    OAUTH_AUTH0_DOMAIN: Optional[str] = Field(default=None, description="OAuth Auth0 Domain")
 
 
 settings = Settings()

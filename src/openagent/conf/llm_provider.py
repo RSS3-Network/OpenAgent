@@ -28,4 +28,12 @@ def set_current_llm(provider_name: str):
 
 
 def get_current_llm() -> BaseChatModel | None:
-    return _current_llm_provider.get()
+    llm = _current_llm_provider.get()
+    if llm is None:
+        available_providers = get_available_providers()
+        if len(available_providers) > 0:
+            llm = list(available_providers.values())[0]
+        else:
+            logger.error("No LLM provider is available.")
+            raise ValueError("No LLM provider is available.")
+    return llm
