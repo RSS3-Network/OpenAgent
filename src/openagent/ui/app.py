@@ -108,7 +108,7 @@ async def do_stream_transfer_widget(msg, transfer_dict):
     chain_name = transfer_dict.get("chain_name", "ethereum")
 
     url = (
-        f"http://localhost:3000/?token={token}"
+        f"/widget/transfer?token={token}"
         f"&amount={amount}&toAddress={to_address}&chainName={chain_name}"
     )
 
