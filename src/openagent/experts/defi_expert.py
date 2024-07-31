@@ -25,13 +25,13 @@ hint: vitalik's address is vitalik.eth"""
     )
 
     activity_type: str = Field(
-        description=f"""Type of DeFi activity. 
+        description=f"""Type of DeFi activity.
 Supported types: {', '.join(DEFI_ACTIVITIES)}"""
     )
 
     network: Optional[str] = Field(
         default=None,
-        description=f"""Retrieve activities for the specified network. 
+        description=f"""Retrieve activities for the specified network.
 Supported networks: {', '.join(SUPPORTED_NETWORKS)}"""
     )
 

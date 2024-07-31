@@ -33,13 +33,13 @@ hint: vitalik's address is vitalik.eth"""
 
     network: Optional[str] = Field(
         default=None,
-        description=f"""Retrieve activities for the specified network. 
+        description=f"""Retrieve activities for the specified network.
 Supported networks: {', '.join(SUPPORTED_NETWORKS)}"""
     )
 
     platform: Optional[str] = Field(
         default=None,
-        description=f"""Retrieve activities for the specified platform. 
+        description=f"""Retrieve activities for the specified platform.
 Allowed platforms: {', '.join(ALLOWED_PLATFORMS)}"""
     )
 
