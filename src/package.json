@@ -1,0 +1,6 @@
+{
+    "dependencies": {
+        "ethers": "^5.7.2",
+        "wagmi": "^2.12.1"
+    }
+}
