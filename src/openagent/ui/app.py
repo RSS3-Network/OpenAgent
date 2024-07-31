@@ -81,7 +81,9 @@ async def handle_function_message(message: FunctionMessage, msg: cl.Message):
     if message.name == "SwapExecutor":
         swap_dict = json.loads(message.content)
         await do_stream_swap_widget(msg, swap_dict)
-
+    elif message.name == "TransferExecutor":
+        transfer_dict = json.loads(message.content)
+        await do_stream_transfer_widget(msg, transfer_dict)
 
 async def do_stream_swap_widget(msg, swap_dict):
     from_chain = swap_dict["from_chain_name"]
@@ -97,6 +99,26 @@ async def do_stream_swap_widget(msg, swap_dict):
         f"""toToken={build_token(to_token, to_token_address)}&fromAmount={from_amount}" width="400" height="700"></iframe>"""
     )
     await msg.stream_token(widget)
+
+
+async def do_stream_transfer_widget(msg, transfer_dict):
+    token = transfer_dict["token"]
+    to_address = transfer_dict["to_address"]
+    amount = transfer_dict["amount"]
+    chain_name = transfer_dict.get("chain_name", "ethereum")
+
+    url = (
+        f"http://localhost:3000/?token={token}"
+        f"&amount={amount}&toAddress={to_address}&chainName={chain_name}"
+    )
+
+    iframe_html = f"""
+        <iframe src="{url}" width="100%" height="600px" style="border:none;">
+        </iframe>
+        """
+    await msg.stream_token(iframe_html)
+
+
 
 
 @cl.on_message
@@ -129,8 +151,11 @@ async def on_message(message: cl.Message):
 
 async def react_tool_call_handle(message, msg):
     try:
-        swap_dict = parse_json_markdown(message.content)
-        if "type" in swap_dict and swap_dict["type"] == "SwapExecutor":
-            await do_stream_swap_widget(msg, swap_dict)
+        action_dict = parse_json_markdown(message.content)
+        if "type" in action_dict:
+            if action_dict["type"] == "SwapExecutor":
+                await do_stream_swap_widget(msg, action_dict)
+            elif action_dict["type"] == "TransferExecutor":
+                await do_stream_transfer_widget(msg, action_dict)
     except Exception as e:
         logger.warning("Failed to handle react tool call message", e)

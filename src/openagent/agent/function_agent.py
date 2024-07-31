@@ -28,7 +28,9 @@ from openagent.experts.nft_expert import NFTExpert
 from openagent.experts.price_expert import PriceExpert
 from openagent.experts.search_expert import SearchExpert
 from openagent.experts.swap_expert import SwapExpert
+from openagent.experts.defi_expert import DeFiExpert
 from openagent.experts.transfer_expert import TransferExpert
+from openagent.experts.feed_source_expert import FeedSourceExpert
 
 # Initialize cache
 init_cache()
@@ -50,7 +52,9 @@ def create_react_agent(session_id: str):
     experts = [
         SearchExpert(),
         FeedExpert(),
+        FeedSourceExpert(),
         PriceExpert(),
+        DeFiExpert(),
         ArticleExpert(),
         NFTExpert(),
         TransferExpert(),
@@ -131,7 +135,9 @@ def create_tool_call_agent(session_id: str):
     experts = [
         SearchExpert(),
         FeedExpert(),
+        FeedSourceExpert(),
         PriceExpert(),
+        DeFiExpert(),
         ArticleExpert(),
         NFTExpert(),
         TransferExpert(),
