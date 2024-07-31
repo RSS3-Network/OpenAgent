@@ -1,22 +1,20 @@
 from typing import Optional, Type
+
 from langchain.callbacks.manager import (
-    AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
 from loguru import logger
 from pydantic import BaseModel, Field
+from rss3_dsl_sdk.client import RSS3Client
+from rss3_dsl_sdk.schemas.base import ActivityFilter, PaginationOptions
 
 from openagent.agent.system_prompt import FEED_PROMPT
-from rss3_dsl_sdk.schemas.base import PaginationOptions, ActivityFilter
-from rss3_dsl_sdk.client import RSS3Client
 
-SUPPORTED_NETWORKS = [
-    "arbitrum", "avax", "base", "binance-smart-chain", "ethereum", "gnosis",
-    "linea", "optimism", "polygon"
-]
+SUPPORTED_NETWORKS = ["arbitrum", "avax", "base", "binance-smart-chain", "ethereum", "gnosis", "linea", "optimism", "polygon"]
 
 DEFI_ACTIVITIES = ["swap", "liquidity", "staking"]
+
 
 class ParamSchema(BaseModel):
     address: str = Field(
@@ -32,8 +30,9 @@ Supported types: {', '.join(DEFI_ACTIVITIES)}"""
     network: Optional[str] = Field(
         default=None,
         description=f"""Retrieve activities for the specified network.
-Supported networks: {', '.join(SUPPORTED_NETWORKS)}"""
+Supported networks: {', '.join(SUPPORTED_NETWORKS)}""",
     )
+
 
 class DeFiExpert(BaseTool):
     name = "DeFiExecutor"
@@ -89,5 +88,5 @@ such as swaps, liquidity provision, and staking across various networks."""
             return result
 
         except Exception as e:
-            logger.error(f"Error fetching DeFi activities: {str(e)}")
-            return f"Error: Unable to fetch data. {str(e)}"
+            logger.error(f"Error fetching DeFi activities: {e!s}")
+            return f"Error: Unable to fetch data. {e!s}"

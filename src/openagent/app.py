@@ -9,7 +9,7 @@ from loguru import logger
 from pydantic import BaseModel
 from sse_starlette import EventSourceResponse
 from starlette import status
-from starlette.responses import JSONResponse,FileResponse
+from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
 from openagent.agent.function_agent import get_agent
@@ -31,10 +31,10 @@ async def health_check():
     return JSONResponse(content={"status": "ok"})
 
 
-
 @app.get("/widget/transfer")
 async def widget_transfer_root():
     return FileResponse(os.path.join("dist", "index.html"))
+
 
 class Input(BaseModel):
     text: str

@@ -1,27 +1,57 @@
 from typing import Optional, Type
 
 from langchain.callbacks.manager import (
-    AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
 from loguru import logger
 from pydantic import BaseModel, Field
+from rss3_dsl_sdk.client import RSS3Client
+from rss3_dsl_sdk.schemas.base import ActivityFilter, PaginationOptions
 
 from openagent.agent.system_prompt import FEED_PROMPT
-from rss3_dsl_sdk.schemas.base import PaginationOptions, ActivityFilter
-from rss3_dsl_sdk.client import RSS3Client
 
 SUPPORTED_NETWORKS = [
-    "arbitrum", "arweave", "avax", "base", "binance-smart-chain", "crossbell",
-    "ethereum", "farcaster", "gnosis", "linea", "optimism", "polygon", "vsl"
+    "arbitrum",
+    "arweave",
+    "avax",
+    "base",
+    "binance-smart-chain",
+    "crossbell",
+    "ethereum",
+    "farcaster",
+    "gnosis",
+    "linea",
+    "optimism",
+    "polygon",
+    "vsl",
 ]
 
 ALLOWED_PLATFORMS = [
-    "1inch", "AAVE", "Aavegotchi", "Crossbell", "Curve", "ENS", "Farcaster",
-    "Highlight", "IQWiki", "KiwiStand", "Lens", "Lido", "LooksRare", "Matters",
-    "Mirror", "OpenSea", "Optimism", "Paragraph", "RSS3", "SAVM", "Stargate",
-    "Uniswap", "Unknown", "VSL"
+    "1inch",
+    "AAVE",
+    "Aavegotchi",
+    "Crossbell",
+    "Curve",
+    "ENS",
+    "Farcaster",
+    "Highlight",
+    "IQWiki",
+    "KiwiStand",
+    "Lens",
+    "Lido",
+    "LooksRare",
+    "Matters",
+    "Mirror",
+    "OpenSea",
+    "Optimism",
+    "Paragraph",
+    "RSS3",
+    "SAVM",
+    "Stargate",
+    "Uniswap",
+    "Unknown",
+    "VSL",
 ]
 
 
@@ -34,13 +64,13 @@ hint: vitalik's address is vitalik.eth"""
     network: Optional[str] = Field(
         default=None,
         description=f"""Retrieve activities for the specified network.
-Supported networks: {', '.join(SUPPORTED_NETWORKS)}"""
+Supported networks: {', '.join(SUPPORTED_NETWORKS)}""",
     )
 
     platform: Optional[str] = Field(
         default=None,
         description=f"""Retrieve activities for the specified platform.
-Allowed platforms: {', '.join(ALLOWED_PLATFORMS)}"""
+Allowed platforms: {', '.join(ALLOWED_PLATFORMS)}""",
     )
 
 
@@ -52,19 +82,19 @@ has done or is doing recently."""
     args_schema: Type[ParamSchema] = ParamSchema
 
     def _run(
-            self,
-            address: str,
-            network: Optional[str] = None,
-            platform: Optional[str] = None,
-            run_manager: Optional[CallbackManagerForToolRun] = None,
+        self,
+        address: str,
+        network: Optional[str] = None,
+        platform: Optional[str] = None,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
-            self,
-            address: str,
-            network: Optional[str] = None,
-            platform: Optional[str] = None,
+        self,
+        address: str,
+        network: Optional[str] = None,
+        platform: Optional[str] = None,
     ):
         return await self.fetch_feeds_by_source(address, network, platform)
 
@@ -94,5 +124,5 @@ has done or is doing recently."""
             return result
 
         except Exception as e:
-            logger.error(f"Error fetching activities: {str(e)}")
-            return f"Error: Unable to fetch data. {str(e)}"
+            logger.error(f"Error fetching activities: {e!s}")
+            return f"Error: Unable to fetch data. {e!s}"

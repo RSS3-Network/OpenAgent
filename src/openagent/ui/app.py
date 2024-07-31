@@ -85,6 +85,7 @@ async def handle_function_message(message: FunctionMessage, msg: cl.Message):
         transfer_dict = json.loads(message.content)
         await do_stream_transfer_widget(msg, transfer_dict)
 
+
 async def do_stream_swap_widget(msg, swap_dict):
     from_chain = swap_dict["from_chain_name"]
     to_chain = swap_dict["to_chain_name"]
@@ -107,18 +108,13 @@ async def do_stream_transfer_widget(msg, transfer_dict):
     amount = transfer_dict["amount"]
     chain_name = transfer_dict.get("chain_name", "ethereum")
 
-    url = (
-        f"/widget/transfer?token={token}"
-        f"&amount={amount}&toAddress={to_address}&chainName={chain_name}"
-    )
+    url = f"/widget/transfer?token={token}" f"&amount={amount}&toAddress={to_address}&chainName={chain_name}"
 
     iframe_html = f"""
         <iframe src="{url}" width="100%" height="600px" style="border:none;">
         </iframe>
         """
     await msg.stream_token(iframe_html)
-
-
 
 
 @cl.on_message
