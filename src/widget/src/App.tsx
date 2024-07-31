@@ -1,19 +1,35 @@
-/* eslint-disable no-console */
+import React from 'react';
+import '@rainbow-me/rainbowkit/styles.css';
+import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
 
-function getQueryParams() {
-  const params = new URLSearchParams(window.location.search);
-  return {
-    fromAmount: params.get('fromAmount') || 11,
-    fromChain: params.get('fromChain') || 1,
-    fromToken: params.get('fromToken') || 'eth',
-    toChain: params.get('toChain') || 1,
-    toToken: params.get('toToken') || 'weth',
-  };
-}
+const config = getDefaultConfig({
+  appName: 'My RainbowKit App',
+  projectId: 'YOUR_PROJECT_ID', // Replace with your actual WalletConnect project ID
+    chains: [mainnet, polygon, optimism, arbitrum],
+  ssr: true,
+});
+
+const queryClient = new QueryClient();
 
 export function App() {
+  return (
+    <div>
+      <h1>Hello World</h1>
+    </div>
+  );
+}
 
-  return <>
-  <h1>hello world</h1>
-  </>
+export function TransferWidgetApp({ children }: { children: React.ReactNode }) {
+  return (
+      <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+          {children}
+       </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }

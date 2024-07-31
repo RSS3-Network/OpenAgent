@@ -9,7 +9,8 @@ import {
   type BaseError
 } from 'wagmi';
 import { parseUnits } from 'viem';
-import styles from '../styles/TransferWidget.module.css';
+import styles from './TransferWidget.module.css';
+
 
 interface TransferWidgetProps {
   token: string;
@@ -18,14 +19,14 @@ interface TransferWidgetProps {
   chainName: string;
 }
 
-const TransferWidget: React.FC<TransferWidgetProps> = ({
+const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
   token,
-  amount,
-  toAddress,
+  amount: initialAmount,
+  toAddress: initialToAddress,
   chainName
 }) => {
-  const [currentAmount, setCurrentAmount] = useState(amount);
-  const [currentToAddress, setCurrentToAddress] = useState(toAddress);
+  const [currentAmount, setCurrentAmount] = useState(initialAmount);
+  const [currentToAddress, setCurrentToAddress] = useState(initialToAddress);
   const [account, setAccount] = useState<string | null>(null);
   const [status, setStatus] = useState<string>('');
   const { address } = useAccount();
@@ -48,21 +49,21 @@ const TransferWidget: React.FC<TransferWidgetProps> = ({
     if (address) {
       setAccount(address);
     }
-
   }, [address]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (account) {
       sendTransaction({
-        to: toAddress as `0x${string}`,
-        value: parseUnits(amount, balance?.decimals || 18),
+        to: currentToAddress as `0x${string}`,
+        value: parseUnits(currentAmount, balance?.decimals || 18),
       });
     } else {
       setStatus('Wallet is not connected');
     }
   };
 
+  // @ts-ignore
   return (
     <div className={styles.transferWidget}>
       <h3>Send</h3>
@@ -81,7 +82,7 @@ const TransferWidget: React.FC<TransferWidgetProps> = ({
         <label>Amount:</label>
         <input
           type="text"
-          value={amount}
+          value={currentAmount}
           onChange={(e) => setCurrentAmount(e.target.value)}
           placeholder="Enter amount"
         />
@@ -90,7 +91,7 @@ const TransferWidget: React.FC<TransferWidgetProps> = ({
         <label>To Address:</label>
         <input
           type="text"
-          value={toAddress}
+          value={currentToAddress}
           onChange={(e) => setCurrentToAddress(e.target.value)}
           placeholder="Enter recipient address"
         />
@@ -116,5 +117,23 @@ const TransferWidget: React.FC<TransferWidgetProps> = ({
     </div>
   );
 };
+
+export function TransferWidget() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token') || '';
+  const amount = params.get('amount') || '';
+  const toAddress = params.get('toAddress') || '';
+  const chainName = params.get('chainName') || 'Ethereum';
+
+  // @ts-ignore
+  return (
+    <TransferWidgetComponent
+      token={token}
+      amount={amount}
+      toAddress={toAddress}
+      chainName={chainName}
+    />
+  );
+}
 
 export default TransferWidget;
