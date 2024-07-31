@@ -8,8 +8,10 @@ from langchain_openai import ChatOpenAI
 from loguru import logger
 
 from openagent.conf.env import settings
+from toolz import memoize
 
 
+@memoize
 def get_available_ollama_providers():
     try:
         ollama_list = ollama.list()
