@@ -7,7 +7,9 @@ from openagent.workflows.member import members
 
 load_dotenv()
 
-system_prompt = """
+
+def build_supervisor_chain():
+    system_prompt = """
 You are an AI Agent Supervisor responsible for managing and coordinating the work of multiple specialized AI Agents.
 Your task is to efficiently allocate and oversee tasks among the following AI Agents based on user requests:
 
@@ -33,39 +35,39 @@ Based on these guidelines, the user request, and the conversation history, selec
  to perform the task or end the conversation. Your decisions should be efficient,
  ensuring the user receives the best possible service experience.
 """
-
-members_info = ", ".join([f"{member['name']} ({member['description']})" for member in members])
-system_prompt = system_prompt.format(members=members_info)
-
-options = ["FINISH"] + [member["name"] for member in members]
-function_def = {
-    "name": "route",
-    "description": "Select the next role.",
-    "parameters": {
-        "title": "routeSchema",
-        "type": "object",
-        "properties": {
-            "next": {
-                "title": "Next",
-                "anyOf": [
-                    {"enum": options},
-                ],
-            }
+    members_info = ", ".join([f"{member['name']} ({member['description']})" for member in members])
+    system_prompt = system_prompt.format(members=members_info)
+    options = ["FINISH"] + [member["name"] for member in members]
+    function_def = {
+        "name": "route",
+        "description": "Select the next role.",
+        "parameters": {
+            "title": "routeSchema",
+            "type": "object",
+            "properties": {
+                "next": {
+                    "title": "Next",
+                    "anyOf": [
+                        {"enum": options},
+                    ],
+                }
+            },
+            "required": ["next"],
         },
-        "required": ["next"],
-    },
-}
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt),
-        MessagesPlaceholder(variable_name="messages"),
-        (
-            "system",
-            "Given the conversation above, who should act next?" " Or should we FINISH? Select one of: {options}",
-        ),
-    ]
-).partial(options=str(options), members=", ".join([member["name"] for member in members]))
+    }
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system_prompt),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "system",
+                "Given the conversation above, who should act next?" " Or should we FINISH? Select one of: {options}",
+            ),
+        ]
+    ).partial(options=str(options), members=", ".join([member["name"] for member in members]))
+    llm = get_current_llm()
+    return prompt | llm.bind_functions(functions=[function_def],
+                                       function_call="route") | JsonOutputFunctionsParser()
 
-llm = get_current_llm()
 
-supervisor_chain = prompt | llm.bind_functions(functions=[function_def], function_call="route") | JsonOutputFunctionsParser()
+supervisor_chain = build_supervisor_chain()
