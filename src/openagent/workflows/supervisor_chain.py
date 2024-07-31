@@ -66,8 +66,7 @@ Based on these guidelines, the user request, and the conversation history, selec
         ]
     ).partial(options=str(options), members=", ".join([member["name"] for member in members]))
     llm = get_current_llm()
-    return prompt | llm.bind_functions(functions=[function_def],
-                                       function_call="route") | JsonOutputFunctionsParser()
+    return prompt | llm.bind_functions(functions=[function_def], function_call="route") | JsonOutputFunctionsParser()
 
 
 supervisor_chain = build_supervisor_chain()

@@ -6,9 +6,9 @@ from langchain_google_vertexai import ChatVertexAI
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from loguru import logger
+from toolz import memoize
 
 from openagent.conf.env import settings
-from toolz import memoize
 
 
 @memoize
