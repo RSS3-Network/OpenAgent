@@ -77,6 +77,7 @@ async def fetch_transfer(to_address: str, token: str, chain_name: str, amount: s
         token=get_token_data_by_key(token_info, "symbol"),
         token_address=get_token_data_by_key(token_info, "address"),
         chain_id=chain_id,
+        chain_name=chain_name,
         amount=res.get("amount", "1"),
         logoURI=get_token_data_by_key(token_info, "logoURI"),
         decimals=get_token_data_by_key(token_info, "decimals"),
