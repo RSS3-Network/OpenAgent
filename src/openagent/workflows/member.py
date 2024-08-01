@@ -7,14 +7,7 @@ FEED_EXPLORER = "feed_explorer_agent"
 RESEARCH_ANALYST = "research_analyst_agent"
 FALLBACK = "fallback_agent"
 
-AgentRole = Literal[
-    "market_analysis_agent",
-    "asset_management_agent",
-    "block_explorer_agent",
-    "feed_explorer_agent",
-    "research_analyst_agent",
-    "fallback_agent"
-]
+AgentRole = Literal["market_analysis_agent", "asset_management_agent", "block_explorer_agent",  "feed_explorer_agent", "research_analyst_agent", "fallback_agent"]
 
 members = [
     {
