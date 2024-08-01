@@ -55,8 +55,11 @@ class TestNextRole(unittest.TestCase):
         result = next_role(query)
         self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
 
+    def setUp(self):
+        # set_current_llm("gemini-1.5-pro")
+        # set_current_llm("gpt-3.5-turbo")
+        set_current_llm("llama3.1:latest")
+
 
 if __name__ == "__main__":
-    set_current_llm("gemini-1.5-pro")
-    # set_current_llm("gpt-3.5-turbo")
     unittest.main()
