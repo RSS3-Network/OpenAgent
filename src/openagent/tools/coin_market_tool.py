@@ -20,7 +20,7 @@ class ARGS(BaseModel):
 
 
 class CoinMarketTool(BaseTool):
-    name = "CoinsMarketExecutor"
+    name = "CoinMarketExecutor"
 
     description = "query coins sorted by market cap, volume."
     args_schema: Type[ARGS] = ARGS
