@@ -47,23 +47,7 @@ Based on these guidelines, the user request, and the conversation history, selec
     members_info = ", ".join([f"{member['name']} ({member['description']})" for member in members])
     system_prompt = system_prompt.format(members=members_info)
     options = ["FINISH"] + [member["name"] for member in members]
-    function_def = {
-        "name": "route",
-        "description": "Select the next role.",
-        "parameters": {
-            "title": "routeSchema",
-            "type": "object",
-            "properties": {
-                "next": {
-                    "title": "Next",
-                    "anyOf": [
-                        {"enum": options},
-                    ],
-                }
-            },
-            "required": ["next"],
-        },
-    }
+
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", system_prompt),
