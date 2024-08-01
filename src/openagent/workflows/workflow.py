@@ -48,7 +48,6 @@ def build_workflow():
         workflow.add_edge(member, END)
 
     conditional_map = {k: k for k in member_names}
-    conditional_map["FINISH"] = END
     workflow.add_conditional_edges("supervisor", lambda x: x["next"], conditional_map)
     workflow.set_entry_point("supervisor")
     return workflow.compile()

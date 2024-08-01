@@ -32,6 +32,7 @@ def get_available_providers():
         providers["gpt-4o"] = ChatOpenAI(model="gpt-4o")
     if settings.VERTEX_PROJECT_ID:
         providers["gemini-1.5-pro"] = ChatVertexAI(model="gemini-1.5-pro")
+        providers["gemini-1.5-flash"] = ChatVertexAI(model="gemini-1.5-flash")
 
     if settings.OLLAMA_HOST:
         ollama_providers = get_available_ollama_providers()

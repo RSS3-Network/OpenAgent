@@ -15,6 +15,12 @@ def next_role(query) -> str:
 
 
 class TestNextRole(unittest.TestCase):
+    def setUp(self):
+        # set_current_llm("gemini-1.5-pro")
+        set_current_llm("gemini-1.5-flash")
+        # set_current_llm("gpt-3.5-turbo")
+        # set_current_llm("llama3.1:latest")
+
     def test_market_analysis(self):
         query = "What's the current price of Ethereum and its market trend?"
         expected_role = "market_analysis_agent"
@@ -55,10 +61,6 @@ class TestNextRole(unittest.TestCase):
         result = next_role(query)
         self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
 
-    def setUp(self):
-        # set_current_llm("gemini-1.5-pro")
-        # set_current_llm("gpt-3.5-turbo")
-        set_current_llm("llama3.1:latest")
 
 
 if __name__ == "__main__":

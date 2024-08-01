@@ -56,7 +56,7 @@ Based on these guidelines, select the next AI Agent or end the conversation.
 
     return (
             prompt
-            | llm.bind_tools(tools=[route], tool_choice="route")
+            | llm.bind_tools(tools=[route], tool_choice="route" if llm.model_name != 'gemini-1.5-flash' else None )
             | JsonOutputToolsParser()
             | extract_next
     )
