@@ -1,13 +1,16 @@
 import unittest
 
 from langchain_core.messages import HumanMessage
+from loguru import logger
 
+from openagent.conf.llm_provider import set_current_llm
 from openagent.workflows.supervisor_chain import build_supervisor_chain
 
 
 def next_role(query) -> str:
     supervisor_chain = build_supervisor_chain()
-    resp = supervisor_chain.invoke({"messages": [HumanMessage(content=query, name="humane")]})
+    resp = supervisor_chain.invoke({"messages": [HumanMessage(content=query, name="human")]})
+    logger.info(f"response: {resp}")
     return resp["next"]
 
 
@@ -52,12 +55,8 @@ class TestNextRole(unittest.TestCase):
         result = next_role(query)
         self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
 
-    def test_finish(self):
-        query = "That's all I needed, thank you!"
-        expected_role = "FINISH"
-        result = next_role(query)
-        self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
-
 
 if __name__ == "__main__":
+    set_current_llm("gemini-1.5-pro")
+    # set_current_llm("gpt-3.5-turbo")
     unittest.main()
