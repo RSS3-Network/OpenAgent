@@ -29,15 +29,15 @@ class SearchExpert(BaseTool):
     args_schema: Type[SearchSchema] = SearchSchema
 
     def _run(
-            self,
-            query: str,
-            run_manager: Optional[CallbackManagerForToolRun] = None,
+        self,
+        query: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         raise NotImplementedError
 
     async def _arun(
-            self,
-            query: str,
-            run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+        self,
+        query: str,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
         return await google_search(query)
