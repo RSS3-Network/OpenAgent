@@ -22,6 +22,7 @@ class TestAssetManagementAgent(unittest.TestCase):
             async for event in events:
                 if event['event'] == 'on_tool_end':
                     event_data_input_ = event['data']['input']
+                    self.assertEqual(event['name'], 'SwapExecutor')
                     self.assertEqual(event_data_input_['from_token'], 'ETH')
                     self.assertEqual(event_data_input_['to_token'], 'USDT')
                     self.assertEqual(event_data_input_['amount'], '20')
@@ -38,6 +39,7 @@ class TestAssetManagementAgent(unittest.TestCase):
             async for event in events:
                 if event['event'] == 'on_tool_end':
                     event_data_input_ = event['data']['input']
+                    self.assertEqual(event['name'], 'TokenBalanceExecutor')
                     self.assertEqual(event_data_input_['wallet_address'], '0x33c0814654fa367ce67d8531026eb4481290e63c')
                     self.assertEqual(event_data_input_['chain'], 'eth-mainnet')
 
@@ -53,6 +55,7 @@ class TestAssetManagementAgent(unittest.TestCase):
             async for event in events:
                 if event['event'] == 'on_tool_end':
                     event_data_input_ = event['data']['input']
+                    self.assertEqual(event['name'], 'NFTBalanceExecutor')
                     self.assertEqual(event_data_input_['wallet_address'], '0x33c0814654fa367ce67d8531026eb4481290e63c')
                     self.assertEqual(event_data_input_['chain'], 'eth-mainnet')
 
