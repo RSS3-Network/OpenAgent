@@ -61,6 +61,23 @@ class TestNextRole(unittest.TestCase):
         result = next_role(query)
         self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
 
+    def test_feed_explorer(self):
+        query = "What are the recent DeFi activities for the address 0x742d35Cc6634C0532925a3b844Bc454e4438f44e?"
+        expected_role = "feed_explorer_agent"
+        result = next_role(query)
+        self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
+
+    def test_feed_explorer_social(self):
+        query = "Show me the latest social interactions for vitalik.eth on Farcaster."
+        expected_role = "feed_explorer_agent"
+        result = next_role(query)
+        self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
+
+    def test_feed_explorer_source(self):
+        query = "What are the most recent activities of vitalik.eth from the Uniswap on Ethereum?"
+        expected_role = "feed_explorer_agent"
+        result = next_role(query)
+        self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
 
 
 if __name__ == "__main__":
