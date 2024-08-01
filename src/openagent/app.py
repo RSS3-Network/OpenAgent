@@ -5,6 +5,7 @@ from chainlit.utils import mount_chainlit
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from langchain_core.messages import HumanMessage
 from loguru import logger
 from pydantic import BaseModel
 from sse_starlette import EventSourceResponse
@@ -26,17 +27,17 @@ app.add_middleware(
 )
 
 
-@app.get("/health", status_code=status.HTTP_200_OK)
+@app.get("/health", status_code=status.HTTP_200_OK, include_in_schema=False)
 async def health_check():
     return JSONResponse(content={"status": "ok"})
 
 
-@app.get("/widget/swap")
+@app.get("/widget/swap", include_in_schema=False)
 async def swap_root():
     return FileResponse(os.path.join("dist", "index.html"))
 
 
-@app.get("/widget/price-chart")
+@app.get("/widget/price-chart", include_in_schema=False)
 async def chart_price_root():
     return FileResponse(os.path.join("dist", "index.html"))
 
@@ -50,7 +51,7 @@ async def outline_creation(req: Input):
     agent = build_workflow()
 
     async def stream():
-        async for event in agent.astream_events({"input": req.text}, version="v1"):
+        async for event in agent.astream_events({"messages": [HumanMessage(content=req.text)]}, version="v1"):
             kind = event["event"]
             if kind == "on_chat_model_stream":
                 yield json.dumps(event["data"]["chunk"].dict(), ensure_ascii=False)
@@ -68,6 +69,5 @@ if not os.path.exists(static_dir):
         logger.error(f"Error creating directory {static_dir}: {e}")
 
 app.mount("/static", StaticFiles(directory=static_dir), name="widget")
-
 
 mount_chainlit(app=app, target="openagent/ui/app.py", path="")
