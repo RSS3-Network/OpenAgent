@@ -36,7 +36,6 @@ def get_available_providers():
 
     if settings.OLLAMA_HOST:
         ollama_providers = get_available_ollama_providers()
-        print(ollama_providers)
         for model in ollama_providers:
             providers[model] = ChatOllama(model=model)
     return providers
