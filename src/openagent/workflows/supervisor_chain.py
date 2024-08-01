@@ -1,11 +1,20 @@
 from dotenv import load_dotenv
+from langchain_core.messages import HumanMessage
+from langchain_core.output_parsers import JsonOutputToolsParser
 from langchain_core.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.tools import tool
 
-from openagent.conf.llm_provider import get_current_llm
-from openagent.workflows.member import members
+from openagent.conf.llm_provider import get_current_llm, set_current_llm
+from openagent.workflows.member import members, AgentRole
 
 load_dotenv()
+
+
+@tool
+def route(next_: AgentRole):
+    """Select the next role."""
+    pass
 
 
 def build_supervisor_chain():
@@ -60,13 +69,13 @@ Based on these guidelines, the user request, and the conversation history, selec
             ("system", system_prompt),
             MessagesPlaceholder(variable_name="messages"),
             (
-                "system",
+                "ai",
                 "Given the conversation above, who should act next?" " Or should we FINISH? Select one of: {options}",
             ),
         ]
     ).partial(options=str(options), members=", ".join([member["name"] for member in members]))
     llm = get_current_llm()
-    return prompt | llm.bind_functions(functions=[function_def], function_call="route") | JsonOutputFunctionsParser()
+    return prompt | llm.bind_tools(tools=[route]) | JsonOutputToolsParser() | (lambda x: {'next': x[-1]['args']['next_']})
 
 
 supervisor_chain = build_supervisor_chain()

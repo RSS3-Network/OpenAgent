@@ -45,10 +45,7 @@ def build_workflow():
     member_names = list(map(lambda x: x["name"], members))
 
     for member in member_names:
-        if member == "fallback_agent":
-            workflow.add_edge(member, END)
-            continue
-        workflow.add_edge(member, "supervisor")
+        workflow.add_edge(member, END)
 
     conditional_map = {k: k for k in member_names}
     conditional_map["FINISH"] = END

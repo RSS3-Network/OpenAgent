@@ -1,6 +1,22 @@
+from typing import Literal
+
+MARKET_ANALYSIS: str = "market_analysis_agent"
+ASSET_MANAGEMENT = "asset_management_agent"
+BLOCK_EXPLORER = "block_explorer_agent"
+RESEARCH_ANALYST = "research_analyst_agent"
+FALLBACK = "fallback_agent"
+
+AgentRole = Literal[
+    "market_analysis_agent",
+    "asset_management_agent",
+    "block_explorer_agent",
+    "research_analyst_agent",
+    "fallback_agent"
+]
+
 members = [
     {
-        "name": "market_analysis_agent",
+        "name": MARKET_ANALYSIS,
         "description": """
 MarketAnalyst: Provides market data analysis and insights.
 
@@ -13,7 +29,7 @@ Maintain a professional and informative tone while providing clear, concise anal
         """.strip(),
     },
     {
-        "name": "asset_management_agent",
+        "name": ASSET_MANAGEMENT,
         "description": """
 AssetManager: Assists with crypto asset management.
 
@@ -26,7 +42,7 @@ Provide accurate information with a friendly tone, using occasional puns or emoj
         """.strip(),
     },
     {
-        "name": "block_explorer_agent",
+        "name": BLOCK_EXPLORER,
         "description": """
 BlockExplorer: Assists in exploring blockchain data.
 
@@ -39,7 +55,7 @@ Present technical information in an easy-to-understand manner, using analogies w
         """.strip(),
     },
     {
-        "name": "research_analyst_agent",
+        "name": RESEARCH_ANALYST,
         "description": """
 ResearchAnalyst: Conducts and provides web3 project research.
 
@@ -52,7 +68,7 @@ Deliver comprehensive yet concise reports, emphasizing key points for investment
         """.strip(),
     },
     {
-        "name": "fallback_agent",
+        "name": FALLBACK,
         "description": """
 FallbackAgent: Handles general queries and conversations.
 
