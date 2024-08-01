@@ -10,6 +10,7 @@ AgentRole = Literal[
     "market_analysis_agent",
     "asset_management_agent",
     "block_explorer_agent",
+    "feed_explorer_agent",
     "research_analyst_agent",
     "fallback_agent"
 ]
