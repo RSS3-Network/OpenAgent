@@ -8,9 +8,10 @@ from loguru import logger
 from pydantic import BaseModel, Field
 from rss3_dsl_sdk.client import RSS3Client
 from rss3_dsl_sdk.schemas.base import ActivityFilter, PaginationOptions
-
 from openagent.agent.system_prompt import FEED_PROMPT
 
+
+# Define supported networks and platforms
 SUPPORTED_NETWORKS = [
     "arbitrum",
     "arweave",
@@ -55,6 +56,7 @@ ALLOWED_PLATFORMS = [
 ]
 
 
+# Define the schema for input parameters
 class ParamSchema(BaseModel):
     address: str = Field(
         description="""wallet address or blockchain domain name,\
@@ -73,7 +75,7 @@ Supported networks: {', '.join(SUPPORTED_NETWORKS)}""",
 Allowed platforms: {', '.join(ALLOWED_PLATFORMS)}""",
     )
 
-
+# Define the FeedSourceExpert tool
 class FeedSourceExpert(BaseTool):
     name = "FeedSourceExecutor"
     description = """Use this tool to get the activities of a wallet address or \
@@ -96,12 +98,24 @@ has done or is doing recently."""
         network: Optional[str] = None,
         platform: Optional[str] = None,
     ):
-        return await self.fetch_feeds_by_source(address, network, platform)
+        """
+        Asynchronously run the feed source fetching process.
 
-    async def fetch_feeds_by_source(self, address: str, network: Optional[str] = None, platform: Optional[str] = None):
+        :param address: The wallet address to fetch activities for
+        :param network: network to filter activities (Optional)
+        :param platform: platform to filter activities (Optional)
+        :return: A string containing the fetched activities or an error message
+        """
+        return await self.fetch_source_feeds(address, network, platform)
+
+    async def fetch_source_feeds(self, address: str, network: Optional[str] = None, platform: Optional[str] = None):
+        """
+        Fetch feed activities for a given address, optionally filtered by network and platform.
+        """
         filters = ActivityFilter()
         pagination = PaginationOptions(limit=5, action_limit=10)
 
+        # Validate and set network and platform filter if provided
         if network:
             if network.lower() not in [n.lower() for n in SUPPORTED_NETWORKS]:
                 return f"Error: Unsupported network '{network}'. Please choose from: {', '.join(SUPPORTED_NETWORKS)}"
@@ -115,9 +129,11 @@ has done or is doing recently."""
         try:
             logger.info(f"Fetching activities for address: {address}, network: {network}, platform: {platform}")
 
+            # Fetch activities using the RSS3 client
             activities = RSS3Client().fetch_activities(account=address, tag=None, activity_type=None, pagination=filters, filters=pagination)
 
-            if not activities.data:  # Check activities.data
+            # Check if any activities were found
+            if not activities.data:
                 return f"No activities found for the given address{' on ' + network if network else ''}{' and ' + platform if platform else ''}."
 
             result = FEED_PROMPT.format(activities_data=activities.dict())
