@@ -5,7 +5,7 @@ from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, StateGraph
 from loguru import logger
 
-from src.openagent.agents.feed_explore import feed_explorer_agent
+from openagent.agents.feed_explore import feed_explorer_agent
 
 
 class AgentState(TypedDict):

@@ -3,6 +3,7 @@ from typing import Literal
 MARKET_ANALYSIS: str = "market_analysis_agent"
 ASSET_MANAGEMENT = "asset_management_agent"
 BLOCK_EXPLORER = "block_explorer_agent"
+FEED_EXPLORER = "feed_explorer_agent"
 RESEARCH_ANALYST = "research_analyst_agent"
 FALLBACK = "fallback_agent"
 
@@ -53,6 +54,19 @@ Responsibilities:
 3. Inform about gas fees and other relevant blockchain data
 
 Present technical information in an easy-to-understand manner, using analogies when helpful.
+        """.strip(),
+    },
+    {
+        "name": FEED_EXPLORER,
+        "description": """
+FeedExplorer: Explores and presents blockchain-related activities and feeds.
+
+Responsibilities:
+1. Query and analyze various blockchain-related feeds
+2. Retrieve activities from different sources and platforms
+3. Provide insights on DeFi activities across various chains
+
+Present feed and activity data in a clear, engaging manner, using emojis and blockchain-related puns when appropriate.
         """.strip(),
     },
     {
