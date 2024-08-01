@@ -1,5 +1,3 @@
-import asyncio
-
 from langchain.agents import (
     AgentExecutor,
     AgentType,
@@ -23,15 +21,36 @@ from openagent.agent.system_prompt import (
 )
 from openagent.conf.env import settings
 from openagent.experts.article_expert import ArticleExpert
+from openagent.experts.dune_expert import DuneExpert
 from openagent.experts.feed_expert import FeedExpert
+from openagent.experts.google_expert import GoogleExpert
 from openagent.experts.nft_expert import NFTExpert
 from openagent.experts.price_expert import PriceExpert
-from openagent.experts.search_expert import SearchExpert
 from openagent.experts.swap_expert import SwapExpert
 from openagent.experts.transfer_expert import TransferExpert
 
 # Initialize cache
 init_cache()
+
+
+# Function to get all experts
+def get_experts():
+    experts = [
+        DuneExpert(),
+        FeedExpert(),
+        PriceExpert(),
+        ArticleExpert(),
+        TransferExpert(),
+        SwapExpert(),
+    ]
+
+    if settings.SERPAPI_API_KEY:
+        experts.append(GoogleExpert())
+
+    if settings.NFTSCAN_API_KEY:
+        experts.append(NFTExpert())
+
+    return experts
 
 
 # Function to create a ReAct agent
@@ -47,15 +66,7 @@ def create_react_agent(session_id: str):
     )
 
     # List of experts to be loaded
-    experts = [
-        SearchExpert(),
-        FeedExpert(),
-        PriceExpert(),
-        ArticleExpert(),
-        NFTExpert(),
-        TransferExpert(),
-        SwapExpert(),
-    ]
+    experts = get_experts()
 
     # Initialize interpreter
     interpreter = create_interpreter(settings.MODEL_NAME)
@@ -128,15 +139,7 @@ def create_tool_call_agent(session_id: str):
     )
 
     # List of experts
-    experts = [
-        SearchExpert(),
-        FeedExpert(),
-        PriceExpert(),
-        ArticleExpert(),
-        NFTExpert(),
-        TransferExpert(),
-        SwapExpert(),
-    ]
+    experts = get_experts()
 
     # Construct the Tools agent
     agent = create_tool_calling_agent(interpreter, experts, prompt)
@@ -144,18 +147,3 @@ def create_tool_call_agent(session_id: str):
     # Create an agent executor by passing in the agent and tools
     agent_executor = AgentExecutor(agent=agent, tools=experts, verbose=True)
     return agent_executor
-
-
-# Function to get the chat history of a session from Postgres
-
-
-async def main():
-    # Create a tool call agent and use it to handle some inputs
-    agent = get_agent("123")
-    await agent.ainvoke({"input": "Swap 1 eth to usdt, from ethereum to arb"})
-    await agent.ainvoke({"input": "What is the price of ETH?"})
-    await agent.ainvoke({"input": "What did vitalik.eth do recently?"})
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
