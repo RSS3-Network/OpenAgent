@@ -55,6 +55,7 @@ def get_current_llm() -> BaseChatModel | None:
     if llm is None:
         available_providers = get_available_providers()
         if len(available_providers) > 0:
+            logger.warning("No LLM provider is set. Using the {list(available_providers.keys())[0]} provider.")
             llm = list(available_providers.values())[0]  # noqa
         else:
             logger.error("No LLM provider is available.")
