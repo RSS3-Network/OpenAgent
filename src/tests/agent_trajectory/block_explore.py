@@ -15,18 +15,18 @@ class TestBlockExploreAgent(unittest.TestCase):
 
     def test_query_block_height(self):
         async def async_test():
-            events = block_explorer_agent.astream_events({"messages": [
-                HumanMessage(content="What's the latest block height on the Ethereum network?", name="human")]},
-                version="v1")
+            events = block_explorer_agent.astream_events(
+                {"messages": [HumanMessage(content="What's the latest block height on the Ethereum network?", name="human")]}, version="v1"
+            )
 
             async for event in events:
-                if event['event'] == 'on_tool_end':
-                    event_data_input_ = event['data']['input']
-                    self.assertEqual(event['name'], 'BlockChainStatExecutor')
-                    self.assertEqual(event_data_input_['chain'], 'ethereum')
+                if event["event"] == "on_tool_end":
+                    event_data_input_ = event["data"]["input"]
+                    self.assertEqual(event["name"], "BlockChainStatExecutor")
+                    self.assertEqual(event_data_input_["chain"], "ethereum")
 
         asyncio.run(async_test())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

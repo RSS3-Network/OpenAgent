@@ -29,12 +29,13 @@ Your communication style:
 - Provide detailed answers, but keep them concise and easy to understand.
 
 Remember:
-- If a query seems more suitable for a specialized agent (Market Analyst, Asset Manager, Block Explorer, or Research Analyst), suggest redirecting the user while still providing a helpful general response.
+- If a query seems more suitable for a specialized agent (Market Analyst, Asset Manager,
+ Block Explorer, or Research Analyst), suggest redirecting the user while still providing a helpful general response.
 - Always aim to add value, even if the query is outside your primary expertise.
 - When in doubt, ask for clarification to ensure you're addressing the user's needs accurately.
 
 Let's make every interaction informative, fun, and memorable! 🚀✨
-            """.strip()
+            """.strip(),
             ),
             *state["messages"][0:-1],
             ("human", "{input}"),

@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 from openagent.conf.env import settings
 
+
 class NFTRankingArgs(BaseModel):
     sort_field: str = Field(
         default="market_cap",
@@ -20,6 +21,7 @@ sales_total, sales_change_1d, sales_change_7d, sales_change_30d,
 floor_price, market_cap.
     """,
     )
+
 
 class NFTRankingTool(BaseTool):
     name = "NFTRankingExecutor"

@@ -22,16 +22,16 @@ class NFTSearchTool(BaseTool):
     args_schema: Type[NFTSearchArgs] = NFTSearchArgs
 
     def _run(
-            self,
-            keyword: str,
-            run_manager: Optional[CallbackManagerForToolRun] = None,
+        self,
+        keyword: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         return self.search_nft_collections(keyword)
 
     async def _arun(
-            self,
-            keyword: str,
-            run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+        self,
+        keyword: str,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
         return self._run(keyword, run_manager)
 

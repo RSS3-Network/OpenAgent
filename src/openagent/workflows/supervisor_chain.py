@@ -5,7 +5,7 @@ from langchain_core.tools import tool
 from loguru import logger
 
 from openagent.conf.llm_provider import get_current_llm
-from openagent.workflows.member import members, AgentRole
+from openagent.workflows.member import AgentRole, members
 
 load_dotenv()
 
@@ -41,24 +41,21 @@ Based on these guidelines, select the next AI Agent or end the conversation.
         [
             ("system", system_prompt),
             MessagesPlaceholder(variable_name="messages"),
-
         ]
     ).partial(options=str(options), members=", ".join([member["name"] for member in members]))
     llm = get_current_llm()
 
     def extract_next(x):
         try:
-            next__ = x[-1]['args']['next_']
-        except Exception as ex:
+            next__ = x[-1]["args"]["next_"]
+        except Exception:
             logger.warning(f"Error extracting next agent: {x}")
             next__ = "fallback_agent"
-        return {'next': next__}
+        return {"next": next__}
 
     return (
-            prompt
-            | llm.bind_tools(tools=[route], tool_choice="route" if llm.model_name != 'gemini-1.5-flash' else None )
-            | JsonOutputToolsParser()
-            | extract_next
+        prompt
+        | llm.bind_tools(tools=[route], tool_choice="route" if llm.model_name != "gemini-1.5-flash" else None)
+        | JsonOutputToolsParser()
+        | extract_next
     )
-
-
