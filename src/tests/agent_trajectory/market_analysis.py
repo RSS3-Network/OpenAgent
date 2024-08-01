@@ -8,7 +8,7 @@ from openagent.agents.market_analysis import market_analysis_agent
 from openagent.conf.llm_provider import set_current_llm
 
 
-class TestBlockExploreAgent(unittest.TestCase):
+class TestMarketAnalysisAgent(unittest.TestCase):
     def setUp(self):
         # set_current_llm("gemini-1.5-pro")
         set_current_llm("gpt-3.5-turbo")
