@@ -22,6 +22,10 @@ class Transfer(BaseModel):
 
 
 class ParamSchema(BaseModel):
+    """
+    Defines the schema for input parameters of the TransferExpert tool.
+    """
+
     to_address: str = Field(
         description="""extract the blockchain address mentioned in the query""",
     )
@@ -44,6 +48,10 @@ if not mentioned, default is "1".""",
 
 
 class TransferExpert(BaseTool):
+    """
+    Tool for generating a transfer widget for cryptocurrency transfers.
+    """
+
     name = "TransferExecutor"
     description = """Use this tool to send cryptocurrencies to another address."""
     args_schema: Type[ParamSchema] = ParamSchema
@@ -68,10 +76,31 @@ class TransferExpert(BaseTool):
         amount: str = "1",
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
+        """
+        Asynchronously run the transfer process.
+
+        :param to_address: The recipient's blockchain address
+        :param token: The token symbol
+        :param chain_name: The blockchain name (default is "ethereum")
+        :param amount: The amount to transfer (default is "1")
+        :param run_manager: Optional callback manager for async operations
+        :return: JSON representation of the transfer details
+        """
+
         return await fetch_transfer(to_address, token, chain_name, amount)
 
 
 async def fetch_transfer(to_address: str, token: str, chain_name: str, amount: str):
+    """
+    Fetch transfer details and prepare the Transfer object.
+
+    :param to_address: The recipient's blockchain address
+    :param token: The token symbol
+    :param chain_name: The blockchain name
+    :param amount: The amount to transfer
+    :return: JSON representation of the Transfer object
+    """
+
     if not to_address.startswith("0x") and not to_address.endswith(".eth"):
         to_address += ".eth"
     chain_id = chain_name_to_id(chain_name)
@@ -80,8 +109,11 @@ async def fetch_transfer(to_address: str, token: str, chain_name: str, amount: s
         "token": token,
         "amount": amount,
     }
+
+    # Select the best token based on the provided token symbol and chain ID
     token_info = await select_best_token(token, chain_id)
 
+    # Create a Transfer object with all the necessary information
     transfer = Transfer(
         to_address=res.get("to_address", "1"),
         token=get_token_data_by_key(token_info, "symbol"),

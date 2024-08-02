@@ -5,6 +5,8 @@ from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, StateGraph
 from loguru import logger
 
+from openagent.agents.feed_explore import feed_explorer_agent
+
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
@@ -33,11 +35,13 @@ def build_workflow():
     asset_management_agent_node = create_node(asset_management_agent, "asset_management_agent")
     block_explorer_agent_node = create_node(block_explorer_agent, "block_explorer_agent")
     research_analyst_agent_node = create_node(research_analyst_agent, "research_analyst_agent")
+    feed_explorer_agent_node = create_node(feed_explorer_agent, "feed_explorer_agent")
 
     workflow = StateGraph(AgentState)
     workflow.add_node("market_analysis_agent", market_analysis_agent_node)
     workflow.add_node("asset_management_agent", asset_management_agent_node)
     workflow.add_node("block_explorer_agent", block_explorer_agent_node)
+    workflow.add_node("feed_explorer_agent", feed_explorer_agent_node)
     workflow.add_node("research_analyst_agent", research_analyst_agent_node)
     workflow.add_node("supervisor", build_supervisor_chain())
     workflow.add_node("fallback_agent", fallback)

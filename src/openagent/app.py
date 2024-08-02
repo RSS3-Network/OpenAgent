@@ -42,6 +42,11 @@ async def chart_price_root():
     return FileResponse(os.path.join("dist", "index.html"))
 
 
+@app.get("/widget/transfer", include_in_schema=False)
+async def transfer_root():
+    return FileResponse(os.path.join("dist", "index.html"))
+
+
 class Input(BaseModel):
     text: str
 

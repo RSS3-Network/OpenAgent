@@ -14,6 +14,10 @@ from openagent.conf.env import settings
 
 
 class ParamSchema(BaseModel):
+    """
+    Defines the schema for input parameters of the FeedExpert tool.
+    """
+
     address: str = Field(
         description="""wallet address or blockchain domain name,\
 hint: vitalik's address is vitalik.eth"""
@@ -26,6 +30,10 @@ eg. : all, post, comment, share."""
 
 
 class FeedExpert(BaseTool):
+    """
+    A tool for fetching and analyzing blockchain activities for a given address.
+    """
+
     name = "FeedExecutor"
     description = """Use this tool to get the activities of a wallet address or \
 blockchain domain name and know what this address has done or doing recently."""
@@ -45,10 +53,27 @@ blockchain domain name and know what this address has done or doing recently."""
         type: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ):
+        """
+        Asynchronously run the feed fetching process.
+
+        :param address: The wallet address to fetch activities for
+        :param type: The type of activities to fetch (all, post, comment, share)
+        :param run_manager: Optional callback manager for async operations
+        :return: A string containing the fetched activities or an error message
+        """
         return await fetch_feeds(address, type)
 
 
 async def fetch_feeds(address: str, type: str):
+    """
+    Fetch feed activities for a given address and activity type.
+
+    :param address: The wallet address to fetch activities for
+    :param type: The type of activities to fetch (all, post, comment, share)
+    :return: A string containing the fetched activities formatted using FEED_PROMPT
+    """
+
+    # Construct the URL for the API request
     url = f"{settings.RSS3_DATA_API}/decentralized/{address}?limit=5&action_limit=10&tag=social"
     if type in ["post", "comment", "share"]:
         url += f"&type={type}"

@@ -137,6 +137,21 @@ async def handle_tool_end(event, msg):
         )
         await msg.stream_token(widget)
 
+    if event["name"] == "TransferExecutor":
+        output = event["data"]["output"]
+        transfer_dict = json.loads(output)
+        token = transfer_dict["token"]
+        to_address = transfer_dict["to_address"]
+        amount = transfer_dict["amount"]
+
+        url = f"/widget/transfer?token={token}&amount={amount}&toAddress={to_address}"
+
+        iframe_html = f"""
+                <iframe src="{url}" width="100%" height="600px" style="border:none;">
+                </iframe>
+                """
+        await msg.stream_token(iframe_html)
+
     if event["name"] == "PriceExecutor":
         output = event["data"]["output"]
         price_dict = json.loads(output)
