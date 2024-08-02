@@ -12,6 +12,7 @@ from sse_starlette import EventSourceResponse
 from starlette import status
 from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
+
 from openagent.workflows.workflow import build_workflow
 
 load_dotenv()
@@ -40,9 +41,11 @@ async def swap_root():
 async def chart_price_root():
     return FileResponse(os.path.join("dist", "index.html"))
 
+
 @app.get("/widget/transfer", include_in_schema=False)
 async def transfer_root():
     return FileResponse(os.path.join("dist", "index.html"))
+
 
 class Input(BaseModel):
     text: str

@@ -79,5 +79,6 @@ class TestNextRole(unittest.TestCase):
         result = next_role(query)
         self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
 
+
 if __name__ == "__main__":
     unittest.main()

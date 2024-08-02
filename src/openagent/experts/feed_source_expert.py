@@ -8,8 +8,8 @@ from loguru import logger
 from pydantic import BaseModel, Field
 from rss3_dsl_sdk.client import RSS3Client
 from rss3_dsl_sdk.schemas.base import ActivityFilter, PaginationOptions
-from openagent.agent.system_prompt import FEED_PROMPT
 
+from openagent.agent.system_prompt import FEED_PROMPT
 
 # Define supported networks and platforms
 SUPPORTED_NETWORKS = [
@@ -74,6 +74,7 @@ Supported networks: {', '.join(SUPPORTED_NETWORKS)}""",
         description=f"""Retrieve activities for the specified platform.
 Allowed platforms: {', '.join(ALLOWED_PLATFORMS)}""",
     )
+
 
 # Define the FeedSourceExpert tool
 class FeedSourceExpert(BaseTool):

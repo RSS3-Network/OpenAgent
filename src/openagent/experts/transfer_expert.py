@@ -20,10 +20,12 @@ class Transfer(BaseModel):
     logoURI: str  # noqa
     decimals: int
 
+
 class ParamSchema(BaseModel):
     """
-     Defines the schema for input parameters of the TransferExpert tool.
+    Defines the schema for input parameters of the TransferExpert tool.
     """
+
     to_address: str = Field(
         description="""extract the blockchain address mentioned in the query""",
     )
@@ -47,8 +49,9 @@ if not mentioned, default is "1".""",
 
 class TransferExpert(BaseTool):
     """
-      Tool for generating a transfer widget for cryptocurrency transfers.
+    Tool for generating a transfer widget for cryptocurrency transfers.
     """
+
     name = "TransferExecutor"
     description = """Use this tool to send cryptocurrencies to another address."""
     args_schema: Type[ParamSchema] = ParamSchema

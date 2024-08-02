@@ -17,6 +17,7 @@ class ParamSchema(BaseModel):
     """
     Defines the schema for input parameters of the FeedExpert tool.
     """
+
     address: str = Field(
         description="""wallet address or blockchain domain name,\
 hint: vitalik's address is vitalik.eth"""

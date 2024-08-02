@@ -131,7 +131,7 @@ export function TransferWidget() {
   const token = params.get('token') || '';
   const amount = params.get('amount') || '';
   const toAddress = params.get('toAddress') || '';
-  
+
   // @ts-ignore
   return (
     <TransferWidgetComponent
