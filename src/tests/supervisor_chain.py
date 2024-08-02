@@ -33,6 +33,12 @@ class TestNextRole(unittest.TestCase):
         result = next_role(query)
         self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
 
+    def test_transfer_expert(self):
+        query = "Can you help me transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e on the Ethereum network?"
+        expected_role = "asset_management_agent"
+        result = next_role(query)
+        self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
+
     def test_block_explorer(self):
         query = "What's the latest block height on the Ethereum network, and what are the current gas fees?"
         expected_role = "block_explorer_agent"
