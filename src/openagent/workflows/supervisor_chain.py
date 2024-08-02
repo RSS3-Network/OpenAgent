@@ -55,9 +55,4 @@ Based on these guidelines, select the next AI Agent or end the conversation.
         return {"next": next__}
 
     tool_choice = None if (isinstance(llm, ChatVertexAI) and llm.model_name == "gemini-1.5-flash") else "route"
-    return (
-            prompt
-            | llm.bind_tools(tools=[route], tool_choice=tool_choice)
-            | JsonOutputToolsParser()
-            | extract_next
-    )
+    return prompt | llm.bind_tools(tools=[route], tool_choice=tool_choice) | JsonOutputToolsParser() | extract_next

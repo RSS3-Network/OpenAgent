@@ -10,8 +10,17 @@ from toolz import memoize
 
 from openagent.conf.env import settings
 
-TOOL_CALL_MODELS = ["llama3.1", "mistral-nemo", "mistral", "mistral-large", "mixtral", "command-r-plus",
-                    "deepseek-coder-v2", "llama3-groq-tool-use", "firefunction-v2"]
+TOOL_CALL_MODELS = [
+    "llama3.1",
+    "mistral-nemo",
+    "mistral",
+    "mistral-large",
+    "mixtral",
+    "command-r-plus",
+    "deepseek-coder-v2",
+    "llama3-groq-tool-use",
+    "firefunction-v2",
+]
 
 
 @memoize
@@ -21,8 +30,8 @@ def get_available_ollama_providers():
         models_ = list(map(lambda x: x["name"].split(":")[0], ollama_list["models"]))
         available_models = list(filter(lambda x: x in TOOL_CALL_MODELS, models_))
         return available_models
-    except Exception as e:
-        logger.warning(f"Failed to get available ollama providers: {e}")
+    except Exception:
+        logger.warning("Failed to get available ollama providers")
         return []
 
 
