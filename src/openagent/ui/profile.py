@@ -1,5 +1,7 @@
 import chainlit as cl
 
+from openagent.conf.llm_provider import TOOL_CALL_MODELS
+
 provider_key_to_profile_info = {
     "gpt-3.5-turbo": {
         "name": "GPT-3.5",
@@ -21,18 +23,21 @@ provider_key_to_profile_info = {
         "markdown_description": "The underlying LLM model is **Gemini 1.5 Flash**.",
         "icon": "https://custom.typingmind.com/assets/models/gemini.png",
     },
-    "llama3.1:latest": {
-        "name": "LLAMA 3.1",
-        "markdown_description": "The underlying LLM model is **LLAMA 3.1**.",
-        "icon": "https://custom.typingmind.com/assets/models/llama.png",
-    },
+
 }
+for model in TOOL_CALL_MODELS:
+    provider_key_to_profile_info[model] = {
+        "name": model,
+        "markdown_description": f"The underlying LLM model is **{model}**.",
+        "icon": "https://ollama.com/public/ollama.png",
+    }
 
 
 def provider_to_profile(provider_key):
     profile_info = provider_key_to_profile_info.get(provider_key)
     if profile_info:
-        return cl.ChatProfile(name=profile_info["name"], markdown_description=profile_info["markdown_description"], icon=profile_info["icon"])
+        return cl.ChatProfile(name=profile_info["name"], markdown_description=profile_info["markdown_description"],
+                              icon=profile_info["icon"])
     return None
 
 
