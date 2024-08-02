@@ -23,8 +23,8 @@ class TestFeedExploreAgent(unittest.TestCase):
                 if event['event'] == 'on_tool_end':
                     event_data_input_ = event['data']['input']
                     self.assertEqual(event['name'], 'DeFiExecutor')
-                    self.assertIn('address', event_data_input_)
                     self.assertEqual(event_data_input_['address'], '0x742d35Cc6634C0532925a3b844Bc454e4438f44e')
+                    self.assertEqual(event_data_input_['activity_type'], 'all')
 
         asyncio.run(async_test())
 

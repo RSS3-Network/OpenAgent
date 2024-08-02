@@ -16,7 +16,6 @@ interface TransferWidgetProps {
   token: string;
   amount: string;
   toAddress: string;
-  chainName: string;
 }
 
 /**
@@ -26,7 +25,6 @@ const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
   token,
   amount: initialAmount,
   toAddress: initialToAddress,
-  chainName
 }) => {
   const [currentAmount, setCurrentAmount] = useState(initialAmount);
   const [currentToAddress, setCurrentToAddress] = useState(initialToAddress);
@@ -133,15 +131,13 @@ export function TransferWidget() {
   const token = params.get('token') || '';
   const amount = params.get('amount') || '';
   const toAddress = params.get('toAddress') || '';
-  const chainName = params.get('chainName') || 'Ethereum';
-
+  
   // @ts-ignore
   return (
     <TransferWidgetComponent
       token={token}
       amount={amount}
       toAddress={toAddress}
-      chainName={chainName}
     />
   );
 }

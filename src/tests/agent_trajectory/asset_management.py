@@ -61,6 +61,22 @@ class TestAssetManagementAgent(unittest.TestCase):
 
         asyncio.run(async_test())
 
+    def test_transfer_eth(self):
+        async def async_test():
+            events = asset_management_agent.astream_events(
+                {"messages": [HumanMessage(content="Can you transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e?", name="human")]},
+                version="v1"
+            )
+
+            async for event in events:
+                if event["event"] == "on_tool_end":
+                    event_data_input_ = event["data"]["input"]
+                    self.assertEqual(event["name"], "TransferExecutor")
+                    self.assertEqual(event_data_input_["to_address"], "0x742d35Cc6634C0532925a3b844Bc454e4438f44e")
+                    self.assertEqual(event_data_input_["token"], "ETH")
+                    self.assertEqual(event_data_input_["amount"], "0.5")
+
+        asyncio.run(async_test())
 
 if __name__ == "__main__":
     unittest.main()

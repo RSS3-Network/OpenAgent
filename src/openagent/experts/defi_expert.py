@@ -10,7 +10,7 @@ from openagent.agent.system_prompt import FEED_PROMPT
 
 # Define the defi activities and common DeFi networks
 SUPPORTED_NETWORKS = ["arbitrum", "avax", "base", "binance-smart-chain", "ethereum", "gnosis", "linea", "optimism", "polygon"]
-DEFI_ACTIVITIES = ["swap", "liquidity", "staking"]
+DEFI_ACTIVITIES = ["swap", "liquidity", "staking", "all"]
 
 # Define the schema for input parameters
 class ParamSchema(BaseModel):
@@ -26,7 +26,7 @@ class DeFiExpert(BaseTool):
      A tool for fetching and analyzing DeFi activities across various networks.
      """
     name = "DeFiExecutor"
-    description = "Use this tool to get the user's DeFi activities (swaps, liquidity provision, staking) across various networks."
+    description = "Use this tool to get the user's DeFi activities (swaps, liquidity provision, staking, all) across various networks."
     args_schema: Type[ParamSchema] = ParamSchema
 
     async def _run(
@@ -76,15 +76,26 @@ class DeFiExpert(BaseTool):
             filters = ActivityFilter(network=[network] if network else None)
             pagination = PaginationOptions(limit=10, action_limit=10)
 
-            # Dynamically select the appropriate fetch method in the SDK based on activity type
-            fetch_method = getattr(client, f"fetch_exchange_{activity_type.lower()}_activities")
-            activities = fetch_method(account=address, filters=filters, pagination=pagination)
+            # Handle 'all' activity type
+            if activity_type == "all":
+                activities = []
+                for act_type in ["swap", "liquidity", "staking"]:
+                    fetch_method = getattr(client, f"fetch_exchange_{act_type}_activities")
+                    act_results = fetch_method(account=address, filters=filters, pagination=pagination)
+                    activities.extend(act_results.data)
+            else:
+                fetch_method = getattr(client, f"fetch_exchange_{activity_type}_activities")
+                activities_result = fetch_method(account=address, filters=filters, pagination=pagination)
+                activities = activities_result.data
 
             # Check if any activities were found
-            if not activities.data:
-                return f"No {activity_type} activities found for {address}{' on ' + network if network else ''}."
+            if not activities:
+                return f"No {'DeFi' if activity_type == 'all' else activity_type} activities found for {address}{' on ' + network if network else ''}."
 
-            result = FEED_PROMPT.format(activities_data=activities.dict(), activity_type=activity_type)
+            # Format the result
+            activities_data = [activity.model_dump() for activity in activities]
+            result = FEED_PROMPT.format(activities_data=activities_data,
+                                        activity_type="DeFi" if activity_type == "all" else activity_type)
             return result
 
         except Exception as e:
