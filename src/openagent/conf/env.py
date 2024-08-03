@@ -8,7 +8,7 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
-    MODEL_NAME: str = Field(default="gemini-1.5-pro", env="MODEL_NAME")
+    MODEL_NAME: str = Field(default="gemini-1.5-pro", env="MODEL_NAME").lower()
     LLM_API_BASE: Optional[str] = Field(default=None)
     GOOGLE_CLOUD_PROJECT_ID: Optional[str] = Field(default=None)
     GOOGLE_GEMINI_API_KEY: Optional[str] = Field(default=None)

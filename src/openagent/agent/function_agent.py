@@ -84,13 +84,16 @@ def create_react_agent(session_id: str):
 
 # Function to create an interpreter based on model name
 def create_interpreter(model_name):
+    # OpenAI models
     if model_name.startswith("gpt"):
         return ChatOpenAI(
             model=model_name,
             temperature=0.3,
             streaming=True,
         )
+    # Google models
     elif model_name.startswith("gemini"):
+        # via Google AI studio
         if settings.GOOGLE_GEMINI_API_KEY is not None:
             return ChatGoogleGenerativeAI(
                 model=model_name,
@@ -98,14 +101,15 @@ def create_interpreter(model_name):
                 temperature=0.3,
                 streaming=True,
             )
+        # via Google Cloud Vertex AI
         else:
             return ChatVertexAI(
-                model=settings.MODEL_NAME,
+                model=model_name,
                 project=settings.GOOGLE_CLOUD_PROJECT_ID,
                 temperature=0.3,
                 streaming=True,
-                verbose=True,
             )
+    # local models via Ollama
     else:
         return ChatOllama(
             model=model_name,
