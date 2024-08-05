@@ -10,3 +10,7 @@ div.MuiBox-root > div.MuiBox-root > div.MuiStack-root.watermark {
 div.MuiStack-root.message-content .markdown-body {
     overflow-wrap: break-word !important;
 }
+
+div.MuiBox-root div.MuiStack-root.watermark{
+    display: none;
+}
