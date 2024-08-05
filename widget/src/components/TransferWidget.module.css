@@ -1,0 +1,123 @@
+.transferWidget {
+  max-width: 400px;
+  margin: auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #fff; /* Ensure the background is white */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow for better appearance */
+}
+
+.title {
+  text-align: center;
+}
+
+.accountInfo,
+.assetInfo,
+.amountInfo,
+.addressInfo,
+.gasFeeInfo {
+  margin-bottom: 15px;
+}
+
+.accountInfo p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.assetInfo {
+  display: flex;
+  align-items: center;
+}
+
+.assetInfo label,
+.amountInfo label,
+.addressInfo label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.assetDetails {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.assetIcon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.balance {
+  margin-left: auto;
+  color: #666;
+}
+
+.amountInfo input,
+.addressInfo input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.gasFeeInfo p {
+  margin: 5px 0;
+  font-size: 12px;
+  color: #666;
+}
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.connectButton,
+.transferButton {
+  width: 48%;
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.connectButton {
+  width: 60%;
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+}
+
+.transferButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.connectButton:hover,
+.transferButton:hover {
+  opacity: 0.8;
+}
+
+.status {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+.transactionInfo,
+.error {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-top: 10px;
+}
