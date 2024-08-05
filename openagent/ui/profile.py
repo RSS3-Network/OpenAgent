@@ -5,34 +5,34 @@ from openagent.conf.llm_provider import TOOL_CALL_MODELS
 provider_key_to_profile_info = {
     "gpt-3.5-turbo": {
         "name": "GPT-3.5",
-        "markdown_description": "The underlying LLM model is **GPT-3.5**.",
+        "markdown_description": "Using **GPT-3.5**.",
         "icon": "https://custom.typingmind.com/assets/models/gpt-35.webp",
     },
     "gpt-4o": {
         "name": "GPT-4o",
-        "markdown_description": "The underlying LLM model is **GPT-4o**.",
+        "markdown_description": "Using **GPT-4o**.",
         "icon": "https://custom.typingmind.com/assets/models/gpt-4.webp",
     },
     "gpt-4o-mini": {
         "name": "GPT-4o-mini",
-        "markdown_description": "The underlying LLM model is **GPT-4o**.",
+        "markdown_description": "Using **GPT-4o**.",
         "icon": "https://custom.typingmind.com/assets/models/gpt-4.webp",
     },
     "gemini-1.5-pro": {
         "name": "Gemini 1.5 Pro",
-        "markdown_description": "The underlying LLM model is **Gemini 1.5 Pro**.",
+        "markdown_description": "Using **Gemini 1.5 Pro**.",
         "icon": "https://custom.typingmind.com/assets/models/gemini.png",
     },
     "gemini-1.5-flash": {
         "name": "Gemini 1.5 Flash",
-        "markdown_description": "The underlying LLM model is **Gemini 1.5 Flash**.",
+        "markdown_description": "Using **Gemini 1.5 Flash**.",
         "icon": "https://custom.typingmind.com/assets/models/gemini.png",
     },
 }
 for model in TOOL_CALL_MODELS:
     provider_key_to_profile_info[model] = {
         "name": model,
-        "markdown_description": f"The underlying LLM model is **{model}**.",
+        "markdown_description": f"Using **{model}**.",
         "icon": "https://ollama.com/public/ollama.png",
     }
 
