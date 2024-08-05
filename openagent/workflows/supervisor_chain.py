@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from langchain_core.output_parsers import JsonOutputToolsParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_vertexai import ChatVertexAI
 from loguru import logger
 
@@ -54,5 +55,13 @@ Based on these guidelines, select the next AI Agent or end the conversation.
             next__ = "fallback_agent"
         return {"next": next__}
 
-    tool_choice = None if (isinstance(llm, ChatVertexAI) and llm.model_name == "gemini-1.5-flash") else "route"
+    def get_tool_choice(llm):
+        if isinstance(llm, ChatVertexAI) and llm.model_name == "gemini-1.5-flash":
+            return None
+        if isinstance(llm, ChatGoogleGenerativeAI):
+            return None
+        return "route"
+
+    tool_choice = get_tool_choice(llm)
+
     return prompt | llm.bind_tools(tools=[route], tool_choice=tool_choice) | JsonOutputToolsParser() | extract_next
