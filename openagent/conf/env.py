@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     OLLAMA_HOST: Optional[str] = Field(default=None, description="OLLAMA API Base URL. Info: https://github.com/ollama/ollama")
 
     # API keys for various tools; some features will be disabled if not set
+    TAVILY_API_KEY: Optional[str] = Field(default=None, description="Tavily API Key. Info: https://tavily.com/")
     NFTSCAN_API_KEY: Optional[str] = Field(default=None, description="NFTScan API Key. Info: https://nftscan.com/")
     COVALENT_API_KEY: Optional[str] = Field(default=None, description="Covalent API Key. Info: https://goldrush.dev/docs/api/")
     ROOTDATA_API_KEY: Optional[str] = Field(default=None, description="RootData API Key. Info: https://www.rootdata.com/")
