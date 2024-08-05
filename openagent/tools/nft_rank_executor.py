@@ -23,7 +23,7 @@ floor_price, market_cap.
     )
 
 
-class NFTRankingTool(BaseTool):
+class NFTRankingExecutor(BaseTool):
     name = "NFTRankingExecutor"
     description = "A tool for getting NFT collection rankings."
     args_schema: Type[NFTRankingArgs] = NFTRankingArgs

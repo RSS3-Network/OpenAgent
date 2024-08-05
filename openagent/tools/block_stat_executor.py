@@ -19,7 +19,7 @@ class ARGS(BaseModel):
     )
 
 
-class BlockStatTool(BaseTool):
+class BlockStatExecutor(BaseTool):
     name = "BlockChainStatExecutor"
     description = (
         "get blockchain statistics such as block height, "

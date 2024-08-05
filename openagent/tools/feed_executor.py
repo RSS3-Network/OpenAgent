@@ -10,12 +10,12 @@ from loguru import logger
 from pydantic import BaseModel, Field
 
 from openagent.conf.env import settings
-from openagent.experts.feed_prompt import FEED_PROMPT
+from openagent.tools.feed_prompt import FEED_PROMPT
 
 
 class ParamSchema(BaseModel):
     """
-    Defines the schema for input parameters of the FeedExpert tool.
+    Defines the schema for input parameters of the FeedExecutor tool.
     """
 
     address: str = Field(
@@ -29,7 +29,7 @@ eg. : all, post, comment, share."""
     )
 
 
-class FeedExpert(BaseTool):
+class FeedExecutor(BaseTool):
     """
     A tool for fetching and analyzing blockchain activities for a given address.
     """

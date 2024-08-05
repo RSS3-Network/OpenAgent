@@ -19,7 +19,7 @@ class ARGS(BaseModel):
     size: int = Field(description="number of coins to return, default: 20")
 
 
-class CoinMarketTool(BaseTool):
+class CoinMarketExecutor(BaseTool):
     name = "CoinMarketExecutor"
 
     description = "query coins sorted by market cap, volume."

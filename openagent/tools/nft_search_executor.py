@@ -16,7 +16,7 @@ class NFTSearchArgs(BaseModel):
     keyword: str = Field(description="NFT symbol or collection name for search")
 
 
-class NFTSearchTool(BaseTool):
+class NFTSearchExecutor(BaseTool):
     name = "NFTSearchTool"
     description = "A tool for searching NFT collections."
     args_schema: Type[NFTSearchArgs] = NFTSearchArgs

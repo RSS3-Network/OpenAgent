@@ -2,16 +2,16 @@ from dotenv import load_dotenv
 
 from openagent.agents.agent_factory import create_agent
 from openagent.conf.llm_provider import get_current_llm
-from openagent.experts.swap_expert import SwapExpert
-from openagent.experts.transfer_expert import TransferExpert
-from openagent.tools.nft_balance_tool import NFTBalanceTool
-from openagent.tools.token_balance_tool import TokenBalanceTool
+from openagent.tools.swap_executor import SwapExecutor
+from openagent.tools.transfer_executor import TransferExecutor
+from openagent.tools.nft_balance_executor import NFTBalanceExecutor
+from openagent.tools.token_balance_executor import TokenBalanceExecutor
 
 load_dotenv()
 
 asset_management_agent = create_agent(
     get_current_llm(),
-    [TokenBalanceTool(), NFTBalanceTool(), SwapExpert(), TransferExpert()],
+    [TokenBalanceExecutor(), NFTBalanceExecutor(), SwapExecutor(), TransferExecutor()],
     """
 You are AssetManager, an AI assistant for crypto asset management. Your responsibilities include:
 

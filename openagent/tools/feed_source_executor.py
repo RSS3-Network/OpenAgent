@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from rss3_dsl_sdk.client import RSS3Client
 from rss3_dsl_sdk.schemas.base import ActivityFilter, PaginationOptions
 
-from openagent.experts.feed_prompt import FEED_PROMPT
+from openagent.tools.feed_prompt import FEED_PROMPT
 
 # Define supported networks and platforms
 SUPPORTED_NETWORKS = [
@@ -76,8 +76,8 @@ Allowed platforms: {', '.join(ALLOWED_PLATFORMS)}""",
     )
 
 
-# Define the FeedSourceExpert tool
-class FeedSourceExpert(BaseTool):
+# Define the FeedSourceExecutor tool
+class FeedSourceExecutor(BaseTool):
     name = "FeedSourceExecutor"
     description = """Use this tool to get the activities of a wallet address or \
 blockchain domain name based on specific network and/or platform, and know what this address \

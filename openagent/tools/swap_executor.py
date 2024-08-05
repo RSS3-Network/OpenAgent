@@ -8,7 +8,7 @@ from langchain.callbacks.manager import (
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
-from openagent.experts.token_util import chain_name_to_id, get_token_data_by_key, select_best_token
+from openagent.tools.token_util import chain_name_to_id, get_token_data_by_key, select_best_token
 
 
 class Swap(BaseModel):
@@ -42,7 +42,7 @@ class ParamSchema(BaseModel):
     amount: str = Field(description="Amount of the from-side token to swap, e.g., '0.1', '1', '10'. Default: '1'.")
 
 
-class SwapExpert(BaseTool):
+class SwapExecutor(BaseTool):
     """
     Tool for generating a swap widget for cryptocurrency swaps.
     """

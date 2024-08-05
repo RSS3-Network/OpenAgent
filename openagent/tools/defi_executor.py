@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from rss3_dsl_sdk.client import RSS3Client
 from rss3_dsl_sdk.schemas.base import ActivityFilter, PaginationOptions
 
-from openagent.experts.feed_prompt import FEED_PROMPT
+from openagent.tools.feed_prompt import FEED_PROMPT
 
 # Define the defi activities and common DeFi networks
 SUPPORTED_NETWORKS = ["arbitrum", "avax", "base", "binance-smart-chain", "ethereum", "gnosis", "linea", "optimism", "polygon"]
@@ -17,7 +17,7 @@ DEFI_ACTIVITIES = ["swap", "liquidity", "staking", "all"]
 # Define the schema for input parameters
 class ParamSchema(BaseModel):
     """
-    Defines the schema for input parameters of the DeFiExpert tool.
+    Defines the schema for input parameters of the DeFiExecutor tool.
     """
 
     address: str = Field(description="Wallet address or blockchain domain name (e.g., vitalik.eth)")
@@ -25,7 +25,7 @@ class ParamSchema(BaseModel):
     network: Optional[str] = Field(default=None, description=f"Network for activities. Supported: {', '.join(SUPPORTED_NETWORKS)}")
 
 
-class DeFiExpert(BaseTool):
+class DeFiExecutor(BaseTool):
     """
     A tool for fetching and analyzing DeFi activities across various networks.
     """

@@ -33,7 +33,7 @@ def _fetch_project_sync(keyword: str) -> str:
     return json.dumps(projects)
 
 
-class ProjectTool(BaseTool):
+class ProjectExecutor(BaseTool):
     name = "ProjectExecutor"
 
     description = "get the project information like investors, team members, social media, etc."

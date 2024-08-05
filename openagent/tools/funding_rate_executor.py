@@ -16,7 +16,7 @@ class ARGS(BaseModel):
     symbol: str = Field(description="Trading pair symbol, e.g., 'BTC/USDT:USDT'")
 
 
-class FundingRateTool(BaseTool):
+class FundingRateExecutor(BaseTool):
     name = "FundingRateExecutor"
     description = "Use this tool to get the funding rate of a trading pair."
     args_schema: Type[ARGS] = ARGS
@@ -57,5 +57,5 @@ def fetch_funding_rate(exchange_name: str, symbol: str) -> float:
 
 
 if __name__ == "__main__":
-    tool = FundingRateTool()
+    tool = FundingRateExecutor()
     print(tool.run(tool_input={"exchange": "binance", "symbol": "BTC/USDT:USDT"}))

@@ -2,14 +2,14 @@ from dotenv import load_dotenv
 
 from openagent.agents.agent_factory import create_agent
 from openagent.conf.llm_provider import get_current_llm
-from openagent.tools.block_stat_tool import BlockStatTool
-from openagent.tools.tavily_tool import tavily_tool
+from openagent.tools.block_stat_executor import BlockStatExecutor
+from openagent.tools.tavily_executor import tavily_executor
 
 load_dotenv()
 
 block_explorer_agent = create_agent(
     get_current_llm(),
-    [BlockStatTool(), tavily_tool],
+    [BlockStatExecutor(), tavily_executor],
     """
 You are BlockExplorer, dedicated to exploring and presenting detailed blockchain information.
 Help users query transaction details, block data, gas fees, block height, and other blockchain-related information.

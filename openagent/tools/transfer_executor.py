@@ -7,7 +7,7 @@ from langchain.callbacks.manager import (
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
-from openagent.experts.token_util import chain_name_to_id, get_token_data_by_key, select_best_token
+from openagent.tools.token_util import chain_name_to_id, get_token_data_by_key, select_best_token
 
 
 class Transfer(BaseModel):
@@ -23,7 +23,7 @@ class Transfer(BaseModel):
 
 class ParamSchema(BaseModel):
     """
-    Defines the schema for input parameters of the TransferExpert tool.
+    Defines the schema for input parameters of the TransferExecutor tool.
     """
 
     to_address: str = Field(
@@ -47,7 +47,7 @@ if not mentioned, default is "1".""",
     )
 
 
-class TransferExpert(BaseTool):
+class TransferExecutor(BaseTool):
     """
     Tool for generating a transfer widget for cryptocurrency transfers.
     """
