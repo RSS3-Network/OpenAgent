@@ -18,7 +18,7 @@ from openagent.workflows.workflow import build_workflow
 
 def enable_auth():
     auth_settings = [settings.CHAINLIT_AUTH_SECRET, settings.OAUTH_AUTH0_CLIENT_ID, settings.OAUTH_AUTH0_CLIENT_SECRET, settings.OAUTH_AUTH0_DOMAIN]
-    return all(arg is not None for arg in auth_settings)
+    return all(arg for arg in auth_settings)
 
 
 if enable_auth():
@@ -38,7 +38,6 @@ def initialize_memory() -> ConversationBufferMemory:
 
 
 if enable_auth():
-
     @cl.oauth_callback
     def oauth_callback(
         provider_id: str,
