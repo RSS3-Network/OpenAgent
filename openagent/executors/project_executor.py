@@ -44,6 +44,8 @@ class ProjectExecutor(BaseTool):
         keyword: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
+        if settings.ROOTDATA_API_KEY is None:
+            return "Please set ROOTDATA_API_KEY in the environment"
         with ThreadPoolExecutor() as executor:
             future = executor.submit(_fetch_project_sync, keyword)
             return future.result()
@@ -53,6 +55,8 @@ class ProjectExecutor(BaseTool):
         keyword: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
+        if settings.ROOTDATA_API_KEY is None:
+            return "Please set ROOTDATA_API_KEY in the environment"
         projects = await fetch_project(keyword)
         return json.dumps(projects)
 

@@ -31,6 +31,8 @@ class CoinMarketExecutor(BaseTool):
         size: int,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
+        if settings.COINGECKO_API_KEY is None:
+            return "Please set COINGECKO_API_KEY in the environment"
         return json.dumps(fetch_coins_with_market(order, size))
 
     async def _arun(
@@ -39,6 +41,8 @@ class CoinMarketExecutor(BaseTool):
         size: int,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
+        if settings.COINGECKO_API_KEY is None:
+            return "Please set COINGECKO_API_KEY in the environment"
         return json.dumps(fetch_coins_with_market(order, size))
 
 

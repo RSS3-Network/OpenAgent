@@ -44,6 +44,8 @@ class NFTRankingExecutor(BaseTool):
 
     @staticmethod
     def collection_ranking(sort_field: str) -> str:
+        if settings.NFTSCAN_API_KEY is None:
+            return "Please set NFTSCAN_API_KEY in the environment"
         """Search for NFT collections ranking."""
         url = f"https://restapi.nftscan.com/api/v2/statistics/ranking/collection?sort_field={sort_field}&sort_direction=desc&limit=20"
 

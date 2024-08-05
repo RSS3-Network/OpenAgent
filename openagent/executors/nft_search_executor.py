@@ -37,6 +37,8 @@ class NFTSearchExecutor(BaseTool):
 
     @staticmethod
     def search_nft_collections(keyword: str) -> str:
+        if settings.NFTSCAN_API_KEY is None:
+            return "Please set NFTSCAN_API_KEY in the environment"
         """Search for NFT collections."""
         url = "https://restapi.nftscan.com/api/v2/collections/filters"
         payload = json.dumps(
