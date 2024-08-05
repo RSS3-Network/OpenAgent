@@ -3,30 +3,21 @@ repos:
     rev: v4.4.0
     hooks:
       - id: check-ast
-        files: ^src/
       - id: check-case-conflict
-        files: ^src/
       - id: check-docstring-first
-        files: ^src/
       - id: check-executables-have-shebangs
-        files: ^src/
       - id: check-json
-        files: ^src/
       - id: check-added-large-files
-        files: ^src/
       - id: pretty-format-json
         args:
           - "--autofix"
           - "--indent=4"
-        files: ^src/
+
       - id: detect-private-key
-        files: ^src/
       - id: debug-statements
-        files: ^src/
       - id: end-of-file-fixer
-        files: ^src/
       - id: trailing-whitespace
-        files: ^src/
+
   - repo: local
     hooks:
       - id: mypy
@@ -35,20 +26,17 @@ repos:
         require_serial: true
         language: system
         types: [ python ]
-        files: ^src/
         pass_filenames: false
-        args: [--config-file=src/pyproject.toml]
+        args: [ --config-file=src/pyproject.toml ]
       - id: ruff-lint
         name: ruff-lint
         entry: ruff check --fix
         require_serial: true
         language: system
-        files: ^src/
         types: [ python ]
       - id: ruff-format
         name: ruff-format
         entry: ruff format
         require_serial: true
         language: system
-        files: ^src/
         types: [ python ]

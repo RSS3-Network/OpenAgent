@@ -13,6 +13,11 @@ provider_key_to_profile_info = {
         "markdown_description": "The underlying LLM model is **GPT-4o**.",
         "icon": "https://custom.typingmind.com/assets/models/gpt-4.webp",
     },
+    "gpt-4o-mini": {
+        "name": "GPT-4o-mini",
+        "markdown_description": "The underlying LLM model is **GPT-4o**.",
+        "icon": "https://custom.typingmind.com/assets/models/gpt-4.webp",
+    },
     "gemini-1.5-pro": {
         "name": "Gemini 1.5 Pro",
         "markdown_description": "The underlying LLM model is **Gemini 1.5 Pro**.",

@@ -39,6 +39,7 @@ def get_available_providers():
     providers = {}
     if settings.OPENAI_API_KEY:
         providers["gpt-3.5-turbo"] = ChatOpenAI(model="gpt-3.5-turbo")
+        providers["gpt-4o-mini"] = ChatOpenAI(model="gpt-4o-mini")
         providers["gpt-4o"] = ChatOpenAI(model="gpt-4o")
     if settings.VERTEX_PROJECT_ID:
         providers["gemini-1.5-pro"] = ChatVertexAI(model="gemini-1.5-pro")
