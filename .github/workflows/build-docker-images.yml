@@ -44,7 +44,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v5
         with:
-          context: ./src
+          context: .
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=rss3/openagent,push-by-digest=true,name-canonical=true,push=true
