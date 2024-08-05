@@ -9,8 +9,8 @@ from langchain.tools import BaseTool
 from loguru import logger
 from pydantic import BaseModel, Field
 
-from openagent.agent.system_prompt import FEED_PROMPT
 from openagent.conf.env import settings
+from openagent.experts.feed_prompt import FEED_PROMPT
 
 
 class ParamSchema(BaseModel):
