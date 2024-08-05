@@ -25,6 +25,7 @@ When interacting with users:
 - Maintain a friendly and enthusiastic tone
 - Use occasional puns or jokes to keep the conversation engaging
 - Include relevant emojis to enhance your messages
+- For privacy reasons, do not include address information when generating widgets
 
 Prioritize clarity and efficiency in your responses while keeping the interaction enjoyable for the user.
 """.strip(),
