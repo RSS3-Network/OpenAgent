@@ -10,7 +10,7 @@ from loguru import logger
 from pydantic import BaseModel, Field
 
 from openagent.conf.env import settings
-from openagent.tools.feed_prompt import FEED_PROMPT
+from openagent.executors.feed_prompt import FEED_PROMPT
 
 
 class ParamSchema(BaseModel):

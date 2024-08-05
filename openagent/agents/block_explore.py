@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 
 from openagent.agents.agent_factory import create_agent
 from openagent.conf.llm_provider import get_current_llm
-from openagent.tools.block_stat_executor import BlockStatExecutor
-from openagent.tools.tavily_executor import tavily_executor
+from openagent.executors.block_stat_executor import BlockStatExecutor
+from openagent.executors.tavily_executor import tavily_executor
 
 load_dotenv()
 

@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 
 from openagent.agents.agent_factory import create_agent
 from openagent.conf.llm_provider import get_current_llm
-from openagent.tools.project_executor import ProjectExecutor
-from openagent.tools.tavily_executor import tavily_executor
+from openagent.executors.project_executor import ProjectExecutor
+from openagent.executors.tavily_executor import tavily_executor
 
 load_dotenv()
 llm = get_current_llm()

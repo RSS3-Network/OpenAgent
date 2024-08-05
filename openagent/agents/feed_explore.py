@@ -2,9 +2,9 @@ from dotenv import load_dotenv
 
 from openagent.agents.agent_factory import create_agent
 from openagent.conf.llm_provider import get_current_llm
-from openagent.tools.defi_executor import DeFiExecutor
-from openagent.tools.feed_executor import FeedExecutor
-from openagent.tools.feed_source_executor import FeedSourceExecutor
+from openagent.executors.defi_executor import DeFiExecutor
+from openagent.executors.feed_executor import FeedExecutor
+from openagent.executors.feed_source_executor import FeedSourceExecutor
 
 load_dotenv()
 

@@ -2,10 +2,10 @@ from dotenv import load_dotenv
 
 from openagent.agents.agent_factory import create_agent
 from openagent.conf.llm_provider import get_current_llm
-from openagent.tools.swap_executor import SwapExecutor
-from openagent.tools.transfer_executor import TransferExecutor
-from openagent.tools.nft_balance_executor import NFTBalanceExecutor
-from openagent.tools.token_balance_executor import TokenBalanceExecutor
+from openagent.executors.swap_executor import SwapExecutor
+from openagent.executors.transfer_executor import TransferExecutor
+from openagent.executors.nft_balance_executor import NFTBalanceExecutor
+from openagent.executors.token_balance_executor import TokenBalanceExecutor
 
 load_dotenv()
 

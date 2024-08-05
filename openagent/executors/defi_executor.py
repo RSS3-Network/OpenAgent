@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from rss3_dsl_sdk.client import RSS3Client
 from rss3_dsl_sdk.schemas.base import ActivityFilter, PaginationOptions
 
-from openagent.tools.feed_prompt import FEED_PROMPT
+from openagent.executors.feed_prompt import FEED_PROMPT
 
 # Define the defi activities and common DeFi networks
 SUPPORTED_NETWORKS = ["arbitrum", "avax", "base", "binance-smart-chain", "ethereum", "gnosis", "linea", "optimism", "polygon"]
