@@ -17,13 +17,45 @@ from openagent.workflows.workflow import build_workflow
 
 
 def enable_auth():
-    auth_settings = [settings.CHAINLIT_AUTH_SECRET, settings.OAUTH_AUTH0_CLIENT_ID, settings.OAUTH_AUTH0_CLIENT_SECRET, settings.OAUTH_AUTH0_DOMAIN]
+    auth_settings = [
+        settings.CHAINLIT_AUTH_SECRET,
+        settings.OAUTH_AUTH0_CLIENT_ID,
+        settings.OAUTH_AUTH0_CLIENT_SECRET,
+        settings.OAUTH_AUTH0_DOMAIN,
+    ]
     return all(arg for arg in auth_settings)
 
 
 if enable_auth():
     # Set up the data layer
     cl_data._data_layer = SQLAlchemyDataLayer(conninfo=settings.DB_CONNECTION)
+
+    @cl.oauth_callback
+    def oauth_callback(
+        provider_id: str,
+        token: str,
+        raw_user_data: Dict[str, str],
+        default_user: cl.User,
+    ) -> Optional[cl.User]:
+        """OAuth callback function."""
+        return default_user
+
+    @cl.on_chat_resume
+    async def on_chat_resume(thread: cl_data.ThreadDict):
+        """Callback function when chat resumes."""
+        memory = initialize_memory()
+        root_messages = [m for m in thread["steps"]]
+        for message in root_messages:
+            if message["type"] == "user_message":
+                memory.chat_memory.add_user_message(message["output"])
+            else:
+                memory.chat_memory.add_ai_message(message["output"])
+
+        cl.user_session.set("memory", memory)
+        profile = cl.user_session.get("chat_profile")
+        provider_key = profile_name_to_provider_key(profile)
+        set_current_llm(provider_key)
+        setup_runnable()
 
 
 def setup_runnable():
@@ -35,18 +67,6 @@ def setup_runnable():
 def initialize_memory() -> ConversationBufferMemory:
     """Initialize conversation memory."""
     return ConversationBufferMemory(return_messages=True)
-
-
-if enable_auth():
-    @cl.oauth_callback
-    def oauth_callback(
-        provider_id: str,
-        token: str,
-        raw_user_data: Dict[str, str],
-        default_user: cl.User,
-    ) -> Optional[cl.User]:
-        """OAuth callback function."""
-        return default_user
 
 
 @cl.set_chat_profiles
@@ -69,26 +89,6 @@ async def on_chat_start():
     await cl.Message(content=f"starting chat using the {profile} chat profile").send()
 
 
-if enable_auth():
-
-    @cl.on_chat_resume
-    async def on_chat_resume(thread: cl_data.ThreadDict):
-        """Callback function when chat resumes."""
-        memory = initialize_memory()
-        root_messages = [m for m in thread["steps"]]
-        for message in root_messages:
-            if message["type"] == "user_message":
-                memory.chat_memory.add_user_message(message["output"])
-            else:
-                memory.chat_memory.add_ai_message(message["output"])
-
-        cl.user_session.set("memory", memory)
-        profile = cl.user_session.get("chat_profile")
-        provider_key = profile_name_to_provider_key(profile)
-        set_current_llm(provider_key)
-        setup_runnable()
-
-
 def build_token(token_symbol: str, token_address: str):
     return f"{token_symbol}{'--' + token_address.lower() if token_symbol != 'ETH' else ''}"
 
@@ -106,7 +106,6 @@ async def on_message(message: cl.Message):
     msg = cl.Message(content="")
     agent_names = [member["name"] for member in members]
 
-    # try:
     async for event in runnable.astream_events(
         {"messages": [*memory.chat_memory.messages, HumanMessage(content=message.content)]},
         config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
