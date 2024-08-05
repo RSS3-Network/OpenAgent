@@ -27,7 +27,7 @@ repos:
         language: system
         types: [ python ]
         pass_filenames: false
-        args: [ --config-file=src/pyproject.toml ]
+        args: [ --config-file=pyproject.toml ]
       - id: ruff-lint
         name: ruff-lint
         entry: ruff check --fix
