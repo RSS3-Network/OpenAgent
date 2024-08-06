@@ -40,7 +40,33 @@ for model in TOOL_CALL_MODELS:
 def provider_to_profile(provider_key):
     profile_info = provider_key_to_profile_info.get(provider_key)
     if profile_info:
-        return cl.ChatProfile(name=profile_info["name"], markdown_description=profile_info["markdown_description"], icon=profile_info["icon"])
+        return cl.ChatProfile(
+            name=profile_info["name"],
+            markdown_description=profile_info["markdown_description"],
+            icon=profile_info["icon"],
+            starters=[
+                cl.Starter(
+                    label="Swap coins",
+                    message="Can you swap some ETH for USDC?",
+                    icon="/public/swap.png",
+                ),
+                cl.Starter(
+                    label="Market analysis",
+                    message="What's the current price of Ethereum and its market trend?",
+                    icon="/public/market.png",
+                ),
+                cl.Starter(
+                    label="Transfer coins",
+                    message="Can you help me transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e on the Ethereum network?",
+                    icon="/public/transfer.png",
+                ),
+                cl.Starter(
+                    label="Block explorer",
+                    message="What's the latest block height on the Ethereum network, and what are the current gas fees?",
+                    icon="/public/block_chain.png",
+                ),
+            ]
+        )
     return None
 
 
