@@ -43,6 +43,7 @@ langchain-ollama = "^0.1.0"
 ollama = "^0.3.1"
 pydantic = "^2.8.2"
 rss3-dsl-sdk = "^0.4.0"
+duckduckgo-search = "^6.2.6"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
