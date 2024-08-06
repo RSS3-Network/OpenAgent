@@ -73,7 +73,7 @@ const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
     <div className={styles.transferWidget}>
       <h3>Send</h3>
       <div className={styles.accountInfo}>
-        <p>Account 1</p>
+        <p>From</p>
         <p>{account || 'Not connected'}</p>
       </div>
       <div className={styles.assetInfo}>

@@ -5,8 +5,8 @@
   border-radius: 10px;
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #fff; /* Ensure the background is white */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow for better appearance */
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -40,10 +40,15 @@
   font-weight: bold;
 }
 
+.assetInfo label {
+  width: 60px;
+  margin-right: 10px;
+}
+
 .assetDetails {
   display: flex;
   align-items: center;
-  margin-left: 10px;
+  flex-grow: 1;
 }
 
 .assetIcon {
@@ -70,24 +75,17 @@
   font-size: 12px;
   color: #666;
 }
+
 .buttonGroup {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 15px;
 }
 
-.connectButton,
-.transferButton {
-  width: 48%;
-  padding: 10px 20px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .connectButton {
-  width: 60%;
+  flex-grow: 1;
+  margin-right: 10px;
   padding: 10px 20px;
   font-size: 14px;
   border: none;
@@ -98,6 +96,12 @@
 }
 
 .transferButton {
+  width: auto;
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   background-color: #28a745;
   color: white;
 }
