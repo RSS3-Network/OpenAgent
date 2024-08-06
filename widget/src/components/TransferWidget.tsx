@@ -80,7 +80,6 @@ const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
         <label>Asset:</label>
         <div className={styles.assetDetails}>
           <span>{token}</span>
-          <span className={styles.balance}>Balance: {balance?.formatted || 0} {token}</span>
         </div>
       </div>
       <div className={styles.amountInfo}>
@@ -102,9 +101,6 @@ const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
         />
       </div>
       <div className={styles.gasFeeInfo}>
-        <p>Estimated gas fee</p>
-        <p>0 Gwei</p>
-        <p>Max fee: 0 ETH</p>
       </div>
       <div className={styles.buttonGroup}>
         <ConnectButton />
