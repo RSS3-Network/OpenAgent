@@ -1,16 +1,19 @@
 .transferWidget {
   max-width: 400px;
   margin: auto;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 24px;
   font-family: Arial, sans-serif;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .title {
   text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
 }
 
 .accountInfo,
@@ -18,7 +21,7 @@
 .amountInfo,
 .addressInfo,
 .gasFeeInfo {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .accountInfo p {
@@ -29,50 +32,56 @@
 
 .assetInfo {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
 }
 
-.assetInfo label,
+.assetLabel, .balanceLabel {
+  display: flex;
+  flex-direction: column;
+}
+
+.assetLabel span:first-child, .balanceLabel span:first-child {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.assetLabel span:last-child, .balanceLabel span:last-child {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
 .amountInfo label,
 .addressInfo label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-weight: bold;
-}
-
-.assetInfo label {
-  width: 60px;
-  margin-right: 10px;
-}
-
-.assetDetails {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-}
-
-.assetIcon {
-  font-size: 24px;
-  margin-right: 10px;
-}
-
-.balance {
-  margin-left: auto;
-  color: #666;
+  color: #555;
 }
 
 .amountInfo input,
 .addressInfo input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 14px;
+}
+
+.gasFeeInfo {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
 }
 
 .gasFeeInfo p {
   margin: 5px 0;
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
 }
 
@@ -80,48 +89,47 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
-}
-
-.connectButton {
-  flex-grow: 1;
-  margin-right: 10px;
-  padding: 10px 20px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
+  margin-top: 20px;
 }
 
 .transferButton {
   width: auto;
-  padding: 10px 20px;
-  font-size: 14px;
+  min-width: 100px;
+  padding: 12px 24px;
+  font-size: 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   background-color: #28a745;
   color: white;
+  transition: background-color 0.3s;
 }
 
-.connectButton:hover,
 .transferButton:hover {
-  opacity: 0.8;
+  background-color: #218838;
 }
 
-.status {
-  margin-top: 15px;
-  font-size: 12px;
-  color: #666;
+.transferButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: #dc3545;
+  margin-top: 12px;
+  font-weight: bold;
   text-align: center;
 }
 
+.status,
 .transactionInfo,
 .error {
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 12px;
+}
+
+.error {
+  color: #dc3545;
 }
