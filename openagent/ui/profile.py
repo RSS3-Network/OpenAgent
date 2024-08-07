@@ -47,7 +47,7 @@ def provider_to_profile(provider_key):
             starters=[
                 cl.Starter(
                     label="Swap coins",
-                    message="Can you swap some ETH for USDC?",
+                    message="Swap 1 ETH for USDC on the Ethereum.",
                     icon="/public/swap.png",
                 ),
                 cl.Starter(
@@ -57,7 +57,7 @@ def provider_to_profile(provider_key):
                 ),
                 cl.Starter(
                     label="Transfer coins",
-                    message="Can you help me transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e on the Ethereum network?",
+                    message="Can you help me transfer 0.1 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e on the Ethereum network?",
                     icon="/public/transfer.png",
                 ),
                 cl.Starter(
@@ -65,7 +65,7 @@ def provider_to_profile(provider_key):
                     message="What's the latest block height on the Ethereum network, and what are the current gas fees?",
                     icon="/public/block_chain.png",
                 ),
-            ]
+            ],
         )
     return None
 

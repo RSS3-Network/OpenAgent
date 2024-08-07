@@ -8,7 +8,12 @@ RESEARCH_ANALYST = "research_analyst_agent"
 FALLBACK = "fallback_agent"
 
 AgentRole = Literal[
-    "market_analysis_agent", "asset_management_agent", "block_explorer_agent", "feed_explorer_agent", "research_analyst_agent", "fallback_agent"
+    "market_analysis_agent",
+    "asset_management_agent",
+    "block_explorer_agent",
+    "feed_explorer_agent",
+    "research_analyst_agent",
+    "fallback_agent",
 ]
 
 members = [
@@ -33,7 +38,7 @@ AssetManager: Assists with crypto asset management.
 Responsibilities:
 1. Query and report on users' token balances
 2. Check and inform about users' NFT holdings
-3. Cross-chain swaps and token transfers
+3. Swap or transfer of cryptocurrency tokens
 
 Provide accurate information with a friendly tone, using occasional puns or emojis to keep interactions engaging.
         """.strip(),

@@ -19,7 +19,7 @@ class ARGS(BaseModel):
 
 class TokenBalanceExecutor(BaseTool):
     name = "TokenBalanceExecutor"
-    description = "get the token balance of a wallet."
+    description = "get the token balance of a wallet address."
     args_schema: Type[ARGS] = ARGS
 
     def _run(
