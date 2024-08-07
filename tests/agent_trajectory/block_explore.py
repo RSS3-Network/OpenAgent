@@ -1,17 +1,29 @@
 import asyncio
 import unittest
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from langchain_core.messages import HumanMessage
 
 from openagent.agents.block_explore import block_explorer_agent
 from openagent.conf.llm_provider import set_current_llm
+from tests.base_test import BaseAgentTest
 
 
-class TestBlockExploreAgent(unittest.TestCase):
-    def setUp(self):
-        # set_current_llm("gemini-1.5-pro")
-        set_current_llm("gpt-3.5-turbo")
-        # set_current_llm("llama3.1:latest")
+class TestBlockExploreAgent(BaseAgentTest):
+    # def setUp(self):
+    #     # set_current_llm("gemini-1.5-pro")
+    #     set_current_llm("gpt-3.5-turbo")
+    #     # set_current_llm("llama3.1:latest")
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        if len(sys.argv) > 2 and not sys.argv[2].startswith('-'):
+            set_current_llm(sys.argv[2])
+            del sys.argv[2]
+        else:
+            set_current_llm("default_model")
 
     def test_query_block_height(self):
         async def async_test():
