@@ -8,9 +8,16 @@ import {
     useBalance,
     useEstimateGas,
     useFeeData,
-    type BaseError
+    type BaseError, useEnsAddress
 } from 'wagmi';
-import {erc20Abi, encodeFunctionData, parseUnits, parseAbi, parseEther, formatEther, formatUnits} from 'viem';
+import {
+    erc20Abi,
+    encodeFunctionData,
+    parseUnits,
+    parseEther,
+    formatEther,
+    isAddress
+} from 'viem';
 import styles from './TransferWidget.module.css';
 
 // Define the prop types for the TransferWidget component
@@ -41,6 +48,8 @@ const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
     const { writeContract, data: hash2, error: error2, isPending: isPending2 } = useWriteContract();
     const [isAmountValid, setIsAmountValid] = useState(true);
 
+
+    // console.log("TranferWidget toAddress:", toAddress)
     const {
         data: hash1,
         error: error1,
@@ -72,6 +81,11 @@ const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
         }) : undefined,
     });
 
+     // Resolve ENS name
+    const { data: resolvedAddress, isLoading: isResolvingENS } = useEnsAddress({
+        name: isAddress(currentToAddress) ? undefined : currentToAddress,
+        chainId: 1,
+    });
 
     // Feture the fee data
     const { data: feeData } = useFeeData();
@@ -118,19 +132,22 @@ const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
      */
      const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        const recipientAddress = resolvedAddress || currentToAddress;
+
         if (address && currentToAddress) {
             const value = parseUnits(currentAmount, balance?.decimals || 18);
        		if (!isErc20) {
                     sendTransaction(
                         {
-                            to: currentToAddress as `0x${string}`,
+                            to: recipientAddress as `0x${string}`,
                             value: parseUnits(currentAmount, balance?.decimals || 18),
                         })
             } else {
                   writeContract({
 					abi: erc20Abi,
 					address: tokenAddress as `0x${string}`,
-					args: [currentToAddress as `0x${string}`, parseEther(String(value))],
+					args: [recipientAddress as `0x${string}`, parseEther(String(value))],
 					functionName: "transfer",
 				},
 				{
@@ -172,14 +189,20 @@ const TransferWidgetComponent: React.FC<TransferWidgetProps> = ({
                 />
             </div>
             <div className={styles.addressInfo}>
-                <label>To Address:</label>
+                <label>To Address or ENS:</label>
                 <input
                     type="text"
                     value={currentToAddress}
                     onChange={(e) => setCurrentToAddress(e.target.value)}
-                    placeholder="Enter recipient address"
+                    placeholder="Enter recipient address or ENS"
                 />
+
             </div>
+             <div className={styles.addressInfo}>
+                {isResolvingENS && <p>Resolving ENS...</p>}
+                {resolvedAddress && <label> Resolved address: </label>}
+                {resolvedAddress && <p className={styles.resolvedAddress}> {resolvedAddress}</p>}
+             </div>
             <div className={styles.gasFeeInfo}>
                 <p>Estimated gas fee</p>
                 {isEstimateError ? (

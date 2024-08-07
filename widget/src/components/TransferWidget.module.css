@@ -85,6 +85,16 @@
   color: #666;
 }
 
+.resolvedAddress {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
 .buttonGroup {
   display: flex;
   justify-content: space-between;
