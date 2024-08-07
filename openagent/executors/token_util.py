@@ -40,7 +40,7 @@ def chain_name_to_id(chain_name: str) -> str:
     return chain_map.get(chain_name, "1")
 
 
-@cached(ttl=60, cache=Cache.MEMORY)
+@cached(ttl=300, cache=Cache.MEMORY)
 async def fetch_tokens() -> Dict[str, List[Dict]]:
     """
     Fetch the token list from the API and cache it for 60 seconds.
@@ -71,6 +71,14 @@ async def select_best_token(keyword: str, chain_id: str) -> Optional[Dict]:
     """
     keyword = keyword.lower()
 
+    # special case for eth on non-ethereum chains
+    if keyword == "eth" and chain_id != "1":
+        keyword = "weth"
+
+    # special case for btc
+    if keyword == "btc":
+        keyword = "wbtc"
+
     tokens = await fetch_tokens()
     tokens_on_chain = tokens.get(chain_id, [])
 
@@ -84,8 +92,10 @@ async def select_best_token(keyword: str, chain_id: str) -> Optional[Dict]:
         # Sort based on priority
         results.sort(
             key=lambda x: (
+                "logoURI" in x,
                 x["symbol"].lower() == keyword,
-                x["coinKey"].lower() == keyword,
+                x.get("coinKey", "").lower() == keyword,
+                x.get("priceUSD") is not None,
                 x["name"].lower() == keyword,
             ),
             reverse=True,
