@@ -16,8 +16,8 @@ def next_role(query) -> str:
 
 class TestNextRole(unittest.TestCase):
     def setUp(self):
-        # set_current_llm("gemini-1.5-pro")
-        set_current_llm("gemini-1.5-flash")
+        set_current_llm("gemini-1.5-pro")
+        # set_current_llm("gemini-1.5-flash")
         # set_current_llm("gpt-3.5-turbo")
         # set_current_llm("llama3.1:latest")
 
@@ -29,6 +29,12 @@ class TestNextRole(unittest.TestCase):
 
     def test_asset_management(self):
         query = "Can you check my ETH balance and show me how to swap some for USDC?"
+        expected_role = "asset_management_agent"
+        result = next_role(query)
+        self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
+
+    def test_asset_management_swap(self):
+        query = "swap 1 eth to usdt on ethereum."
         expected_role = "asset_management_agent"
         result = next_role(query)
         self.assertEqual(result, expected_role, f"Expected {expected_role}, but got {result} for query: {query}")
