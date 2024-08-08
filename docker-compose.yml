@@ -26,13 +26,6 @@ services:
       - vector_data:/var/lib/postgresql/data
     networks:
       - openagent-network
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
 
   ollama:
     volumes:
@@ -47,6 +40,13 @@ services:
       - OLLAMA_KEEP_ALIVE=24h
     networks:
       - openagent-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
 
 volumes:
   vector_data:
