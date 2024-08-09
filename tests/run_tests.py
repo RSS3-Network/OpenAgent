@@ -1,5 +1,6 @@
-import unittest
 import sys
+import unittest
+
 from openagent.conf.llm_provider import set_current_llm
 
 
@@ -11,10 +12,10 @@ def run_tests(model_name, specific_test=None):
     test_loader = unittest.TestLoader()
 
     if specific_test:
-        specific_test = specific_test.replace('tests.', '', 1)
+        specific_test = specific_test.replace("tests.", "", 1)
         test_suite = test_loader.loadTestsFromName(specific_test)
     else:
-        test_suite = test_loader.discover('agent_trajectory', pattern='*.py')
+        test_suite = test_loader.discover("agent_trajectory", pattern="*.py")
 
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(test_suite)
