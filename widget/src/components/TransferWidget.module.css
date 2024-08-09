@@ -131,8 +131,18 @@
   text-align: center;
 }
 
+
+
+.transactionInfo {
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+  margin-top: 12px;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
 .status,
-.transactionInfo,
 .error {
   font-size: 14px;
   color: #666;

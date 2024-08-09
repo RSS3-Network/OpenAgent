@@ -10,16 +10,13 @@ let SEPOLIA_RPC_URL = process.env.REACT_APP_SEPOLIA_RPC_URL || "";
 
 /* eslint-disable no-console */
 export function App() {
-
   return <>
-  <h1>hello world</h1>
   </>
 }
 
 const { connectors } = getDefaultWallets({
   appName: "OpenAgent Widget",
   appDescription: "Widget",
-  // appIcon: "",
   projectId: "project id",
 })
 
@@ -39,8 +36,6 @@ declare module "wagmi" {
     config: typeof wagmiConfig
   }
 }
-
-
 
 // Create a new QueryClient instance for React Query
 const queryClient = new QueryClient();
