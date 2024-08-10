@@ -86,7 +86,6 @@ async def on_chat_start():
     provider_key = profile_name_to_provider_key(profile)
     set_current_llm(provider_key)
     setup_runnable()
-    await cl.Message(content=f"starting chat using the {profile} chat profile").send()
 
 
 def build_token(token_symbol: str, token_address: str):
