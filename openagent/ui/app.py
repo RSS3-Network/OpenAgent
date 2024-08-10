@@ -164,5 +164,5 @@ async def handle_tool_end(event, msg):
     if event["name"] == "PriceExecutor":
         output = event["data"]["output"]
         price_dict = json.loads(output)
-        widget = f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="400"></iframe>"""  # noqa
+        widget = f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="600px"></iframe>"""  # noqa
         await msg.stream_token(widget)
