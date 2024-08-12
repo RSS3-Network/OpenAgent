@@ -1,19 +1,20 @@
 import pytest
 from langchain_core.messages import HumanMessage
 
-from openagent.agents.asset_management import asset_management_agent
-from openagent.conf.llm_provider import set_current_llm
+from openagent.agents.asset_management import build_asset_management_agent
+from openagent.conf.llm_provider import get_available_providers
 
 
-@pytest.fixture(autouse=True)
-def setup_llm():
-    # set_current_llm("gemini-1.5-pro")
-    # set_current_llm("gemini-1.5-flash")
-    set_current_llm("gpt-3.5-turbo")
-    # set_current_llm("llama3.1:latest")
+@pytest.fixture(scope="module")
+def asset_management_agent(request):
+    model = request.config.getoption("--model")
+    llm = get_available_providers()[model]
+    agent = build_asset_management_agent(llm)
+    return agent
+
 
 @pytest.mark.asyncio
-async def test_swap_eth_to_usdt():
+async def test_swap_eth_to_usdt(asset_management_agent):
     events = asset_management_agent.astream_events(
         {"messages": [HumanMessage(content="Can you swap 20 eth to usdt ?", name="human")]}, version="v1"
     )
@@ -33,7 +34,7 @@ async def test_swap_eth_to_usdt():
 
 
 @pytest.mark.asyncio
-async def test_query_user_token_balance():
+async def test_query_user_token_balance(asset_management_agent):
     events = asset_management_agent.astream_events(
         {"messages": [HumanMessage(content="Can you check 0x33c0814654fa367ce67d8531026eb4481290e63c eth balance ?",
                                    name="human")]},
@@ -54,7 +55,7 @@ async def test_query_user_token_balance():
 
 
 @pytest.mark.asyncio
-async def test_query_user_nft_holdings():
+async def test_query_user_nft_holdings(asset_management_agent):
     events = asset_management_agent.astream_events(
         {"messages": [HumanMessage(content="Can you check 0x33c0814654fa367ce67d8531026eb4481290e63c nft holdings ?",
                                    name="human")]},
@@ -75,7 +76,7 @@ async def test_query_user_nft_holdings():
 
 
 @pytest.mark.asyncio
-async def test_transfer_eth():
+async def test_transfer_eth(asset_management_agent):
     events = asset_management_agent.astream_events(
         {"messages": [HumanMessage(content="Can you transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e?",
                                    name="human")]},

@@ -1,20 +1,20 @@
 import pytest
 from langchain_core.messages import HumanMessage
 
-from openagent.agents.feed_explore import feed_explorer_agent
-from openagent.conf.llm_provider import set_current_llm
+from openagent.agents.feed_explore import build_feed_explorer_agent
+from openagent.conf.llm_provider import get_available_providers
 
 
-@pytest.fixture(scope="module", autouse=True)
-def setup_llm():
-    # set_current_llm("gemini-1.5-pro")
-    # set_current_llm("gemini-1.5-flash")
-    set_current_llm("gpt-3.5-turbo")
-    # set_current_llm("llama3.1:latest")
+@pytest.fixture(scope="module")
+def feed_explorer_agent(request):
+    model = request.config.getoption("--model")
+    llm = get_available_providers()[model]
+    agent = build_feed_explorer_agent(llm)
+    return agent
 
 
 @pytest.mark.asyncio
-async def test_query_defi_activities():
+async def test_query_defi_activities(feed_explorer_agent):
     events = feed_explorer_agent.astream_events(
         {
             "messages": [
@@ -39,7 +39,7 @@ async def test_query_defi_activities():
 
 
 @pytest.mark.asyncio
-async def test_query_social_activities():
+async def test_query_social_activities(feed_explorer_agent):
     events = feed_explorer_agent.astream_events(
         {"messages": [HumanMessage(content="What are the recent activities for vitalik.eth?", name="human")]},
         version="v1"
@@ -58,7 +58,7 @@ async def test_query_social_activities():
 
 
 @pytest.mark.asyncio
-async def test_query_feed_source():
+async def test_query_feed_source(feed_explorer_agent):
     events = feed_explorer_agent.astream_events(
         {"messages": [HumanMessage(content="Show me the latest activities of vitalik.eth from Uniswap on Ethereum",
                                    name="human")]},
@@ -82,7 +82,7 @@ async def test_query_feed_source():
 
 
 @pytest.mark.asyncio
-async def test_query_unsupported_network():
+async def test_query_unsupported_network(feed_explorer_agent):
     events = feed_explorer_agent.astream_events(
         {"messages": [HumanMessage(content="Show me activities on the XYZ network", name="human")]}, version="v1"
     )
@@ -99,7 +99,7 @@ async def test_query_unsupported_network():
 
 
 @pytest.mark.asyncio
-async def test_query_multiple_addresses():
+async def test_query_multiple_addresses(feed_explorer_agent):
     events = feed_explorer_agent.astream_events(
         {
             "messages": [

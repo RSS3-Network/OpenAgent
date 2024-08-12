@@ -1,20 +1,20 @@
 import pytest
 from langchain_core.messages import HumanMessage
 
-from openagent.agents.market_analysis import market_analysis_agent
-from openagent.conf.llm_provider import set_current_llm
+from openagent.agents.market_analysis import build_market_analysis_agent
+from openagent.conf.llm_provider import get_available_providers
 
 
-@pytest.fixture(scope="module", autouse=True)
-def setup_llm():
-    # set_current_llm("gemini-1.5-pro")
-    # set_current_llm("gemini-1.5-flash")
-    set_current_llm("gpt-3.5-turbo")
-    # set_current_llm("llama3.1:latest")
+@pytest.fixture(scope="module")
+def market_analysis_agent(request):
+    model = request.config.getoption("--model")
+    llm = get_available_providers()[model]
+    agent = build_market_analysis_agent(llm)
+    return agent
 
 
 @pytest.mark.asyncio
-async def test_query_btc_price():
+async def test_query_btc_price(market_analysis_agent):
     events = market_analysis_agent.astream_events(
         {"messages": [HumanMessage(content="What's BTC price now?", name="human")]}, version="v1")
 
@@ -30,7 +30,7 @@ async def test_query_btc_price():
 
 
 @pytest.mark.asyncio
-async def test_query_eth_price():
+async def test_query_eth_price(market_analysis_agent):
     events = market_analysis_agent.astream_events(
         {"messages": [HumanMessage(content="What's the current price of Ethereum?", name="human")]}, version="v1"
     )
@@ -47,7 +47,7 @@ async def test_query_eth_price():
 
 
 @pytest.mark.asyncio
-async def test_query_funding_rate():
+async def test_query_funding_rate(market_analysis_agent):
     events = market_analysis_agent.astream_events(
         {"messages": [HumanMessage(content="What's the funding rate for BTC/USDT in binance?", name="human")]},
         version="v1"
@@ -66,7 +66,7 @@ async def test_query_funding_rate():
 
 
 @pytest.mark.asyncio
-async def test_query_nft_ranking():
+async def test_query_nft_ranking(market_analysis_agent):
     events = market_analysis_agent.astream_events(
         {"messages": [HumanMessage(content="What are the top 5 NFT collections?", name="human")]}, version="v1"
     )
@@ -81,7 +81,7 @@ async def test_query_nft_ranking():
 
 
 @pytest.mark.asyncio
-async def test_query_coin_market():
+async def test_query_coin_market(market_analysis_agent):
     events = market_analysis_agent.astream_events(
         {"messages": [HumanMessage(content="Give me the market cap for Bitcoin", name="human")]}, version="v1"
     )
