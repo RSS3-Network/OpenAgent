@@ -5,13 +5,14 @@
 Use the following command to run tests and generate a report (example for `supervisor_chain.py`):
 
 ```bash
-pytest --count=3 -n 11 supervisor_chain.py --alluredir allure-results
+pytest --count=3 -n 11 supervisor_chain.py --alluredir allure-results --model=gemini-1.5-pro
 ```
 
 Command breakdown:
 - `--count=3`: Repeats each test case 3 times
 - `-n 11`: Uses 11 parallel processes
 - `--alluredir allure-results`: Specifies the output directory for Allure report results
+- `--model=gemini-1.5-pro`: Specifies the model to use for the test, e.g. gpt-3.5-turbo, gemini-1.5-pro, gemini-1.5-flash, llama3.1:latest etc.
 
 ## View Report
 
