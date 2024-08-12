@@ -75,26 +75,3 @@ def get_gemini_provider(model: str) -> BaseChatModel | None:
 
 def get_ollama_provider(model: str) -> BaseChatModel | None:
     return ChatOllama(model=model) if settings.OLLAMA_HOST else None
-
-
-_current_llm_provider: ContextVar[BaseChatModel | None] = ContextVar("current_llm_provider", default=None)
-
-
-def set_current_llm(provider_name: str) -> None:
-    logger.info(f"Setting current LLM provider to {provider_name}")
-    providers = get_available_providers()
-    _current_llm_provider.set(providers.get(provider_name))
-
-
-def get_current_llm() -> BaseChatModel:
-    llm = _current_llm_provider.get()
-    if llm is None:
-        available_providers = get_available_providers()
-        if available_providers:
-            first_provider = next(iter(available_providers.items()))
-            logger.warning(f"No LLM provider is set. Using the {first_provider[0]} provider.")
-            llm = first_provider[1]
-        else:
-            logger.error("No LLM provider is available.")
-            raise ValueError("No LLM provider is available.")
-    return llm

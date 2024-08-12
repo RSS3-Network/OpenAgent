@@ -7,12 +7,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.messages import HumanMessage
 from loguru import logger
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sse_starlette import EventSourceResponse
 from starlette import status
 from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
+from openagent.conf.llm_provider import get_available_providers
 from openagent.workflows.workflow import build_workflow
 
 load_dotenv()
@@ -49,11 +50,14 @@ async def transfer_root():
 
 class Input(BaseModel):
     text: str
+    model: str = Field("gpt-3.5-turbo", title="Model name", description="The name of the model to use.")
 
 
 @app.post("/api/stream_chat", description="streaming chat api for openagent")
 async def outline_creation(req: Input):
-    agent = build_workflow()
+    model = req.model
+    llm = get_available_providers()[model]
+    agent = build_workflow(llm)
 
     async def stream():
         async for event in agent.astream_events({"messages": [HumanMessage(content=req.text)]}, version="v1"):

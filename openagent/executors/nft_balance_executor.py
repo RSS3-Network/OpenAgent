@@ -42,7 +42,8 @@ class NFTBalanceExecutor(BaseTool):
 def fetch_balance(chain: str, address: str) -> str:
     if settings.COVALENT_API_KEY is None:
         return "Please set COVALENT_API_KEY in the environment"
-    c = CovalentClient(settings.COVALENT_API_KEY)
+    print(settings.COVALENT_API_KEY)
+    c = CovalentClient('ckey_docs')
     b = c.nft_service.get_nfts_for_address(chain, address)
     if b.error:
         return b.error_message
