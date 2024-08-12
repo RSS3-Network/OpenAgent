@@ -15,6 +15,7 @@ def next_role(supervisor_chain, query) -> str:
 @pytest.fixture(scope="module")
 def supervisor_chain(request):
     model = request.config.getoption("--model")
+    logger.info(f"using model: {model}")
     llm = get_available_providers()[model]
     return build_supervisor_chain(llm)
 

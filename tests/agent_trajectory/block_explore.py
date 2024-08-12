@@ -1,5 +1,6 @@
 import pytest
 from langchain_core.messages import HumanMessage
+from loguru import logger
 
 from openagent.agents.block_explore import build_block_explorer_agent
 from openagent.conf.llm_provider import get_available_providers
@@ -8,6 +9,8 @@ from openagent.conf.llm_provider import get_available_providers
 @pytest.fixture(scope="module")
 def block_explorer_agent(request):
     model = request.config.getoption("--model")
+    logger.info(f"using model: {model}")
+
     llm = get_available_providers()[model]
     agent = build_block_explorer_agent(llm)
     return agent
