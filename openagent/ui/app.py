@@ -149,10 +149,11 @@ async def handle_tool_end(event, msg):
         output = event["data"]["output"]
         transfer_dict = json.loads(output)
         token = transfer_dict["token"]
+        token_address = transfer_dict["token_address"]
         to_address = transfer_dict["to_address"]
         amount = transfer_dict["amount"]
 
-        url = f"/widget/transfer?token={token}&amount={amount}&toAddress={to_address}"
+        url = f"/widget/transfer?token={token}&tokenAddress={token_address}&amount={amount}&toAddress={to_address}"
 
         iframe_html = f"""
                 <iframe src="{url}" width="100%" height="600px" style="border:none;">
@@ -163,5 +164,5 @@ async def handle_tool_end(event, msg):
     if event["name"] == "PriceExecutor":
         output = event["data"]["output"]
         price_dict = json.loads(output)
-        widget = f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="400"></iframe>"""  # noqa
+        widget = f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="600px"></iframe>"""  # noqa
         await msg.stream_token(widget)
