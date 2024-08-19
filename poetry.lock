@@ -623,25 +623,6 @@ files = [
 ]
 
 [[package]]
-name = "covalent-api-sdk"
-version = "1.0.2"
-description = "covalent-api-sdk-py"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "covalent_api_sdk-1.0.2-py3-none-any.whl", hash = "sha256:906b191e88769cb4774428c7f06d6be15b7b5a3855761a8ec3a03ff6db08a1dd"},
-    {file = "covalent_api_sdk-1.0.2.tar.gz", hash = "sha256:578247e551bfadd988f41a51bd3020fa286e11c57d00c762b14f228f3592e8ab"},
-]
-
-[package.dependencies]
-aiohttp = "*"
-deprecated = "*"
-pytest = "*"
-pytest-asyncio = "*"
-pytest-env = "*"
-requests = "*"
-
-[[package]]
 name = "cryptography"
 version = "42.0.7"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
@@ -3085,41 +3066,6 @@ pluggy = ">=1.5,<2.0"
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
-name = "pytest-asyncio"
-version = "0.23.7"
-description = "Pytest support for asyncio"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pytest_asyncio-0.23.7-py3-none-any.whl", hash = "sha256:009b48127fbe44518a547bddd25611551b0e43ccdbf1e67d12479f569832c20b"},
-    {file = "pytest_asyncio-0.23.7.tar.gz", hash = "sha256:5f5c72948f4c49e7db4f29f2521d4031f1c27f86e57b046126654083d4770268"},
-]
-
-[package.dependencies]
-pytest = ">=7.0.0,<9"
-
-[package.extras]
-docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1.0)"]
-testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)"]
-
-[[package]]
-name = "pytest-env"
-version = "1.1.3"
-description = "pytest plugin that allows you to add environment variables."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pytest_env-1.1.3-py3-none-any.whl", hash = "sha256:aada77e6d09fcfb04540a6e462c58533c37df35fa853da78707b17ec04d17dfc"},
-    {file = "pytest_env-1.1.3.tar.gz", hash = "sha256:fcd7dc23bb71efd3d35632bde1bbe5ee8c8dc4489d6617fb010674880d96216b"},
-]
-
-[package.dependencies]
-pytest = ">=7.4.3"
-
-[package.extras]
-test = ["covdefaults (>=2.3)", "coverage (>=7.3.2)", "pytest-mock (>=3.12)"]
-
-[[package]]
 name = "pytest-repeat"
 version = "0.9.3"
 description = "pytest plugin for repeating tests"
@@ -4326,4 +4272,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "fa5a3e310143c72bc5e7155f524834ce3ad47295e12c3eb4f5de9fe1f22edb6e"
+content-hash = "3329184dfe5a15126c31836ba01869bb8cc41e90054b319acfb57fffb1a138e5"
