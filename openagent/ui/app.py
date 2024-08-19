@@ -31,17 +31,15 @@ if enable_auth():
     # Set up the data layer
     cl_data._data_layer = SQLAlchemyDataLayer(conninfo=settings.DB_CONNECTION)
 
-
     @cl.oauth_callback
     def oauth_callback(
-            provider_id: str,
-            token: str,
-            raw_user_data: Dict[str, str],
-            default_user: cl.User,
+        provider_id: str,
+        token: str,
+        raw_user_data: Dict[str, str],
+        default_user: cl.User,
     ) -> Optional[cl.User]:
         """OAuth callback function."""
         return default_user
-
 
     @cl.on_chat_resume
     async def on_chat_resume(thread: cl_data.ThreadDict):
@@ -111,9 +109,9 @@ async def on_message(message: cl.Message):
     agent_names = [member["name"] for member in members]
 
     async for event in runnable.astream_events(
-            {"messages": [*memory.chat_memory.messages, HumanMessage(content=message.content)]},
-            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
-            version="v1",
+        {"messages": [*memory.chat_memory.messages, HumanMessage(content=message.content)]},
+        config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
+        version="v1",
     ):
         kind = event["event"]
         if kind == "on_tool_end":

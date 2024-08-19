@@ -18,8 +18,7 @@ def market_analysis_agent(request):
 
 @pytest.mark.asyncio
 async def test_query_btc_price(market_analysis_agent):
-    events = market_analysis_agent.astream_events(
-        {"messages": [HumanMessage(content="What's BTC price now?", name="human")]}, version="v1")
+    events = market_analysis_agent.astream_events({"messages": [HumanMessage(content="What's BTC price now?", name="human")]}, version="v1")
 
     tool_end_count = 0
     async for event in events:
@@ -52,8 +51,7 @@ async def test_query_eth_price(market_analysis_agent):
 @pytest.mark.asyncio
 async def test_query_funding_rate(market_analysis_agent):
     events = market_analysis_agent.astream_events(
-        {"messages": [HumanMessage(content="What's the funding rate for BTC/USDT in binance?", name="human")]},
-        version="v1"
+        {"messages": [HumanMessage(content="What's the funding rate for BTC/USDT in binance?", name="human")]}, version="v1"
     )
 
     tool_end_count = 0

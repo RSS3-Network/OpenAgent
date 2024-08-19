@@ -20,26 +20,28 @@ def supervisor_chain(request):
     return build_supervisor_chain(llm)
 
 
-@pytest.mark.parametrize("query,expected_role", [
-    ("What's the current price of Ethereum and its market trend?", "market_analysis_agent"),
-    ("Can you check my ETH balance and show me how to swap some for USDC?", "asset_management_agent"),
-    ("swap 1 eth to usdt on ethereum.", "asset_management_agent"),
-    ("Can you help me transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e on the Ethereum network?",
-     "asset_management_agent"),
-    ("What's the latest block height on the Ethereum network, and what are the current gas fees?",
-     "block_explorer_agent"),
-    (
+@pytest.mark.parametrize(
+    "query,expected_role",
+    [
+        ("What's the current price of Ethereum and its market trend?", "market_analysis_agent"),
+        ("Can you check my ETH balance and show me how to swap some for USDC?", "asset_management_agent"),
+        ("swap 1 eth to usdt on ethereum.", "asset_management_agent"),
+        ("Can you help me transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e on the Ethereum network?", "asset_management_agent"),
+        ("What's the latest block height on the Ethereum network, and what are the current gas fees?", "block_explorer_agent"),
+        (
             "Can you provide a detailed analysis of the Uniswap project, including its recent developments and market position?",
-            "research_analyst_agent"),
-    ("What's the weather like today in New York?", "fallback_agent"),
-    (
+            "research_analyst_agent",
+        ),
+        ("What's the weather like today in New York?", "fallback_agent"),
+        (
             "I want to invest in a promising DeFi project. Can you first give me an overview of the current DeFi market trends, then recommend a project, and finally show me how to acquire some tokens of that project?",
-            "market_analysis_agent"),
-    ("What are the recent DeFi activities for the address 0x742d35Cc6634C0532925a3b844Bc454e4438f44e?",
-     "feed_explorer_agent"),
-    ("Show me the latest social interactions for vitalik.eth on Farcaster.", "feed_explorer_agent"),
-    ("What are the most recent activities of vitalik.eth from the Uniswap on Ethereum?", "feed_explorer_agent"),
-])
+            "market_analysis_agent",
+        ),
+        ("What are the recent DeFi activities for the address 0x742d35Cc6634C0532925a3b844Bc454e4438f44e?", "feed_explorer_agent"),
+        ("Show me the latest social interactions for vitalik.eth on Farcaster.", "feed_explorer_agent"),
+        ("What are the most recent activities of vitalik.eth from the Uniswap on Ethereum?", "feed_explorer_agent"),
+    ],
+)
 def test_next_role(supervisor_chain, query, expected_role):
     result = next_role(supervisor_chain, query)
     assert result == expected_role, f"Expected {expected_role}, but got {result} for query: {query}"

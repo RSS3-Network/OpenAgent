@@ -1,4 +1,3 @@
-from contextvars import ContextVar
 from typing import Dict, List
 
 import ollama

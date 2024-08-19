@@ -19,8 +19,7 @@ def block_explorer_agent(request):
 @pytest.mark.asyncio
 async def test_query_block_height(block_explorer_agent):
     events = block_explorer_agent.astream_events(
-        {"messages": [HumanMessage(content="What's the latest block height on the Ethereum network?", name="human")]},
-        version="v1"
+        {"messages": [HumanMessage(content="What's the latest block height on the Ethereum network?", name="human")]}, version="v1"
     )
 
     tool_end_count = 0

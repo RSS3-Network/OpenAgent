@@ -17,9 +17,7 @@ def asset_management_agent(request):
 
 @pytest.mark.asyncio
 async def test_swap_eth_to_usdt(asset_management_agent):
-    events = asset_management_agent.astream_events(
-        {"messages": [HumanMessage(content="Can you swap 20 eth to usdt ?", name="human")]}, version="v1"
-    )
+    events = asset_management_agent.astream_events({"messages": [HumanMessage(content="Can you swap 20 eth to usdt ?", name="human")]}, version="v1")
 
     on_tool_end_count = 0
 
@@ -38,8 +36,7 @@ async def test_swap_eth_to_usdt(asset_management_agent):
 @pytest.mark.asyncio
 async def test_query_user_token_balance(asset_management_agent):
     events = asset_management_agent.astream_events(
-        {"messages": [HumanMessage(content="Can you check 0x33c0814654fa367ce67d8531026eb4481290e63c eth balance ?",
-                                   name="human")]},
+        {"messages": [HumanMessage(content="Can you check 0x33c0814654fa367ce67d8531026eb4481290e63c eth balance ?", name="human")]},
         version="v1",
     )
 
@@ -59,8 +56,7 @@ async def test_query_user_token_balance(asset_management_agent):
 @pytest.mark.asyncio
 async def test_query_user_nft_holdings(asset_management_agent):
     events = asset_management_agent.astream_events(
-        {"messages": [HumanMessage(content="Can you check 0x33c0814654fa367ce67d8531026eb4481290e63c nft holdings ?",
-                                   name="human")]},
+        {"messages": [HumanMessage(content="Can you check 0x33c0814654fa367ce67d8531026eb4481290e63c nft holdings ?", name="human")]},
         version="v1",
     )
 
@@ -80,8 +76,7 @@ async def test_query_user_nft_holdings(asset_management_agent):
 @pytest.mark.asyncio
 async def test_transfer_eth(asset_management_agent):
     events = asset_management_agent.astream_events(
-        {"messages": [HumanMessage(content="Can you transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e?",
-                                   name="human")]},
+        {"messages": [HumanMessage(content="Can you transfer 0.5 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e?", name="human")]},
         version="v1",
     )
 

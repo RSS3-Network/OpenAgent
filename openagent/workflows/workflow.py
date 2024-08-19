@@ -9,7 +9,7 @@ from loguru import logger
 from openagent.agents.asset_management import build_asset_management_agent
 from openagent.agents.block_explore import build_block_explorer_agent
 from openagent.agents.fallback import build_fallback_agent
-from openagent.agents.feed_explore import  build_feed_explorer_agent
+from openagent.agents.feed_explore import build_feed_explorer_agent
 from openagent.agents.research_analyst import build_research_analyst_agent
 
 
