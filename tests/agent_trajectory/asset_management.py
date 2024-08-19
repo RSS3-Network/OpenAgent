@@ -48,7 +48,7 @@ async def test_query_user_token_balance(asset_management_agent):
             event_data_input_ = event["data"]["input"]
             assert event["name"] == "TokenBalanceExecutor"
             assert event_data_input_["wallet_address"] == "0x33c0814654fa367ce67d8531026eb4481290e63c"
-            assert event_data_input_["chain"] == "eth-mainnet"
+            assert event_data_input_["chain"] == "eth"
 
     assert on_tool_end_count > 0, "The on_tool_end event did not occur in test_query_user_token_balance"
 
@@ -68,7 +68,7 @@ async def test_query_user_nft_holdings(asset_management_agent):
             event_data_input_ = event["data"]["input"]
             assert event["name"] == "NFTBalanceExecutor"
             assert event_data_input_["wallet_address"] == "0x33c0814654fa367ce67d8531026eb4481290e63c"
-            assert event_data_input_["chain"] == "eth-mainnet"
+            assert event_data_input_["chain"] == "eth"
 
     assert on_tool_end_count > 0, "The on_tool_end event did not occur in test_query_user_nft_holdings"
 
