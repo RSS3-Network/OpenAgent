@@ -1,7 +1,6 @@
 import json
 from typing import Optional, Type
 
-from covalent import CovalentClient
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
@@ -13,7 +12,8 @@ from openagent.conf.env import settings
 
 
 class ARGS(BaseModel):
-    chain: str = Field(description="chain name,options:eth-mainnet,optimism-mainnet,arbitrum-mainnet,bsc-mainnet")
+    chain: str = Field(description="chain name,options:eth,optimism,arbitrum,bsc")
+
     wallet_address: str = Field(description="wallet address")
 
 
@@ -40,27 +40,30 @@ class NFTBalanceExecutor(BaseTool):
 
 
 def fetch_balance(chain: str, address: str) -> str:
-    if settings.COVALENT_API_KEY is None:
-        return "Please set COVALENT_API_KEY in the environment"
-    print(settings.COVALENT_API_KEY)
-    c = CovalentClient('ckey_docs')
-    b = c.nft_service.get_nfts_for_address(chain, address)
-    if b.error:
-        return b.error_message
+    if settings.MORALIS_API_KEY is None:
+        return "Please set MORALIS_API_KEY in the environment"
+    from moralis import evm_api
+
+    params = {"chain": chain, "format": "decimal", "media_items": False, "address": address}
+
+    result = evm_api.nft.get_wallet_nfts(
+        api_key=settings.MORALIS_API_KEY,
+        params=params,
+    )
+
     return json.dumps(
         list(
             map(
                 lambda x: {
-                    "contract_name": x.contract_name,
-                    "contract_ticker_symbol": x.contract_ticker_symbol,
-                    "balance": x.balance,
-                    "pretty_floor_price_quote": x.pretty_floor_price_quote,
+                    "amount": x["amount"],
+                    "name": x["name"],
+                    "symbol": x["symbol"],
                 },
-                b.data.items,
+                result["result"],
             )
         )
     )
 
 
 if __name__ == "__main__":
-    print(fetch_balance("eth-mainnet", "0x33c0814654fa367ce67d8531026eb4481290e63c"))
+    print(fetch_balance("eth", "0x33c0814654fa367ce67d8531026eb4481290e63c"))

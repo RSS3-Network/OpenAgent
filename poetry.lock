@@ -844,6 +844,52 @@ files = [
 ]
 
 [[package]]
+name = "frozendict"
+version = "2.3.10"
+description = "A simple immutable dictionary"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "frozendict-2.3.10-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:df2d2afa5af41bfa09dc9d5a8e6d73ae39b677a8572200c65a5ea353387ffccd"},
+    {file = "frozendict-2.3.10-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:b10df7f5d8637b1af319434f99dc25ca6f5537e28b293e4c405ebfb4bf9581fa"},
+    {file = "frozendict-2.3.10-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:da22a3e873f365f97445c49afc1e6d5198ed6d172f3efaf0e9fde0edcca3cea1"},
+    {file = "frozendict-2.3.10-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:89218738e2122b50bf8a0444083dbe2de280402e9c2ef0929c0db0f93ff11271"},
+    {file = "frozendict-2.3.10-cp310-cp310-musllinux_1_1_aarch64.whl", hash = "sha256:aa11add43a71fd47523fbd011be5cc011df79e25ec0b0339fc0d728623aaa7ec"},
+    {file = "frozendict-2.3.10-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:af267bd6d98cbc10580105dc76f28f7156856fa48a5bbcadd40edb85f93657ae"},
+    {file = "frozendict-2.3.10-cp310-cp310-win_amd64.whl", hash = "sha256:c112024df64b8926a315d7e36b860967fcad8aae0c592b9f117589391373e893"},
+    {file = "frozendict-2.3.10-cp310-cp310-win_arm64.whl", hash = "sha256:a0065db2bc76628853dd620bd08c1ca44ad0b711e92e89b4156493153add6f9d"},
+    {file = "frozendict-2.3.10-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:93634af5a6d71762aebc7d78bdce92890b7e612588faf887c9eaf752dc7ccdb1"},
+    {file = "frozendict-2.3.10-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7b4d05e231dc1a2ec874f847fd7348cbee469555468efb875a89994ecde31a81"},
+    {file = "frozendict-2.3.10-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6d40d0644f19365fc6cc428db31c0f113fa550bd15920262f9d77ccf6556d87b"},
+    {file = "frozendict-2.3.10-cp36-cp36m-musllinux_1_1_aarch64.whl", hash = "sha256:12b40526219f9583b30690011288bca4d6cce8724cda96b3c3ab08b67c5a7f09"},
+    {file = "frozendict-2.3.10-cp36-cp36m-musllinux_1_1_x86_64.whl", hash = "sha256:6b552fffeba8e41b43ce10cc0fc467e048a7c9a71ae3241057510342132555b9"},
+    {file = "frozendict-2.3.10-cp36-cp36m-win_amd64.whl", hash = "sha256:07208e4718cb70aa259ac886c19b96a4aad1cf00e9199f211746f738951bbf7c"},
+    {file = "frozendict-2.3.10-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:e8bec6d11f7254e405290cb1b081caffa0c18b6aa779130da9a546349c56be83"},
+    {file = "frozendict-2.3.10-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b089c7e8c95d8b043e82e7da26e165f4220d7310efaad5e94445db7e3bc8321e"},
+    {file = "frozendict-2.3.10-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:08a5829d708657c9d5ad58f4a7e4baa73a3d57290f9613bdd909d481fc203a3a"},
+    {file = "frozendict-2.3.10-cp37-cp37m-musllinux_1_1_aarch64.whl", hash = "sha256:1c015852dacf144dbeadf203673d8c714f788fcc2b810a36504994b3c4f5a436"},
+    {file = "frozendict-2.3.10-cp37-cp37m-musllinux_1_1_x86_64.whl", hash = "sha256:bb9f15a5ed924be2b1cb3654b7ea3b7bae265ff39e2b5784d42bd4a6e1353e45"},
+    {file = "frozendict-2.3.10-cp37-cp37m-win_amd64.whl", hash = "sha256:809bb9c6c657bded925710a309bb2a2350bdbfdc9371df427f1a93cb8ab7ec3e"},
+    {file = "frozendict-2.3.10-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:ff7a9cca3a3a1e584349e859d028388bd96a5475f76721471b73797472c6db17"},
+    {file = "frozendict-2.3.10-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:0cdd496933ddb428f3854bea9ffdce0245bb27c27909f663ad396409fb4dffb5"},
+    {file = "frozendict-2.3.10-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:9df392b655fadaa0174c1923e6205b30ad1ccca248e8e146e63a8147a355ee01"},
+    {file = "frozendict-2.3.10-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7901828700f36fe12486705afe7afc5583434390c8f69b5419de1b6c566fb00d"},
+    {file = "frozendict-2.3.10-cp38-cp38-musllinux_1_1_aarch64.whl", hash = "sha256:c9aa28ce48d848ee520409533fd0254de4caf025c5cf1b9f27c98c1dd8cf90aa"},
+    {file = "frozendict-2.3.10-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:0856af4f5b4288b2270e0b74078fad5cbaf4f799326b82183865f6f367008b2c"},
+    {file = "frozendict-2.3.10-cp38-cp38-win_amd64.whl", hash = "sha256:ac41c671ff33cbefc0f06c4b2a630d18ab59f5256f45f57d5632252ae4a8c07a"},
+    {file = "frozendict-2.3.10-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:893205dc5a4e5c4b24e5822ceb21ef14fed8ca4afae7ac688e2fc24294c85225"},
+    {file = "frozendict-2.3.10-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:e78c5ac5d71f3b73f07ff9d9e3cc32dfbf7954f2c57c2d0e1fe8f1600e980b40"},
+    {file = "frozendict-2.3.10-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8c4ca4cc42bc30b20476616411d4b49aae6084760b99251f1cbdfed879ae53ea"},
+    {file = "frozendict-2.3.10-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c865962216f7cfd6dac8693f4de431a9d98a7225185ff23613ecd10c42423adc"},
+    {file = "frozendict-2.3.10-cp39-cp39-musllinux_1_1_aarch64.whl", hash = "sha256:99b2f47b292cc4d68f6679918e8e9e6dc5e816924d8369d07018be56b93fb20f"},
+    {file = "frozendict-2.3.10-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:8e7abf4539b73c8e5680dd2fdbd19ca4fc3e2b2f3666f80f022217839bb859fd"},
+    {file = "frozendict-2.3.10-cp39-cp39-win_amd64.whl", hash = "sha256:901e774629fc63f84d24b5e46b59de1eed22392ee98b7f92e694a127d541edac"},
+    {file = "frozendict-2.3.10-cp39-cp39-win_arm64.whl", hash = "sha256:6f8681c0ffe92be9aba40c9b9960c48f0ae7f6ea585af2b93fc9542cc3865969"},
+    {file = "frozendict-2.3.10-py3-none-any.whl", hash = "sha256:66cded65f144393b4226bda9fe9ac2f42451d2d603e8a486015744bb566a7008"},
+    {file = "frozendict-2.3.10.tar.gz", hash = "sha256:aadc83510ce82751a0bb3575231f778bc37cbb373f5f05a52b888e26cbb92f79"},
+]
+
+[[package]]
 name = "frozenlist"
 version = "1.4.1"
 description = "A list-like structure which implements collections.abc.MutableSequence"
@@ -1942,6 +1988,24 @@ files = [
 
 [package.dependencies]
 marshmallow = ">=2.0.0"
+
+[[package]]
+name = "moralis"
+version = "0.1.49"
+description = "The official Moralis Python SDK"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "moralis-0.1.49-py3-none-any.whl", hash = "sha256:2a92e26f61d57e726f947541fa30950a48ba45bc0e3fb8e489ff5d7adbc64a7c"},
+    {file = "moralis-0.1.49.tar.gz", hash = "sha256:ea73e08344e75be980a8ee61f0c16c6d5262e9c34934520cb7b3725dfd838040"},
+]
+
+[package.dependencies]
+certifi = ">=14.5.14"
+frozendict = ">=2.3.4,<2.4.0"
+python-dateutil = ">=2.8.2"
+typing-extensions = ">=4.3.0"
+urllib3 = ">=1.26.7"
 
 [[package]]
 name = "multidict"
@@ -4262,4 +4326,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "732fa82543071898b68e001f3d1fb1f6a0365b57ed37b6503ba3484a16bf5806"
+content-hash = "fa5a3e310143c72bc5e7155f524834ce3ad47295e12c3eb4f5de9fe1f22edb6e"
