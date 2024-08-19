@@ -2,11 +2,13 @@
 
 ## Execute Tests
 
-Use the following command to run tests and generate a report (example for `supervisor_chain.py`):
+Use the following command to run tests and generate a report:
 
 ```bash
 pytest --count=3 -n 11 supervisor_chain.py --alluredir allure-results --model=gemini-1.5-pro
+pytest --count=3 -n 11 agent_trajectory/*.py --alluredir allure-results --model=gpt-3.5-turbo
 ```
+
 
 Command breakdown:
 - `--count=3`: Repeats each test case 3 times
