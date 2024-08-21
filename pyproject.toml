@@ -47,6 +47,7 @@ pytest-xdist = "^3.6.1"
 pytest-repeat = "^0.9.3"
 allure-pytest = "^2.13.5"
 moralis = "^0.1.49"
+pytest-asyncio = "^0.23.8"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
