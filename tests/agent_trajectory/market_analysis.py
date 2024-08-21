@@ -51,7 +51,7 @@ async def test_query_eth_price(market_analysis_agent):
 @pytest.mark.asyncio
 async def test_query_funding_rate(market_analysis_agent):
     events = market_analysis_agent.astream_events(
-        {"messages": [HumanMessage(content="What's the funding rate for BTC/USDT in binance?", name="human")]}, version="v1"
+        {"messages": [HumanMessage(content="What's the funding rate for BTC in binance?", name="human")]}, version="v1"
     )
 
     tool_end_count = 0
@@ -76,7 +76,7 @@ async def test_query_nft_ranking(market_analysis_agent):
     async for event in events:
         if event["event"] == "on_tool_end":
             tool_end_count += 1
-            # assert event["name"] == "NFTRankingExecutor"
+            assert event["name"] == "NFTRankingExecutor"
 
     assert tool_end_count > 0, "The on_tool_end event did not occur"
 
