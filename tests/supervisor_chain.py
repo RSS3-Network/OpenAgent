@@ -33,10 +33,6 @@ def supervisor_chain(request):
             "research_analyst_agent",
         ),
         ("What's the weather like today in New York?", "fallback_agent"),
-        (
-            "I want to invest in a promising DeFi project. Can you first give me an overview of the current DeFi market trends, then recommend a project, and finally show me how to acquire some tokens of that project?",
-            "market_analysis_agent",
-        ),
         ("What are the recent DeFi activities for the address 0x742d35Cc6634C0532925a3b844Bc454e4438f44e?", "feed_explorer_agent"),
         ("Show me the latest social interactions for vitalik.eth on Farcaster.", "feed_explorer_agent"),
         ("What are the most recent activities of vitalik.eth from the Uniswap on Ethereum?", "feed_explorer_agent"),
