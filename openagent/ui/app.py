@@ -6,11 +6,12 @@ import chainlit.data as cl_data
 from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 from langchain.memory import ConversationBufferMemory
 from langchain.schema.runnable.config import RunnableConfig
+from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import HumanMessage
 from loguru import logger
 
 from openagent.conf.env import settings
-from openagent.conf.llm_provider import get_available_providers, set_current_llm
+from openagent.conf.llm_provider import get_available_providers
 from openagent.ui.profile import profile_name_to_provider_key, provider_to_profile
 from openagent.workflows.member import members
 from openagent.workflows.workflow import build_workflow
@@ -54,13 +55,13 @@ if enable_auth():
         cl.user_session.set("memory", memory)
         profile = cl.user_session.get("chat_profile")
         provider_key = profile_name_to_provider_key(profile)
-        set_current_llm(provider_key)
-        setup_runnable()
+        llm = get_available_providers()[provider_key]
+        setup_runnable(llm)
 
 
-def setup_runnable():
+def setup_runnable(llm: BaseChatModel):
     """Set up the runnable agent."""
-    agent = build_workflow()
+    agent = build_workflow(llm)
     cl.user_session.set("runnable", agent)
 
 
@@ -84,8 +85,8 @@ async def on_chat_start():
     cl.user_session.set("memory", initialize_memory())
     profile = cl.user_session.get("chat_profile")
     provider_key = profile_name_to_provider_key(profile)
-    set_current_llm(provider_key)
-    setup_runnable()
+    llm = get_available_providers()[provider_key]
+    setup_runnable(llm)
 
 
 def build_token(token_symbol: str, token_address: str):
@@ -96,11 +97,13 @@ def build_token(token_symbol: str, token_address: str):
 async def on_message(message: cl.Message):
     """Callback function to handle user messages."""
     memory = cl.user_session.get("memory")  # type: ConversationBufferMemory
-    runnable = cl.user_session.get("runnable")
 
     profile = cl.user_session.get("chat_profile")
     provider_key = profile_name_to_provider_key(profile)
-    set_current_llm(provider_key)
+    llm = get_available_providers()[provider_key]
+
+    setup_runnable(llm)
+    runnable = cl.user_session.get("runnable")
 
     msg = cl.Message(content="")
     agent_names = [member["name"] for member in members]
@@ -164,5 +167,5 @@ async def handle_tool_end(event, msg):
     if event["name"] == "PriceExecutor":
         output = event["data"]["output"]
         price_dict = json.loads(output)
-        widget = f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="600px"></iframe>"""  # noqa
+        widget = f"""<iframe src="/widget/price-chart?token={list(price_dict.keys())[0]}" height="400px"></iframe>"""  # noqa
         await msg.stream_token(widget)

@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 
 class ARGS(BaseModel):
     exchange: str = Field(description="Name of the exchange (ccxt supported), e.g., 'binance'")
-    symbol: str = Field(description="Trading pair symbol, e.g., 'BTC/USDT:USDT'")
+    symbol: str = Field(description="Trading pair symbol, e.g., 'BTC/USDT'")
 
 
 class FundingRateExecutor(BaseTool):
@@ -46,6 +46,8 @@ class FundingRateExecutor(BaseTool):
 
 def fetch_funding_rate(exchange_name: str, symbol: str) -> float:
     try:
+        if not symbol.endswith(":USDT"):
+            symbol = f"{symbol}:USDT"
         exchange_class = getattr(ccxt, exchange_name)
         exchange = exchange_class()
 

@@ -20,8 +20,7 @@ class Settings(BaseSettings):
 
     # API keys for various tools; some features will be disabled if not set
     TAVILY_API_KEY: Optional[str] = Field(default=None, description="Tavily API Key. Info: https://tavily.com/")
-    NFTSCAN_API_KEY: Optional[str] = Field(default=None, description="NFTScan API Key. Info: https://nftscan.com/")
-    COVALENT_API_KEY: Optional[str] = Field(default=None, description="Covalent API Key. Info: https://goldrush.dev/docs/api/")
+    MORALIS_API_KEY: Optional[str] = Field(default=None, description="Moralis API Key. Info: https://moralis.io/")
     ROOTDATA_API_KEY: Optional[str] = Field(default=None, description="RootData API Key. Info: https://www.rootdata.com/")
     COINGECKO_API_KEY: Optional[str] = Field(default=None, description="CoinGecko API Key. Info: https://www.coingecko.com/en/api/pricing")
     RSS3_DATA_API: str = Field(default="https://gi.rss3.io", description="RSS3 Data API URL")

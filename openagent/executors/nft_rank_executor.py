@@ -1,26 +1,19 @@
+import json
 from typing import Optional, Type
 
-import requests
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
+from moralis import evm_api
 from pydantic import BaseModel, Field
 
 from openagent.conf.env import settings
 
 
 class NFTRankingArgs(BaseModel):
-    sort_field: str = Field(
-        default="market_cap",
-        description="""
-Options include: volume_1d, volume_7d, volume_30d, volume_total, volume_change_1d,
-volume_change_7d, volume_change_30d, sales_1d, sales_7d, sales_30d,
-sales_total, sales_change_1d, sales_change_7d, sales_change_30d,
-floor_price, market_cap.
-    """,
-    )
+    limit: int = Field(description="Number of collections to return", default=10)
 
 
 class NFTRankingExecutor(BaseTool):
@@ -30,25 +23,42 @@ class NFTRankingExecutor(BaseTool):
 
     def _run(
         self,
-        sort_field: str = "market_cap",
+        limit: int,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
-        return self.collection_ranking(sort_field)
+        return self.collection_ranking(limit)
 
     async def _arun(
         self,
-        sort_field: str = "market_cap",
+        limit: int,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
-        return self._run(sort_field, run_manager)
+        return self._run(limit, run_manager)
 
     @staticmethod
-    def collection_ranking(sort_field: str) -> str:
-        if settings.NFTSCAN_API_KEY is None:
-            return "Please set NFTSCAN_API_KEY in the environment"
-        """Search for NFT collections ranking."""
-        url = f"https://restapi.nftscan.com/api/v2/statistics/ranking/collection?sort_field={sort_field}&sort_direction=desc&limit=20"
+    def collection_ranking(limit: int) -> str:
+        if settings.MORALIS_API_KEY is None:
+            return "Please set MORALIS_API_KEY in the environment"
+        by_market_cap = evm_api.market_data.get_top_nft_collections_by_market_cap(
+            api_key=settings.MORALIS_API_KEY,
+        )
+        limit = min(limit, len(by_market_cap))
+        result = by_market_cap[0:limit]
+        return json.dumps(
+            list(
+                map(
+                    lambda x: {
+                        "collection_title": x["collection_title"],
+                        "collection_image": x["collection_image"],
+                        "floor_price_usd": x["floor_price_usd"],
+                        "collection_address": x["collection_address"],
+                    },
+                    result,
+                )
+            )
+        )
 
-        headers = {"X-API-KEY": f"{settings.NFTSCAN_API_KEY}"}
-        response = requests.get(url, headers=headers)
-        return response.text
+
+if __name__ == "__main__":
+    ranking = NFTRankingExecutor.collection_ranking(4)
+    print(ranking)

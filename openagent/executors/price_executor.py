@@ -14,7 +14,7 @@ from openagent.conf.env import settings
 
 
 class ARGS(BaseModel):
-    token: str = Field(description="token symbol")
+    token: str = Field(description="token symbol, e.g., 'ETH', 'BTC'")
 
 
 class PriceExecutor(BaseTool):
