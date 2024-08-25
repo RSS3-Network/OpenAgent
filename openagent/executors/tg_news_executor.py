@@ -1,7 +1,7 @@
+import json
 from typing import Optional, Type
 
 import aiohttp
-import feedparser
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
@@ -9,6 +9,8 @@ from langchain.callbacks.manager import (
 from langchain.tools import BaseTool
 from loguru import logger
 from pydantic import BaseModel, Field
+
+from openagent.conf.env import settings
 
 
 class ParamSchema(BaseModel):
@@ -21,7 +23,7 @@ class ParamSchema(BaseModel):
 
 class TelegramNewsExecutor(BaseTool):
     """
-    A tool for fetching recent news from specific Telegram channels.
+    A tool for fetching recent news from specific Telegram channels using RSS3 DATA API.
     """
 
     name = "TelegramNewsExecutor"
@@ -53,7 +55,7 @@ and cryptocurrency space."""
 
 async def fetch_telegram_news(limit: int = 10):
     """
-    Fetch recent news from specific Telegram channels.
+    Fetch recent news from specific Telegram channels using RSS3 DATA API.
 
     :param limit: Number of recent news items to fetch
     :return: A string containing the fetched news items
@@ -63,21 +65,22 @@ async def fetch_telegram_news(limit: int = 10):
 
     async with aiohttp.ClientSession() as session:
         for channel in channels:
-            url = f"https://rsshub.app/telegram/channel/{channel}"
+            url = f"{settings.RSS3_DATA_API}/rss/telegram/channel/{channel}"
             logger.info(f"Fetching news from {url}")
 
             async with session.get(url) as resp:
                 if resp.status == 200:
                     content = await resp.text()
-                    feed = feedparser.parse(content)
-                    entries = feed.entries[:limit]
+                    data = json.loads(content)
+                    entries = data["data"][:limit]
                     all_news.extend(entries)
                 else:
                     logger.error(f"Failed to fetch from {url}. Status: {resp.status}")
 
     formatted_news = []
     for entry in all_news:
-        formatted_entry = f"Title: {entry.title}\nDate: {entry.published}\nSummary: {entry.summary}\nLink: {entry.link}\n\n"
+        metadata = entry["actions"][0]["metadata"]
+        formatted_entry = f"Title: {metadata['title']}\nDate: {metadata['pub_date']}\nSummary: {metadata['description']}\n\n"
         formatted_news.append(formatted_entry)
 
     result = "Recent news from Telegram channels:\n\n" + "\n".join(formatted_news)
