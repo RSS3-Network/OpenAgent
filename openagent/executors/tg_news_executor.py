@@ -1,16 +1,13 @@
-import json
-from typing import Optional, Type
+import asyncio
+from typing import Any, Dict, List, Optional, Type
 
-import aiohttp
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
-    CallbackManagerForToolRun,
 )
 from langchain.tools import BaseTool
-from loguru import logger
 from pydantic import BaseModel, Field
 
-from openagent.conf.env import settings
+from openagent.executors.tg_util import fetch_tg_msgs
 
 
 class ParamSchema(BaseModel):
@@ -26,23 +23,19 @@ class TelegramNewsExecutor(BaseTool):
     A tool for fetching recent news from specific Telegram channels using RSS3 DATA API.
     """
 
+    def _run(self, *args: Any, **kwargs: Any) -> Any:
+        raise NotImplementedError
+
     name = "TelegramNewsExecutor"
     description = """Use this tool to get recent news and updates in the blockchain \
 and cryptocurrency space."""
     args_schema: Type[ParamSchema] = ParamSchema
 
-    def _run(
-        self,
-        limit: int = 10,
-        run_manager: Optional[CallbackManagerForToolRun] = None,
-    ) -> str:
-        raise NotImplementedError
-
     async def _arun(
         self,
         limit: int = 10,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
-    ):
+    ) -> str:
         """
         Asynchronously run the Telegram news fetching process.
 
@@ -50,39 +43,44 @@ and cryptocurrency space."""
         :param run_manager: Optional callback manager for async operations
         :return: A string containing the fetched news items
         """
-        return await fetch_telegram_news(limit)
+        return await fetch_telegram_news(["ChannelPANews", "chainfeedsxyz"], limit)
 
 
-async def fetch_telegram_news(limit: int = 10):
+async def fetch_telegram_news(channels: List[str], limit: int = 10) -> str:
     """
     Fetch recent news from specific Telegram channels using RSS3 DATA API.
 
+    :param channels: List of Telegram channels to fetch news from
     :param limit: Number of recent news items to fetch
     :return: A string containing the fetched news items
     """
-    channels = ["ChannelPANews", "chainfeedsxyz"]
-    all_news = []
+    results = await asyncio.gather(*[fetch_tg_msgs(channel, limit) for channel in channels])
+    return format_news(list(results))
 
-    async with aiohttp.ClientSession() as session:
-        for channel in channels:
-            url = f"{settings.RSS3_DATA_API}/rss/telegram/channel/{channel}"
-            logger.info(f"Fetching news from {url}")
 
-            async with session.get(url) as resp:
-                if resp.status == 200:
-                    content = await resp.text()
-                    data = json.loads(content)
-                    entries = data["data"][:limit]
-                    all_news.extend(entries)
-                else:
-                    logger.error(f"Failed to fetch from {url}. Status: {resp.status}")
+def format_news(results: List[List[Dict]]) -> str:
+    """
+    Format the fetched news results into a readable string.
 
-    formatted_news = []
-    for entry in all_news:
-        metadata = entry["actions"][0]["metadata"]
-        formatted_entry = f"Title: {metadata['title']}\nDate: {metadata['pub_date']}\nSummary: {metadata['description']}\n\n"
-        formatted_news.append(formatted_entry)
+    :param results: A list of lists containing news entries
+    :return: A formatted string of news items
+    """
+    formatted_news = [format_entry(entry) for item in results for entry in item]
+    return "Recent news from Telegram channels:\n\n" + "\n".join(formatted_news)
 
-    result = "Recent news from Telegram channels:\n\n" + "\n".join(formatted_news)
 
-    return result
+def format_entry(entry: Dict) -> str:
+    """
+    Format a single news entry into a readable string.
+
+    :param entry: A dictionary containing news entry data
+    :return: A formatted string of the news entry
+    """
+    metadata = entry["actions"][0]["metadata"]
+    return f"Title: {metadata['title']}\nDate: {metadata['pub_date']}\nSummary: {metadata['description']}\n\n"
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    entries = loop.run_until_complete(fetch_telegram_news(["ChannelPANews", "chainfeedsxyz"], 10))
+    print(entries)
