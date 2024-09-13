@@ -1,4 +1,5 @@
 import asyncio
+import json
 from typing import Any, Dict, List, Optional, Type
 
 from langchain.callbacks.manager import (
@@ -54,8 +55,14 @@ async def fetch_telegram_news(channels: List[str], limit: int = 10) -> str:
     :param limit: Number of recent news items to fetch
     :return: A string containing the fetched news items
     """
-    results = await asyncio.gather(*[fetch_tg_msgs(channel, limit) for channel in channels])
-    return format_news(list(results))
+    results = []
+    try:
+        results = list(await asyncio.gather(*[fetch_tg_msgs(channel, limit) for channel in channels]))
+        return format_news(results)
+    except Exception as e:
+        if results:
+            return f"An error occurred while fetching news, this is the results: {json.dumps(results)}"
+        return f"An error occurred while fetching news: {str(e)}"
 
 
 def format_news(results: List[List[Dict]]) -> str:
