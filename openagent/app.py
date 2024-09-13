@@ -1,6 +1,7 @@
 import json
 import os
 
+import vertexai
 from chainlit.utils import mount_chainlit
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -13,6 +14,7 @@ from starlette import status
 from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
+from openagent.conf.env import settings
 from openagent.conf.llm_provider import get_available_providers
 from openagent.workflows.workflow import build_workflow
 
@@ -80,3 +82,6 @@ if not os.path.exists(static_dir):
 app.mount("/static", StaticFiles(directory=static_dir), name="widget")
 
 mount_chainlit(app=app, target="openagent/ui/app.py", path="")
+
+if settings.VERTEX_PROJECT_ID:
+    vertexai.init(project=settings.VERTEX_PROJECT_ID)
