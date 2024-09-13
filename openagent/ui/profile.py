@@ -46,7 +46,7 @@ def provider_to_profile(provider_key):
             icon=profile_info["icon"],
             starters=[
                 cl.Starter(
-                    label="Swap coins",
+                    label="Swap token",
                     message="Swap 1 ETH for USDC on the Ethereum.",
                     icon="/public/swap.png",
                 ),
@@ -56,7 +56,7 @@ def provider_to_profile(provider_key):
                     icon="/public/market.png",
                 ),
                 cl.Starter(
-                    label="Transfer coins",
+                    label="Transfer token",
                     message="Can you help me transfer 0.1 ETH to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e on the Ethereum network?",
                     icon="/public/transfer.png",
                 ),
