@@ -91,26 +91,33 @@ jobs:
         pwd
         ls -la
         
-        # Create version-specific results directory
-        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}
+        # 为每个模型创建单独的结果目录
+        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini
+        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o
         
         cd tests
-        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }} --model=gpt-4o-mini || true
-        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }} --model=gpt-4o-mini || true
+        # 使用 gpt-4o-mini 运行测试
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --model=gpt-4o-mini || true
+        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --model=gpt-4o-mini || true
+        
+        # 使用 gpt-4o 运行测试
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --model=gpt-4o || true
+        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --model=gpt-4o || true
         cd ..
         
-    - name: Generate Allure Report
+    - name: Generate Allure Reports
       if: always()
       run: |
-        # Generate report for specific version
-        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }} --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}
+        # 为每个模型生成报告
+        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini
+        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/gpt-4o
         
-    - name: Upload Allure Report
+    - name: Upload Allure Reports
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: allure-report-v${{ steps.get_version.outputs.VERSION }}
-        path: allure-report-v${{ steps.get_version.outputs.VERSION }}/
+        name: allure-reports-v${{ steps.get_version.outputs.VERSION }}
+        path: allure-report-v${{ steps.get_version.outputs.VERSION }}
         
     - name: Deploy to GitHub Pages
       if: always()
@@ -118,18 +125,20 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: allure-report-v${{ steps.get_version.outputs.VERSION }}
-        destination_dir: reports/v${{ steps.get_version.outputs.VERSION }}  # Create versioned directory on gh-pages branch
+        destination_dir: reports/v${{ steps.get_version.outputs.VERSION }}
 
     - name: Create version index
       if: always()
       run: |
-        # Create a simple version index page
         echo "<!DOCTYPE html>" > index.html
         echo "<html><head><title>Test Reports</title></head>" >> index.html
         echo "<body>" >> index.html
         echo "<h1>Test Report Versions</h1>" >> index.html
         echo "<p>Latest version: v${{ steps.get_version.outputs.VERSION }}</p>" >> index.html
-        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}'>View latest report</a></p>" >> index.html
+        echo "<h2>GPT-4O Mini Reports</h2>" >> index.html
+        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini'>View GPT-4O Mini report</a></p>" >> index.html
+        echo "<h2>GPT-4O Reports</h2>" >> index.html
+        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/gpt-4o'>View GPT-4O report</a></p>" >> index.html
         echo "</body></html>" >> index.html
 
     - name: Deploy index to GitHub Pages
