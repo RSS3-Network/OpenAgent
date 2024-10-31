@@ -145,9 +145,60 @@ jobs:
         echo "<head>" >> index.html
         echo "  <title>Test Reports</title>" >> index.html
         echo "  <style>" >> index.html
-        echo "    body { font-family: Arial, sans-serif; margin: 40px; }" >> index.html
-        echo "    .version-block { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }" >> index.html
-        echo "    .latest-version { background-color: #f0f8ff; padding: 15px; border-radius: 5px; }" >> index.html
+        echo "    body {" >> index.html
+        echo "      font-family: 'Times New Roman', Times, serif;" >> index.html
+        echo "      margin: 40px auto;" >> index.html
+        echo "      max-width: 1000px;" >> index.html
+        echo "      background-color: #f4f1ea;" >> index.html
+        echo "      color: #2c2c2c;" >> index.html
+        echo "      line-height: 1.6;" >> index.html
+        echo "    }" >> index.html
+        echo "    h1 {" >> index.html
+        echo "      text-align: center;" >> index.html
+        echo "      font-size: 42px;" >> index.html
+        echo "      border-bottom: 3px double #2c2c2c;" >> index.html
+        echo "      padding-bottom: 10px;" >> index.html
+        echo "      font-weight: 900;" >> index.html
+        echo "      letter-spacing: 1px;" >> index.html
+        echo "    }" >> index.html
+        echo "    h2 {" >> index.html
+        echo "      font-family: 'Georgia', serif;" >> index.html
+        echo "      font-size: 28px;" >> index.html
+        echo "      margin-top: 25px;" >> index.html
+        echo "    }" >> index.html
+        echo "    h3, h4 {" >> index.html
+        echo "      font-family: 'Georgia', serif;" >> index.html
+        echo "      margin: 15px 0;" >> index.html
+        echo "    }" >> index.html
+        echo "    .version-block {" >> index.html
+        echo "      margin-bottom: 30px;" >> index.html
+        echo "      border-bottom: 1px solid #8b8b8b;" >> index.html
+        echo "      padding: 20px;" >> index.html
+        echo "      background-color: #fff;" >> index.html
+        echo "      box-shadow: 3px 3px 5px rgba(0,0,0,0.1);" >> index.html
+        echo "    }" >> index.html
+        echo "    .latest-version {" >> index.html
+        echo "      background-color: #fff;" >> index.html
+        echo "      border: 2px solid #2c2c2c;" >> index.html
+        echo "      padding: 25px;" >> index.html
+        echo "      position: relative;" >> index.html
+        echo "      margin-top: 40px;" >> index.html
+        echo "    }" >> index.html
+        echo "    a {" >> index.html
+        echo "      color: #2c2c2c;" >> index.html
+        echo "      text-decoration: none;" >> index.html
+        echo "      border-bottom: 1px dotted #2c2c2c;" >> index.html
+        echo "      transition: all 0.3s ease;" >> index.html
+        echo "    }" >> index.html
+        echo "    a:hover {" >> index.html
+        echo "      color: #8b8b8b;" >> index.html
+        echo "      border-bottom: 1px solid #8b8b8b;" >> index.html
+        echo "    }" >> index.html
+        echo "    .date-stamp {" >> index.html
+        echo "      font-style: italic;" >> index.html
+        echo "      color: #666;" >> index.html
+        echo "      font-size: 0.9em;" >> index.html
+        echo "    }" >> index.html
         echo "  </style>" >> index.html
         echo "</head>" >> index.html
         echo "<body>" >> index.html
