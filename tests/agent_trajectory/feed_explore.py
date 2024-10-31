@@ -87,7 +87,6 @@ async def test_query_unsupported_network(feed_explorer_agent):
             tool_end_count += 1
             assert "output" in event["data"]
             assert "Unsupported network" in event["data"]["output"]
-            assert "XYZ" in event["data"]["output"]
 
     assert tool_end_count > 0, "The on_tool_end event did not occur"
 

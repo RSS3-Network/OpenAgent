@@ -89,7 +89,7 @@ jobs:
         
         cd tests
         poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results --model=gpt-4o-mini || true
-        poetry run pytest --count=1 -n 11 agent_trajectory/*.py --alluredir=../allure-results --model=gpt-4o-mini || true
+        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results --model=gpt-4o-mini || true
         cd ..
         
     - name: Generate Allure Report
