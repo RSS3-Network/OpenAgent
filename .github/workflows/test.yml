@@ -11,6 +11,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: openagent
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
     steps:
     - uses: actions/checkout@v4
     
@@ -27,6 +42,8 @@ jobs:
     
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client libpq-dev
         poetry install
         poetry add pytest pytest-xdist allure-pytest
         
@@ -44,15 +61,31 @@ jobs:
         allure --version
         
     - name: Run tests
+      env:
+        # Database settings
+        DB_CONNECTION: postgresql+psycopg://postgres:password@localhost:5432/openagent
+        
+        # LLM provider settings
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
+
+        # Optional API keys
+        TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+        MORALIS_API_KEY: ${{ secrets.MORALIS_API_KEY }}
+        ROOTDATA_API_KEY: ${{ secrets.ROOTDATA_API_KEY }}
+        COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+        
+        # RSS3 API URLs
+        RSS3_DATA_API: https://gi.rss3.io
+        RSS3_SEARCH_API: https://devnet.rss3.io/search
+        
+
       run: |
-        # 显示当前工作目录和文件列表，用于调试
         pwd
         ls -la
         
-        # 创建测试结果目录
         mkdir -p allure-results
         
-        # 如果测试文件在 tests 目录下
         cd tests
         poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results --model=gemini-1.5-pro
         poetry run pytest --count=3 -n 11 agent_trajectory/*.py --alluredir=../allure-results --model=gpt-3.5-turbo
