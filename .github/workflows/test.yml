@@ -133,14 +133,13 @@ jobs:
       id: get_tags
       run: |
         # Get all tags and sort by version number (newest first)
-        TAGS=$(git tag -l 'v*' | sort -rV)
-        echo "TAGS<<EOF" >> $GITHUB_OUTPUT
-        echo "$TAGS" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+        TAGS=$(git tag -l 'v*' | sort -rV | tr '\n' ' ')
+        echo "TAGS=$TAGS" >> $GITHUB_OUTPUT
 
     - name: Create version index
       if: always()
       run: |
+        # Create HTML header
         echo "<!DOCTYPE html>" > index.html
         echo "<html>" >> index.html
         echo "<head>" >> index.html
@@ -167,7 +166,6 @@ jobs:
         echo "<h2>Historical Versions</h2>" >> index.html
         for tag in ${{ steps.get_tags.outputs.TAGS }}; do
           if [ "$tag" != "v${{ steps.get_version.outputs.VERSION }}" ]; then
-            version=${tag#v}
             echo "<div class='version-block'>" >> index.html
             echo "<h3>Version: $tag</h3>" >> index.html
             echo "<h4>GPT-4O Mini Reports</h4>" >> index.html
