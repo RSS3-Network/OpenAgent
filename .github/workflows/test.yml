@@ -1,0 +1,66 @@
+name: Test with Allure Report
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.5'
+        
+    - name: Install poetry
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry config virtualenvs.create false
+    
+    - name: Install dependencies
+      run: |
+        poetry install
+        poetry add pytest pytest-xdist allure-pytest
+        
+    - name: Set up Allure
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    
+    - name: Install Allure CommandLine
+      run: |
+        curl -o allure-2.24.1.tgz -OL https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.24.1/allure-commandline-2.24.1.tgz
+        sudo tar -zxvf allure-2.24.1.tgz -C /opt/
+        sudo ln -s /opt/allure-2.24.1/bin/allure /usr/bin/allure
+        allure --version
+        
+    - name: Run tests
+      run: |
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=allure-results --model=gemini-1.5-pro
+        poetry run pytest --count=3 -n 11 agent_trajectory/*.py --alluredir=allure-results --model=gpt-3.5-turbo
+        
+    - name: Generate Allure Report
+      run: |
+        allure generate allure-results --clean
+        
+    - name: Upload Allure Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure-report
+        path: allure-report/
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: allure-report
