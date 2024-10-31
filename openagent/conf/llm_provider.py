@@ -12,7 +12,7 @@ from toolz import memoize
 from openagent.conf.env import settings
 
 TOOL_CALL_MODELS = [
-    "llama3.1",
+    "llama3.2",
     "mistral-nemo",
     "mistral",
     "mistral-large",
@@ -24,14 +24,13 @@ TOOL_CALL_MODELS = [
 ]
 
 
-@memoize
 def get_available_ollama_providers() -> List[str]:
     try:
         ollama_list = ollama.list()
         models_ = [model["name"].split(":")[0] for model in ollama_list["models"]]
         return [model for model in models_ if model in TOOL_CALL_MODELS]
-    except Exception:
-        logger.warning("Failed to get available ollama providers")
+    except Exception as e:
+        logger.warning("Failed to get available ollama providers",e)
         return []
 
 
