@@ -87,8 +87,8 @@ jobs:
         mkdir -p allure-results
         
         cd tests
-        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results --model=gemini-1.5-pro
-        poetry run pytest --count=3 -n 11 agent_trajectory/*.py --alluredir=../allure-results --model=gpt-3.5-turbo
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results --model=gpt-4o-mini
+        poetry run pytest --count=3 -n 11 agent_trajectory/*.py --alluredir=../allure-results --model=gpt-4o-mini
         cd ..
         
     - name: Generate Allure Report
