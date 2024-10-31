@@ -45,12 +45,22 @@ jobs:
         
     - name: Run tests
       run: |
-        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=allure-results --model=gemini-1.5-pro
-        poetry run pytest --count=3 -n 11 agent_trajectory/*.py --alluredir=allure-results --model=gpt-3.5-turbo
+        # 显示当前工作目录和文件列表，用于调试
+        pwd
+        ls -la
+        
+        # 创建测试结果目录
+        mkdir -p allure-results
+        
+        # 如果测试文件在 tests 目录下
+        cd tests
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results --model=gemini-1.5-pro
+        poetry run pytest --count=3 -n 11 agent_trajectory/*.py --alluredir=../allure-results --model=gpt-3.5-turbo
+        cd ..
         
     - name: Generate Allure Report
       run: |
-        allure generate allure-results --clean
+        allure generate allure-results --clean -o allure-report
         
     - name: Upload Allure Report
       uses: actions/upload-artifact@v3
