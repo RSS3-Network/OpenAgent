@@ -44,7 +44,7 @@ def get_available_providers() -> Dict[str, BaseChatModel]:
     providers = {}
 
     provider_configs = [
-        (["gpt-3.5-turbo", "gpt-4o-mini", "gpt-4o"], get_openai_provider),
+        (["gpt-4o-mini", "gpt-4o"], get_openai_provider),
         (["gemini-1.5-pro", "gemini-1.5-flash"], get_gemini_provider),
     ]
 

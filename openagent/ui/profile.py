@@ -3,11 +3,6 @@ import chainlit as cl
 from openagent.conf.llm_provider import TOOL_CALL_MODELS
 
 provider_key_to_profile_info = {
-    "gpt-3.5-turbo": {
-        "name": "GPT-3.5",
-        "markdown_description": "Using **GPT-3.5**.",
-        "icon": "https://custom.typingmind.com/assets/models/gpt-35.webp",
-    },
     "gpt-4o": {
         "name": "GPT-4o",
         "markdown_description": "Using **GPT-4o**.",
