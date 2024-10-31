@@ -132,8 +132,8 @@ jobs:
     - name: Get all tags
       id: get_tags
       run: |
-        # Get all tags and sort by version number (newest first)
-        TAGS=$(git tag -l 'v*' | sort -rV | tr '\n' ' ')
+        # Get the 10 most recent tags and sort by version number (newest first)
+        TAGS=$(git tag -l 'v*' | sort -rV | head -n 10 | tr '\n' ' ')
         echo "TAGS=$TAGS" >> $GITHUB_OUTPUT
 
     - name: Create version index
@@ -207,14 +207,15 @@ jobs:
         # Display latest version
         echo "<div class='version-block latest-version'>" >> index.html
         echo "<h2>Latest Version: v${{ steps.get_version.outputs.VERSION }}</h2>" >> index.html
+        echo "<div class='date-stamp'>Current Release</div>" >> index.html
         echo "<h3>GPT-4O Mini Reports</h3>" >> index.html
         echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini'>View GPT-4O Mini report</a></p>" >> index.html
         echo "<h3>GPT-4O Reports</h3>" >> index.html
         echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/gpt-4o'>View GPT-4O report</a></p>" >> index.html
         echo "</div>" >> index.html
         
-        # Display historical versions
-        echo "<h2>Historical Versions</h2>" >> index.html
+        # Display historical versions (limited to 9 previous versions)
+        echo "<h2>Recent Historical Versions</h2>" >> index.html
         for tag in ${{ steps.get_tags.outputs.TAGS }}; do
           if [ "$tag" != "v${{ steps.get_version.outputs.VERSION }}" ]; then
             echo "<div class='version-block'>" >> index.html
@@ -226,6 +227,11 @@ jobs:
             echo "</div>" >> index.html
           fi
         done
+        
+        # Add note about older versions
+        echo "<div class='version-block' style='text-align: center; font-style: italic;'>" >> index.html
+        echo "<p>Showing only the 10 most recent versions</p>" >> index.html
+        echo "</div>" >> index.html
         
         echo "</body></html>" >> index.html
 
