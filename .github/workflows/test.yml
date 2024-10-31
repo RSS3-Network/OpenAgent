@@ -2,9 +2,8 @@ name: Test with Allure Report
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
 
 jobs:
@@ -60,6 +59,13 @@ jobs:
         sudo ln -s /opt/allure-2.24.1/bin/allure /usr/bin/allure
         allure --version
         
+    - name: Get tag version
+      id: get_version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Using version: $VERSION"
+      
     - name: Run tests
       continue-on-error: true
       env:
@@ -85,28 +91,55 @@ jobs:
         pwd
         ls -la
         
-        mkdir -p allure-results
+        # 使用版本号创建特定的结果目录
+        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}
         
         cd tests
-        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results --model=gpt-4o-mini || true
-        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results --model=gpt-4o-mini || true
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }} --model=gpt-4o-mini || true
+        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }} --model=gpt-4o-mini || true
         cd ..
         
     - name: Generate Allure Report
       if: always()
       run: |
-        allure generate allure-results --clean -o allure-report
+        # 为特定版本生成报告
+        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }} --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}
         
     - name: Upload Allure Report
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: allure-report
-        path: allure-report/
+        name: allure-report-v${{ steps.get_version.outputs.VERSION }}
+        path: allure-report-v${{ steps.get_version.outputs.VERSION }}/
         
     - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main' && always()
+      if: always()
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: allure-report
+        publish_dir: allure-report-v${{ steps.get_version.outputs.VERSION }}
+        destination_dir: reports/v${{ steps.get_version.outputs.VERSION }}  # 在 gh-pages 分支上创建版本化的目录
+
+    - name: Create version index
+      if: always()
+      run: |
+        # 创建一个简单的版本索引页面
+        echo "<!DOCTYPE html>" > index.html
+        echo "<html><head><title>Test Reports</title></head>" >> index.html
+        echo "<body>" >> index.html
+        echo "<h1>Test Report Versions</h1>" >> index.html
+        echo "<p>Latest version: v${{ steps.get_version.outputs.VERSION }}</p>" >> index.html
+        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}'>View latest report</a></p>" >> index.html
+        echo "</body></html>" >> index.html
+
+    - name: Deploy index to GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .
+        destination_dir: .
+        keep_files: true
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'Update version index for v${{ steps.get_version.outputs.VERSION }}'
