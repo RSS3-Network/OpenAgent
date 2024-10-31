@@ -91,7 +91,7 @@ jobs:
         pwd
         ls -la
         
-        # 使用版本号创建特定的结果目录
+        # Create version-specific results directory
         mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}
         
         cd tests
@@ -102,7 +102,7 @@ jobs:
     - name: Generate Allure Report
       if: always()
       run: |
-        # 为特定版本生成报告
+        # Generate report for specific version
         allure generate allure-results-v${{ steps.get_version.outputs.VERSION }} --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}
         
     - name: Upload Allure Report
@@ -118,12 +118,12 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: allure-report-v${{ steps.get_version.outputs.VERSION }}
-        destination_dir: reports/v${{ steps.get_version.outputs.VERSION }}  # 在 gh-pages 分支上创建版本化的目录
+        destination_dir: reports/v${{ steps.get_version.outputs.VERSION }}  # Create versioned directory on gh-pages branch
 
     - name: Create version index
       if: always()
       run: |
-        # 创建一个简单的版本索引页面
+        # Create a simple version index page
         echo "<!DOCTYPE html>" > index.html
         echo "<html><head><title>Test Reports</title></head>" >> index.html
         echo "<body>" >> index.html
