@@ -202,7 +202,7 @@ jobs:
         echo "  </style>" >> index.html
         echo "</head>" >> index.html
         echo "<body>" >> index.html
-        echo "<h1>Test Report Versions</h1>" >> index.html
+        echo "<h1>Open Agent Intelligence Assessment Archives</h1>" >> index.html
         
         # Display latest version
         echo "<div class='version-block latest-version'>" >> index.html
