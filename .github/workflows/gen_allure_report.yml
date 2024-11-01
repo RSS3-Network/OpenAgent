@@ -96,7 +96,7 @@ jobs:
         # Create separate result directories for each model
         mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini
         mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o
-        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/llama-3.2
+        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2
         
         cd tests
         # Run tests with gpt-4o-mini
@@ -107,9 +107,9 @@ jobs:
         poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --model=gpt-4o || true
         poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --model=gpt-4o || true
 
-        # Run tests with llama-3.2
-        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/llama-3.2 --model=llama-3.2 || true
-        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/llama-3.2 --model=llama-3.2 || true
+        # Run tests with llama3.2
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --model=llama3.2 || true
+        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --model=llama3.2 || true
         cd ..
         
     - name: Generate Allure Reports
@@ -118,7 +118,7 @@ jobs:
         # Generate reports for each model
         allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini
         allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/gpt-4o
-        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/llama-3.2 --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/llama-3.2
+        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/llama3.2
         
     - name: Upload Allure Reports
       if: always()
@@ -219,7 +219,7 @@ jobs:
         echo "<h3>GPT-4O Reports</h3>" >> index.html
         echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/gpt-4o'>View GPT-4O report</a></p>" >> index.html
         echo "<h3>Llama 3.2 Reports</h3>" >> index.html
-        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/llama-3.2'>View Llama 3.2 report</a></p>" >> index.html
+        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/llama3.2'>View Llama 3.2 report</a></p>" >> index.html
         echo "</div>" >> index.html
         
         # Display historical versions (limited to 9 previous versions)
@@ -233,7 +233,7 @@ jobs:
             echo "<h4>GPT-4O Reports</h4>" >> index.html
             echo "<p><a href='reports/$tag/gpt-4o'>View GPT-4O report</a></p>" >> index.html
             echo "<h4>Llama 3.2 Reports</h4>" >> index.html
-            echo "<p><a href='reports/$tag/llama-3.2'>View Llama 3.2 report</a></p>" >> index.html
+            echo "<p><a href='reports/$tag/llama3.2'>View Llama 3.2 report</a></p>" >> index.html
             echo "</div>" >> index.html
           fi
         done
