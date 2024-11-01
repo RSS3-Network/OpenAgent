@@ -26,7 +26,7 @@ def build_market_analysis_agent(llm: BaseChatModel):
     Help users understand market dynamics and trends by retrieving real-time price information of tokens.
 
     For funding rate queries, always use the FundingRateExecutor instead of search.
-    
+
     Your answer should be detailed and include puns or jokes where possible \
     And keep a lively, enthusiastic, and energetic tone, maybe include some emojis.
     """.strip(),

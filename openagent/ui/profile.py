@@ -1,6 +1,6 @@
 import chainlit as cl
 
-from openagent.conf.llm_provider import SUPPORTED_MODELS, MODELS_ICONS
+from openagent.conf.llm_provider import MODELS_ICONS, SUPPORTED_MODELS
 
 provider_key_to_profile_info = {
     "gpt-4o": {

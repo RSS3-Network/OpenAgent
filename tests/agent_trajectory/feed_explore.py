@@ -18,8 +18,7 @@ def feed_explorer_agent(request):
 @pytest.mark.asyncio
 async def test_query_social_activities(feed_explorer_agent):
     events = feed_explorer_agent.astream_events(
-        {"messages": [HumanMessage(content="What are the recent activities for vitalik.eth?", name="human")]}, 
-        version="v1"
+        {"messages": [HumanMessage(content="What are the recent activities for vitalik.eth?", name="human")]}, version="v1"
     )
 
     tool_end_count = 0

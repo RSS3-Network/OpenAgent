@@ -83,11 +83,7 @@ async def select_best_token(keyword: str, chain_id: str) -> Optional[Dict]:
     tokens_on_chain = tokens.get(chain_id, [])
 
     # Filter based on symbol and name
-    results = [
-        token
-        for token in tokens_on_chain
-        if token["symbol"].lower() == keyword or token["name"].lower() == keyword
-    ]
+    results = [token for token in tokens_on_chain if token["symbol"].lower() == keyword or token["name"].lower() == keyword]
 
     if results:
         if len(results) == 1:

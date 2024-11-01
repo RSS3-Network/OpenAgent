@@ -11,7 +11,7 @@ from langchain_core.messages import HumanMessage
 from loguru import logger
 
 from openagent.conf.env import settings
-from openagent.conf.llm_provider import get_available_providers, SUPPORTED_MODELS
+from openagent.conf.llm_provider import SUPPORTED_MODELS, get_available_providers
 from openagent.ui.profile import profile_name_to_provider_key, provider_to_profile
 from openagent.workflows.member import members
 from openagent.workflows.workflow import build_workflow

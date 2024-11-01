@@ -62,7 +62,7 @@ async def fetch_telegram_news(channels: List[str], limit: int = 10) -> str:
     except Exception as e:
         if results:
             return f"An error occurred while fetching news, this is the results: {json.dumps(results)}"
-        return f"An error occurred while fetching news: {str(e)}"
+        return f"An error occurred while fetching news: {e!s}"
 
 
 def format_news(results: List[List[Dict]]) -> str:

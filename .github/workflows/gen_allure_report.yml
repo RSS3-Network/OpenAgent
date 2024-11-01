@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:latest
@@ -24,56 +24,56 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    
+
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0  # Fetch all history and tags
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11.5'
-        
+
     - name: Install poetry
       run: |
         python -m pip install --upgrade pip
         pip install poetry
         poetry config virtualenvs.create false
-    
+
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y postgresql-client libpq-dev
         poetry install
         poetry add pytest pytest-xdist allure-pytest
-        
+
     - name: Set up Allure
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '17'
-    
+
     - name: Install Allure CommandLine
       run: |
         curl -o allure-2.24.1.tgz -OL https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.24.1/allure-commandline-2.24.1.tgz
         sudo tar -zxvf allure-2.24.1.tgz -C /opt/
         sudo ln -s /opt/allure-2.24.1/bin/allure /usr/bin/allure
         allure --version
-        
+
     - name: Get tag version
       id: get_version
       run: |
         VERSION=${GITHUB_REF#refs/tags/v}
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
         echo "Using version: $VERSION"
-      
+
     - name: Run tests
       continue-on-error: true
       env:
         # Database settings
         DB_CONNECTION: postgresql+psycopg://postgres:password@localhost:5432/openagent
-        
+
         # LLM provider settings
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
@@ -84,26 +84,26 @@ jobs:
         MORALIS_API_KEY: ${{ secrets.MORALIS_API_KEY }}
         ROOTDATA_API_KEY: ${{ secrets.ROOTDATA_API_KEY }}
         COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
-        
+
         # RSS3 API URLs
         RSS3_DATA_API: https://gi.rss3.io
         RSS3_SEARCH_API: https://devnet.rss3.io/search
-        
+
 
       run: |
         pwd
         ls -la
-        
+
         # Create separate result directories for each model
         mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini
         mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o
         mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2
-        
+
         cd tests
         # Run tests with gpt-4o-mini
         poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --model=gpt-4o-mini || true
         poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --model=gpt-4o-mini || true
-        
+
         # Run tests with gpt-4o
         poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --model=gpt-4o || true
         poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --model=gpt-4o || true
@@ -112,7 +112,7 @@ jobs:
         poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --model=llama3.2 || true
         poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --model=llama3.2 || true
         cd ..
-        
+
     - name: Generate Allure Reports
       if: always()
       run: |
@@ -120,14 +120,14 @@ jobs:
         allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini
         allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/gpt-4o
         allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/llama3.2
-        
+
     - name: Upload Allure Reports
       if: always()
       uses: actions/upload-artifact@v3
       with:
         name: allure-reports-v${{ steps.get_version.outputs.VERSION }}
         path: allure-report-v${{ steps.get_version.outputs.VERSION }}
-        
+
     - name: Deploy to GitHub Pages
       if: always()
       uses: peaceiris/actions-gh-pages@v3
@@ -210,7 +210,7 @@ jobs:
         echo "</head>" >> index.html
         echo "<body>" >> index.html
         echo "<h1>Open Agent Intelligence Assessment Archives</h1>" >> index.html
-        
+
         # Display latest version
         echo "<div class='version-block latest-version'>" >> index.html
         echo "<h2>Latest Version: v${{ steps.get_version.outputs.VERSION }}</h2>" >> index.html
@@ -222,7 +222,7 @@ jobs:
         echo "<h3>Llama 3.2 Reports</h3>" >> index.html
         echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/llama3.2'>View Llama 3.2 report</a></p>" >> index.html
         echo "</div>" >> index.html
-        
+
         # Display historical versions (limited to 9 previous versions)
         echo "<h2>Recent Historical Versions</h2>" >> index.html
         for tag in ${{ steps.get_tags.outputs.TAGS }}; do
@@ -238,12 +238,12 @@ jobs:
             echo "</div>" >> index.html
           fi
         done
-        
+
         # Add note about older versions
         echo "<div class='version-block' style='text-align: center; font-style: italic;'>" >> index.html
         echo "<p>Showing only the 10 most recent versions</p>" >> index.html
         echo "</div>" >> index.html
-        
+
         echo "</body></html>" >> index.html
 
     - name: Deploy index to GitHub Pages
