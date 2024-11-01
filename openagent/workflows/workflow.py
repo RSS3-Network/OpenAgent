@@ -11,6 +11,7 @@ from openagent.agents.block_explore import build_block_explorer_agent
 from openagent.agents.fallback import build_fallback_agent
 from openagent.agents.feed_explore import build_feed_explorer_agent
 from openagent.agents.research_analyst import build_research_analyst_agent
+from openagent.conf.llm_provider import SUPPORTED_MODELS
 
 
 class AgentState(TypedDict):
@@ -28,6 +29,25 @@ def create_node(agent, name):
 
 
 def build_workflow(llm: BaseChatModel):
+    if hasattr(llm, "model"):
+        model_name = llm.model
+    else:
+        return build_tool_workflow(llm)
+
+    supports_tools = SUPPORTED_MODELS.get(model_name, {}).get("supports_tools", False)
+
+    if not supports_tools:
+        return build_simple_workflow(llm)
+    else:
+        return build_tool_workflow(llm)
+
+
+def build_simple_workflow(llm: BaseChatModel):
+    """Simple conversation workflow without tools"""
+    return llm
+
+
+def build_tool_workflow(llm: BaseChatModel):
     from openagent.agents.market_analysis import build_market_analysis_agent
     from openagent.workflows.member import members
     from openagent.workflows.supervisor_chain import build_supervisor_chain
