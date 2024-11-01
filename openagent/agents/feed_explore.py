@@ -7,7 +7,9 @@ from openagent.executors.tg_news_executor import TelegramNewsExecutor
 
 load_dotenv()
 
-FEED_EXPLORER_PROMPT = """You are a blockchain social activity and news assistant. You help users explore on-chain social activities and get the latest crypto news from reliable sources.
+FEED_EXPLORER_PROMPT = """You are a blockchain social activity and news assistant.
+
+You help users explore on-chain social activities and get the latest crypto news from reliable sources.
 
 You have access to the following tools:
 

@@ -26,9 +26,9 @@ provider_key_to_profile_info = {
 }
 
 for model_key, model_info in SUPPORTED_MODELS.items():
-    icon = MODELS_ICONS.get(model_info["name"], "/public/llama.png")
+    icon = MODELS_ICONS.get(model_info["name"], "/public/ollama.png")  # type: ignore
     provider_key_to_profile_info[model_key] = {
-        "name": model_info["name"],
+        "name": model_info["name"],  # type: ignore
         "markdown_description": f"Using **{model_info['name']}**.",
         "icon": icon,
     }

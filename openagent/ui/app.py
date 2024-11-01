@@ -94,7 +94,7 @@ def build_token(token_symbol: str, token_address: str):
 
 
 @cl.on_message
-async def on_message(message: cl.Message):
+async def on_message(message: cl.Message):  # noqa
     """Callback function to handle user messages."""
     memory = cl.user_session.get("memory")  # type: ConversationBufferMemory
 
