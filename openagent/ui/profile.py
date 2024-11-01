@@ -1,6 +1,6 @@
 import chainlit as cl
 
-from openagent.conf.llm_provider import TOOL_CALL_MODELS
+from openagent.conf.llm_provider import SUPPORTED_MODELS, MODELS_ICONS
 
 provider_key_to_profile_info = {
     "gpt-4o": {
@@ -24,11 +24,13 @@ provider_key_to_profile_info = {
         "icon": "https://custom.typingmind.com/assets/models/gemini.png",
     },
 }
-for model in TOOL_CALL_MODELS:
-    provider_key_to_profile_info[model] = {
-        "name": model,
-        "markdown_description": f"Using **{model}**.",
-        "icon": "https://ollama.com/public/ollama.png",
+
+for model_key, model_info in SUPPORTED_MODELS.items():
+    icon = MODELS_ICONS.get(model_info["name"], "/public/llama.png")
+    provider_key_to_profile_info[model_key] = {
+        "name": model_info["name"],
+        "markdown_description": f"Using **{model_info['name']}**.",
+        "icon": icon,
     }
 
 

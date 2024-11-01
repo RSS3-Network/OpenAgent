@@ -11,26 +11,40 @@ from toolz import memoize
 
 from openagent.conf.env import settings
 
-TOOL_CALL_MODELS = [
-    "llama3.2",
-    "mistral-nemo",
-    "mistral",
-    "mistral-large",
-    "mixtral",
-    "command-r-plus",
-    "deepseek-coder-v2",
-    "llama3-groq-tool-use",
-    "firefunction-v2",
-]
+SUPPORTED_MODELS = {
+    "llama3.2": {"name": "llama3.2", "supports_tools": True},
+    "mistral-nemo": {"name": "mistral-nemo", "supports_tools": True},
+    "darkmoon/olmo:7B-instruct-q6-k": {"name": "olmo", "supports_tools": False},
+}
+
+MODELS_ICONS = {
+    "llama3.1": "/public/llama.png",
+    "llama3.2": "/public/llama.png",
+    "mistral": "/public/mistral.png",
+    "mistral-nemo": "/public/mistral.png",
+    "mistral-large": "/public/mistral.png",
+    "olmo": "/public/olmo.png",
+}
 
 
+@memoize
 def get_available_ollama_providers() -> List[str]:
     try:
         ollama_list = ollama.list()
-        models_ = [model["name"].split(":")[0] for model in ollama_list["models"]]
-        return [model for model in models_ if model in TOOL_CALL_MODELS]
+        available_models = []
+        for model in ollama_list["models"]:
+            full_name = model["name"]
+            # check if the full model name is in SUPPORTED_MODELS
+            if full_name in SUPPORTED_MODELS:
+                available_models.append(full_name)
+            else:
+                # try to check the base name (without version tag)
+                base_name = full_name.split(":")[0]
+                if base_name in SUPPORTED_MODELS:
+                    available_models.append(base_name)
+        return available_models
     except Exception as e:
-        logger.warning("Failed to get available ollama providers",e)
+        logger.exception("Failed to get available ollama providers", e)
         return []
 
 
