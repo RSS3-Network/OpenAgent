@@ -138,8 +138,8 @@ jobs:
     - name: Get all tags
       id: get_tags
       run: |
-        # Get the 10 most recent tags and sort by version number (newest first)
-        TAGS=$(git tag -l 'v*' | sort -rV | head -n 10 | tr '\n' ' ')
+        # Get tags greater than v1.0.7, sort by version number (newest first), and take the 10 most recent
+        TAGS=$(git tag -l 'v*' | awk '/^v[0-9]+\.[0-9]+\.[0-9]+$/ { if ($1 > "v1.0.7") print $0 }' | sort -rV | head -n 10 | tr '\n' ' ')
         echo "TAGS=$TAGS" >> $GITHUB_OUTPUT
 
     - name: Create version index
