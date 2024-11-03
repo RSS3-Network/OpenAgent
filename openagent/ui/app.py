@@ -11,7 +11,7 @@ from langchain_core.messages import HumanMessage
 from loguru import logger
 
 from openagent.conf.env import settings
-from openagent.conf.llm_provider import get_available_providers
+from openagent.conf.llm_provider import SUPPORTED_MODELS, get_available_providers
 from openagent.ui.profile import profile_name_to_provider_key, provider_to_profile
 from openagent.workflows.member import members
 from openagent.workflows.workflow import build_workflow
@@ -94,7 +94,7 @@ def build_token(token_symbol: str, token_address: str):
 
 
 @cl.on_message
-async def on_message(message: cl.Message):
+async def on_message(message: cl.Message):  # noqa
     """Callback function to handle user messages."""
     memory = cl.user_session.get("memory")  # type: ConversationBufferMemory
 
@@ -108,19 +108,34 @@ async def on_message(message: cl.Message):
     msg = cl.Message(content="")
     agent_names = [member["name"] for member in members]
 
-    async for event in runnable.astream_events(
-        {"messages": [*memory.chat_memory.messages, HumanMessage(content=message.content)]},
-        config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
-        version="v1",
-    ):
-        kind = event["event"]
-        if kind == "on_tool_end":
-            await handle_tool_end(event, msg)
-        elif kind == "on_chat_model_stream":  # noqa
-            if event["metadata"]["langgraph_node"] in agent_names:
-                content = event["data"]["chunk"].content
-                if content:
-                    await msg.stream_token(content)
+    if hasattr(llm, "model"):
+        model_name = llm.model
+        supports_tools = SUPPORTED_MODELS.get(model_name, {}).get("supports_tools", False)
+    else:
+        supports_tools = True
+
+    if supports_tools:
+        async for event in runnable.astream_events(
+            {"messages": [*memory.chat_memory.messages, HumanMessage(content=message.content)]},
+            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
+            version="v1",
+        ):
+            kind = event["event"]
+            if kind == "on_tool_end":
+                await handle_tool_end(event, msg)
+            elif kind == "on_chat_model_stream":  # noqa
+                if event["metadata"]["langgraph_node"] in agent_names:
+                    content = event["data"]["chunk"].content
+                    if content:
+                        await msg.stream_token(content)
+    else:
+        # simple conversation handling logic
+        async for chunk in runnable.astream(
+            [*memory.chat_memory.messages, HumanMessage(content=message.content)],
+            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
+        ):
+            if chunk.content:
+                await msg.stream_token(chunk.content)
 
     await msg.send()
     memory.chat_memory.add_user_message(message.content)

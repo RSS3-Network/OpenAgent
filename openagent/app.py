@@ -52,7 +52,7 @@ async def transfer_root():
 
 class Input(BaseModel):
     text: str
-    model: str = Field("gpt-3.5-turbo", title="Model name", description="The name of the model to use.")
+    model: str = Field("gpt-4o-mini", title="Model name", description="The name of the model to use.")
 
 
 @app.post("/api/stream_chat", description="streaming chat api for openagent")

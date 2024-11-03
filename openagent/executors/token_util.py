@@ -34,7 +34,7 @@ def chain_name_to_id(chain_name: str) -> str:
         "ETH": "1",
         "OPTIMISM": "10",
         "BSC": "56",
-        "POLYGON": "137",
+        "BASE": "8453",
         "ARBITRUM": "42161",
     }
     return chain_map.get(chain_name, "1")

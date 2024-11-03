@@ -1,13 +1,8 @@
 import chainlit as cl
 
-from openagent.conf.llm_provider import TOOL_CALL_MODELS
+from openagent.conf.llm_provider import MODELS_ICONS, SUPPORTED_MODELS
 
 provider_key_to_profile_info = {
-    "gpt-3.5-turbo": {
-        "name": "GPT-3.5",
-        "markdown_description": "Using **GPT-3.5**.",
-        "icon": "https://custom.typingmind.com/assets/models/gpt-35.webp",
-    },
     "gpt-4o": {
         "name": "GPT-4o",
         "markdown_description": "Using **GPT-4o**.",
@@ -29,11 +24,13 @@ provider_key_to_profile_info = {
         "icon": "https://custom.typingmind.com/assets/models/gemini.png",
     },
 }
-for model in TOOL_CALL_MODELS:
-    provider_key_to_profile_info[model] = {
-        "name": model,
-        "markdown_description": f"Using **{model}**.",
-        "icon": "https://ollama.com/public/ollama.png",
+
+for model_key, model_info in SUPPORTED_MODELS.items():
+    icon = MODELS_ICONS.get(model_info["name"], "/public/ollama.png")  # type: ignore
+    provider_key_to_profile_info[model_key] = {
+        "name": model_info["name"],  # type: ignore
+        "markdown_description": f"Using **{model_info['name']}**.",
+        "icon": icon,
     }
 
 

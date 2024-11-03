@@ -1,0 +1,259 @@
+name: Test with Allure Report
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: openagent
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history and tags
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.5'
+
+    - name: Install poetry
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry config virtualenvs.create false
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client libpq-dev
+        poetry install
+        poetry add pytest pytest-xdist allure-pytest
+
+    - name: Set up Allure
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Install Allure CommandLine
+      run: |
+        curl -o allure-2.24.1.tgz -OL https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.24.1/allure-commandline-2.24.1.tgz
+        sudo tar -zxvf allure-2.24.1.tgz -C /opt/
+        sudo ln -s /opt/allure-2.24.1/bin/allure /usr/bin/allure
+        allure --version
+
+    - name: Get tag version
+      id: get_version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Using version: $VERSION"
+
+    - name: Run tests
+      continue-on-error: true
+      env:
+        # Database settings
+        DB_CONNECTION: postgresql+psycopg://postgres:password@localhost:5432/openagent
+
+        # LLM provider settings
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
+        OLLAMA_HOST: ${{ secrets.OLLAMA_HOST }}
+
+        # Optional API keys
+        TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+        MORALIS_API_KEY: ${{ secrets.MORALIS_API_KEY }}
+        ROOTDATA_API_KEY: ${{ secrets.ROOTDATA_API_KEY }}
+        COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+
+        # RSS3 API URLs
+        RSS3_DATA_API: https://gi.rss3.io
+        RSS3_SEARCH_API: https://devnet.rss3.io/search
+
+
+      run: |
+        pwd
+        ls -la
+
+        # Create separate result directories for each model
+        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini
+        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o
+        mkdir -p allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2
+
+        cd tests
+        # Run tests with gpt-4o-mini
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --model=gpt-4o-mini || true
+        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --model=gpt-4o-mini || true
+
+        # Run tests with gpt-4o
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --model=gpt-4o || true
+        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --model=gpt-4o || true
+
+        # Run tests with llama3.2
+        poetry run pytest --count=3 -n 11 supervisor_chain.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --model=llama3.2 || true
+        poetry run pytest --count=3 -n 48 agent_trajectory/*.py --alluredir=../allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --model=llama3.2 || true
+        cd ..
+
+    - name: Generate Allure Reports
+      if: always()
+      run: |
+        # Generate reports for each model
+        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini
+        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/gpt-4o --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/gpt-4o
+        allure generate allure-results-v${{ steps.get_version.outputs.VERSION }}/llama3.2 --clean -o allure-report-v${{ steps.get_version.outputs.VERSION }}/llama3.2
+
+    - name: Upload Allure Reports
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure-reports-v${{ steps.get_version.outputs.VERSION }}
+        path: allure-report-v${{ steps.get_version.outputs.VERSION }}
+
+    - name: Deploy to GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: allure-report-v${{ steps.get_version.outputs.VERSION }}
+        destination_dir: reports/v${{ steps.get_version.outputs.VERSION }}
+
+    - name: Get all tags
+      id: get_tags
+      run: |
+        # Get tags greater than v1.0.7, sort by version number (newest first), and take the 10 most recent
+        TAGS=$(git tag -l 'v*' | awk '/^v[0-9]+\.[0-9]+\.[0-9]+$/ { if ($1 > "v1.0.7") print $0 }' | sort -rV | head -n 10 | tr '\n' ' ')
+        echo "TAGS=$TAGS" >> $GITHUB_OUTPUT
+
+    - name: Create version index
+      if: always()
+      run: |
+        # Create HTML header
+        echo "<!DOCTYPE html>" > index.html
+        echo "<html>" >> index.html
+        echo "<head>" >> index.html
+        echo "  <title>Open Agent Intelligence Assessment Archives</title>" >> index.html
+        echo "  <style>" >> index.html
+        echo "    body {" >> index.html
+        echo "      font-family: 'Times New Roman', Times, serif;" >> index.html
+        echo "      margin: 40px auto;" >> index.html
+        echo "      max-width: 1000px;" >> index.html
+        echo "      background-color: #f4f1ea;" >> index.html
+        echo "      color: #2c2c2c;" >> index.html
+        echo "      line-height: 1.6;" >> index.html
+        echo "    }" >> index.html
+        echo "    h1 {" >> index.html
+        echo "      text-align: center;" >> index.html
+        echo "      font-size: 42px;" >> index.html
+        echo "      border-bottom: 3px double #2c2c2c;" >> index.html
+        echo "      padding-bottom: 10px;" >> index.html
+        echo "      font-weight: 900;" >> index.html
+        echo "      letter-spacing: 1px;" >> index.html
+        echo "    }" >> index.html
+        echo "    h2 {" >> index.html
+        echo "      font-family: 'Georgia', serif;" >> index.html
+        echo "      font-size: 28px;" >> index.html
+        echo "      margin-top: 25px;" >> index.html
+        echo "    }" >> index.html
+        echo "    h3, h4 {" >> index.html
+        echo "      font-family: 'Georgia', serif;" >> index.html
+        echo "      margin: 15px 0;" >> index.html
+        echo "    }" >> index.html
+        echo "    .version-block {" >> index.html
+        echo "      margin-bottom: 30px;" >> index.html
+        echo "      border-bottom: 1px solid #8b8b8b;" >> index.html
+        echo "      padding: 20px;" >> index.html
+        echo "      background-color: #fff;" >> index.html
+        echo "      box-shadow: 3px 3px 5px rgba(0,0,0,0.1);" >> index.html
+        echo "    }" >> index.html
+        echo "    .latest-version {" >> index.html
+        echo "      background-color: #fff;" >> index.html
+        echo "      border: 2px solid #2c2c2c;" >> index.html
+        echo "      padding: 25px;" >> index.html
+        echo "      position: relative;" >> index.html
+        echo "      margin-top: 40px;" >> index.html
+        echo "    }" >> index.html
+        echo "    a {" >> index.html
+        echo "      color: #2c2c2c;" >> index.html
+        echo "      text-decoration: none;" >> index.html
+        echo "      border-bottom: 1px dotted #2c2c2c;" >> index.html
+        echo "      transition: all 0.3s ease;" >> index.html
+        echo "    }" >> index.html
+        echo "    a:hover {" >> index.html
+        echo "      color: #8b8b8b;" >> index.html
+        echo "      border-bottom: 1px solid #8b8b8b;" >> index.html
+        echo "    }" >> index.html
+        echo "    .date-stamp {" >> index.html
+        echo "      font-style: italic;" >> index.html
+        echo "      color: #666;" >> index.html
+        echo "      font-size: 0.9em;" >> index.html
+        echo "    }" >> index.html
+        echo "  </style>" >> index.html
+        echo "</head>" >> index.html
+        echo "<body>" >> index.html
+        echo "<h1>Open Agent Intelligence Assessment Archives</h1>" >> index.html
+
+        # Display latest version
+        echo "<div class='version-block latest-version'>" >> index.html
+        echo "<h2>Latest Version: v${{ steps.get_version.outputs.VERSION }}</h2>" >> index.html
+        echo "<div class='date-stamp'>Current Release</div>" >> index.html
+        echo "<h3>GPT-4O Mini Reports</h3>" >> index.html
+        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/gpt-4o-mini'>View GPT-4O Mini report</a></p>" >> index.html
+        echo "<h3>GPT-4O Reports</h3>" >> index.html
+        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/gpt-4o'>View GPT-4O report</a></p>" >> index.html
+        echo "<h3>Llama 3.2 Reports</h3>" >> index.html
+        echo "<p><a href='reports/v${{ steps.get_version.outputs.VERSION }}/llama3.2'>View Llama 3.2 report</a></p>" >> index.html
+        echo "</div>" >> index.html
+
+        # Display historical versions (limited to 9 previous versions)
+        echo "<h2>Recent Historical Versions</h2>" >> index.html
+        for tag in ${{ steps.get_tags.outputs.TAGS }}; do
+          if [ "$tag" != "v${{ steps.get_version.outputs.VERSION }}" ]; then
+            echo "<div class='version-block'>" >> index.html
+            echo "<h3>Version: $tag</h3>" >> index.html
+            echo "<h4>GPT-4O Mini Reports</h4>" >> index.html
+            echo "<p><a href='reports/$tag/gpt-4o-mini'>View GPT-4O Mini report</a></p>" >> index.html
+            echo "<h4>GPT-4O Reports</h4>" >> index.html
+            echo "<p><a href='reports/$tag/gpt-4o'>View GPT-4O report</a></p>" >> index.html
+            echo "<h4>Llama 3.2 Reports</h4>" >> index.html
+            echo "<p><a href='reports/$tag/llama3.2'>View Llama 3.2 report</a></p>" >> index.html
+            echo "</div>" >> index.html
+          fi
+        done
+
+        # Add note about older versions
+        echo "<div class='version-block' style='text-align: center; font-style: italic;'>" >> index.html
+        echo "<p>Showing only the 10 most recent versions</p>" >> index.html
+        echo "</div>" >> index.html
+
+        echo "</body></html>" >> index.html
+
+    - name: Deploy index to GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .
+        destination_dir: .
+        keep_files: true
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'Update version index for v${{ steps.get_version.outputs.VERSION }}'
