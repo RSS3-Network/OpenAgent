@@ -93,8 +93,8 @@ jobs:
         # Create commit with timestamp
         git commit -m "docs: update compatibility test report [skip ci]" || echo "No changes to commit"
         
-        # Push changes
-        git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${GITHUB_REF#refs/heads/}
+        # Push changes to main branch
+        git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
 
 
 
