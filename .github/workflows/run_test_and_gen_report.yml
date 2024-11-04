@@ -6,6 +6,10 @@ on:
       - 'v*.*.*'
   workflow_dispatch:
 
+# Add permissions configuration
+permissions:
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -76,10 +80,21 @@ jobs:
         cd tests
         poetry run python run_test.py
 
-    - name: Commit test results
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: Add test results
+    - name: Commit and push report
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        
+        # Add the generated report
+        git add tests/compatible-models.mdx
+        
+        # Create commit with timestamp
+        git commit -m "docs: update compatibility test report [skip ci]" || echo "No changes to commit"
+        
+        # Push changes
+        git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${GITHUB_REF#refs/heads/}
 
 
 
