@@ -84,17 +84,27 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        # 首先切换到 main 分支
+        git fetch origin main
+        git checkout main
+        
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         
-        # Add the generated report
-        git add tests/compatible-models.mdx
+        # 检查文件是否存在
+        ls -la tests/compatible-models.mdx || echo "Report file not found!"
+        
+        # 添加所有更改（包括新文件）
+        git add -A
+        
+        # 显示待提交的更改
+        git status
         
         # Create commit with timestamp
         git commit -m "docs: update compatibility test report [skip ci]" || echo "No changes to commit"
         
         # Push changes to main branch
-        git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+        git push origin main
 
 
 
