@@ -32,14 +32,14 @@ Learn more:
 
 | Name | Score (out of 100) |
 |------|-------------------|
-{% for model in open_source_models %}
+{% for model in open_source_models -%}
 | {{ model.name }} | {{ model.score }} |
-{% endfor %}
+{%- endfor %}
 
 ### Proprietary Models
 
 | Name | Score (out of 100) |
 |------|-------------------|
-{% for model in proprietary_models %}
+{%- for model in proprietary_models %}
 | {{ model.name }} | {{ model.score }} |
-{% endfor %} 
+{%- endfor %} 
