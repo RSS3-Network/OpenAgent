@@ -49,6 +49,7 @@ allure-pytest = "^2.13.5"
 moralis = "^0.1.49"
 pytest-asyncio = "^0.23.8"
 feedparser = "^6.0.11"
+jinja2 = "^3.1.4"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.1"
