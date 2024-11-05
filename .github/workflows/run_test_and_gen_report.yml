@@ -84,9 +84,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # Switch to main branch
-        git fetch origin main
-        git checkout main
+        # Switch to docs branch
+        git fetch origin docs || git fetch origin main
+        git checkout docs || git checkout -b docs
         
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
@@ -103,8 +103,8 @@ jobs:
         # Create commit with timestamp
         git commit -m "docs: update compatibility test report" || echo "No changes to commit"
         
-        # Push changes to main branch
-        git push origin main
+        # Push changes to docs branch
+        git push origin docs
 
 
 
