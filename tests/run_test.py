@@ -15,7 +15,7 @@ PROPRIETARY_MODELS = [
 OPENSOURCE_MODELS = [
     {"name": "llama3.2", "function_call_support": True},
     {"name": "mistral-nemo", "function_call_support": True},
-    {"name": "darkmoon/olmo:7B-instruct-q6-k", "function_call_support": False}
+    # {"name": "darkmoon/olmo:7B-instruct-q6-k", "function_call_support": False}
 ]
 
 
