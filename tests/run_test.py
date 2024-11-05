@@ -7,15 +7,15 @@ from jinja2 import Environment, FileSystemLoader
 # Global model configurations
 PROPRIETARY_MODELS = [
     {"name": "gpt-4o-mini", "function_call_support": True},
-    # {"name": "gpt-4o", "function_call_support": True},
-    # {"name": "gemini-1.5-flash", "function_call_support": True},
-    # {"name": "gemini-1.5-pro", "function_call_support": True},
+    {"name": "gpt-4o", "function_call_support": True},
+    {"name": "gemini-1.5-flash", "function_call_support": True},
+    {"name": "gemini-1.5-pro", "function_call_support": True},
 ]
 
 OPENSOURCE_MODELS = [
-    # {"name": "llama3.2", "function_call_support": True},
-    # {"name": "mistral-nemo", "function_call_support": True},
-    # {"name": "darkmoon/olmo:7B-instruct-q6-k", "function_call_support": False}
+    {"name": "llama3.2", "function_call_support": True},
+    {"name": "mistral-nemo", "function_call_support": True},
+    {"name": "darkmoon/olmo:7B-instruct-q6-k", "function_call_support": False}
 ]
 
 
