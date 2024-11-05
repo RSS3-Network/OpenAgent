@@ -38,16 +38,18 @@ class TestStats:
 
 
 def generate_model_report(proprietary_results, opensource_results):
-    # Convert results format
+    # Convert results format and sort by score
     proprietary_models = [
         {'name': model_name, 'score': score}
         for model_name, score in proprietary_results.items()
     ]
+    proprietary_models.sort(key=lambda x: x['score'], reverse=True)
 
     open_source_models = [
         {'name': model_name, 'score': score}
         for model_name, score in opensource_results.items()
     ]
+    open_source_models.sort(key=lambda x: x['score'], reverse=True)
 
     # Set up template environment
     env = Environment(loader=FileSystemLoader('templates'))
