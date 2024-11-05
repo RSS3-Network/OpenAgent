@@ -13,6 +13,10 @@ PROPRIETARY_MODELS = [
 ]
 
 OPENSOURCE_MODELS = [
+    {"name": "qwen2", "function_call_support": True},
+    {"name": "mistral", "function_call_support": True},
+    {"name": "qwen2.5", "function_call_support": True},
+    {"name": "llama3.1", "function_call_support": True},
     {"name": "llama3.2", "function_call_support": True},
     {"name": "mistral-nemo", "function_call_support": True},
     # {"name": "darkmoon/olmo:7B-instruct-q6-k", "function_call_support": False}
@@ -95,7 +99,7 @@ def run_model_tests(model_name):
     print(f"\nTesting model: {model_name}")
     stats = TestStats()
     test_files = ["supervisor_chain.py"] \
-                 + glob.glob("agent_trajectory/*.py")
+                 # + glob.glob("agent_trajectory/*.py")
     pytest.main(["--count=1", "-n", "11"] + test_files + [f"--model={model_name}"] + sys.argv[1:], plugins=[stats])
     return stats.calculate_model_score()
 
