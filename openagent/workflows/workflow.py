@@ -3,6 +3,7 @@ from typing import Annotated, Sequence, TypedDict
 
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_ollama import ChatOllama
 from langgraph.graph import END, StateGraph
 from loguru import logger
 
@@ -11,7 +12,7 @@ from openagent.agents.block_explore import build_block_explorer_agent
 from openagent.agents.fallback import build_fallback_agent
 from openagent.agents.feed_explore import build_feed_explorer_agent
 from openagent.agents.research_analyst import build_research_analyst_agent
-from openagent.conf.llm_provider import SUPPORTED_MODELS
+from openagent.conf.llm_provider import SUPPORTED_OLLAMA_MODELS
 
 
 class AgentState(TypedDict):
@@ -29,14 +30,15 @@ def create_node(agent, name):
 
 
 def build_workflow(llm: BaseChatModel):
-    if hasattr(llm, "model"):
+    is_ollama = isinstance(llm, ChatOllama)
+    if hasattr(llm, "model") and is_ollama:
         model_name = llm.model
     else:
         return build_tool_workflow(llm)
 
-    supports_tools = SUPPORTED_MODELS.get(model_name, {}).get("supports_tools", False)
+    supports_tools = SUPPORTED_OLLAMA_MODELS.get(model_name, {}).get("supports_tools", False)
 
-    if not supports_tools:
+    if not supports_tools and is_ollama:
         return build_simple_workflow(llm)
     else:
         return build_tool_workflow(llm)

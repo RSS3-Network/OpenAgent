@@ -8,10 +8,11 @@ from langchain.memory import ConversationBufferMemory
 from langchain.schema.runnable.config import RunnableConfig
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import HumanMessage
+from langchain_ollama import ChatOllama
 from loguru import logger
 
 from openagent.conf.env import settings
-from openagent.conf.llm_provider import SUPPORTED_MODELS, get_available_providers
+from openagent.conf.llm_provider import SUPPORTED_OLLAMA_MODELS, get_available_providers
 from openagent.ui.profile import profile_name_to_provider_key, provider_to_profile
 from openagent.workflows.member import members
 from openagent.workflows.workflow import build_workflow
@@ -108,9 +109,9 @@ async def on_message(message: cl.Message):  # noqa
     msg = cl.Message(content="")
     agent_names = [member["name"] for member in members]
 
-    if hasattr(llm, "model"):
+    if hasattr(llm, "model") and isinstance(llm,ChatOllama):
         model_name = llm.model
-        supports_tools = SUPPORTED_MODELS.get(model_name, {}).get("supports_tools", False)
+        supports_tools = SUPPORTED_OLLAMA_MODELS.get(model_name, {}).get("supports_tools", False)
     else:
         supports_tools = True
 

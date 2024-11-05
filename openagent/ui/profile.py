@@ -1,6 +1,6 @@
 import chainlit as cl
 
-from openagent.conf.llm_provider import MODELS_ICONS, SUPPORTED_MODELS
+from openagent.conf.llm_provider import MODELS_ICONS, SUPPORTED_OLLAMA_MODELS
 
 provider_key_to_profile_info = {
     "gpt-4o": {
@@ -25,7 +25,7 @@ provider_key_to_profile_info = {
     },
 }
 
-for model_key, model_info in SUPPORTED_MODELS.items():
+for model_key, model_info in SUPPORTED_OLLAMA_MODELS.items():
     icon = MODELS_ICONS.get(model_info["name"], "/public/ollama.png")  # type: ignore
     provider_key_to_profile_info[model_key] = {
         "name": model_info["name"],  # type: ignore
