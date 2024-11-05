@@ -84,20 +84,20 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # 首先切换到 main 分支
+        # Switch to main branch
         git fetch origin main
         git checkout main
         
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         
-        # 检查文件是否存在
+        # Check if file exists
         ls -la tests/compatible-models.mdx || echo "Report file not found!"
         
-        # 添加所有更改（包括新文件）
+        # Add all changes (including new files)
         git add -A
         
-        # 显示待提交的更改
+        # Show pending changes
         git status
         
         # Create commit with timestamp
