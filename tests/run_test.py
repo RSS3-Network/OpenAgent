@@ -92,13 +92,17 @@ def run_all_tests(proprietary_models, opensource_models):
 if __name__ == "__main__":
     # Proprietary model list
     proprietary_models = [
+        "gemini-1.5-flash",
+        "gemini-1.5-pro",
         "gpt-4o-mini",
         "gpt-4o",
     ]
 
     # Open source model list
     opensource_models = [
-        # "llama3.2",
+        "llama3.2",
+        "mistral-nemo",
+        "darkmoon/olmo:7B-instruct-q6-k"
     ]
 
     run_all_tests(proprietary_models, opensource_models)
