@@ -4,6 +4,20 @@ import sys
 import pytest
 from jinja2 import Environment, FileSystemLoader
 
+# Global model configurations
+PROPRIETARY_MODELS = [
+    {"name": "gpt-4o-mini", "function_call_support": True},
+    # {"name": "gpt-4o", "function_call_support": True},
+    # {"name": "gemini-1.5-flash", "function_call_support": True},
+    # {"name": "gemini-1.5-pro", "function_call_support": True},
+]
+
+OPENSOURCE_MODELS = [
+    # {"name": "llama3.2", "function_call_support": True},
+    # {"name": "mistral-nemo", "function_call_support": True},
+    # {"name": "darkmoon/olmo:7B-instruct-q6-k", "function_call_support": False}
+]
+
 
 class TestStats:
     def __init__(self):
@@ -38,17 +52,28 @@ class TestStats:
 
 
 def generate_model_report(proprietary_results, opensource_results):
+    def bool_to_emoji(value):
+        return "✅" if value else "❌"
+
     # Convert results format and sort by score
-    proprietary_models = [
-        {'name': model_name, 'score': score}
-        for model_name, score in proprietary_results.items()
-    ]
+    proprietary_models = []
+    for model in PROPRIETARY_MODELS:
+        if model['name'] in proprietary_results:
+            proprietary_models.append({
+                'name': model['name'],
+                'score': proprietary_results[model['name']],
+                'function_call_support': bool_to_emoji(model['function_call_support'])
+            })
     proprietary_models.sort(key=lambda x: x['score'], reverse=True)
 
-    open_source_models = [
-        {'name': model_name, 'score': score}
-        for model_name, score in opensource_results.items()
-    ]
+    open_source_models = []
+    for model in OPENSOURCE_MODELS:
+        if model['name'] in opensource_results:
+            open_source_models.append({
+                'name': model['name'],
+                'score': opensource_results[model['name']],
+                'function_call_support': bool_to_emoji(model['function_call_support'])
+            })
     open_source_models.sort(key=lambda x: x['score'], reverse=True)
 
     # Set up template environment
@@ -75,36 +100,21 @@ def run_model_tests(model_name):
     return stats.calculate_model_score()
 
 
-def run_all_tests(proprietary_models, opensource_models):
+def run_all_tests():
     proprietary_results = {}
     opensource_results = {}
 
     # Test proprietary models
-    for model in proprietary_models:
-        proprietary_results[model] = run_model_tests(model)
+    for model in PROPRIETARY_MODELS:
+        proprietary_results[model['name']] = run_model_tests(model['name'])
 
     # Test open source models
-    for model in opensource_models:
-        opensource_results[model] = run_model_tests(model)
+    for model in OPENSOURCE_MODELS:
+        opensource_results[model['name']] = run_model_tests(model['name'])
 
     # Generate report
     generate_model_report(proprietary_results, opensource_results)
 
 
 if __name__ == "__main__":
-    # Proprietary model list
-    proprietary_models = [
-        "gemini-1.5-flash",
-        "gemini-1.5-pro",
-        "gpt-4o-mini",
-        "gpt-4o",
-    ]
-
-    # Open source model list
-    opensource_models = [
-        "llama3.2",
-        "mistral-nemo",
-        "darkmoon/olmo:7B-instruct-q6-k"
-    ]
-
-    run_all_tests(proprietary_models, opensource_models)
+    run_all_tests()

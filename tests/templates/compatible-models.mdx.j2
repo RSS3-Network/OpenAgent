@@ -30,16 +30,16 @@ Learn more:
 
 <LinkCard id="ollama" />
 
-| Name | Score (out of 100) |
-|------|-------------------|
+| Name | Score (out of 100) | Function Call Support |
+|------|-------------------|---------------------|
 {%- for model in open_source_models %}
-| {{ model.name }} | {{ model.score }} |
+| {{ model.name }} | {{ model.score }} | {{ model.function_call_support }} |
 {%- endfor %}
 
 ### Proprietary Models
 
-| Name | Score (out of 100) |
-|------|-------------------|
+| Name | Score (out of 100) | Function Call Support |
+|------|-------------------|---------------------|
 {%- for model in proprietary_models %}
-| {{ model.name }} | {{ model.score }} |
+| {{ model.name }} | {{ model.score }} | {{ model.function_call_support }} |
 {%- endfor %} 

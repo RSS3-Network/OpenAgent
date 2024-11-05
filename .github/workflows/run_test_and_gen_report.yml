@@ -101,7 +101,7 @@ jobs:
         git status
         
         # Create commit with timestamp
-        git commit -m "docs: update compatibility test report [skip ci]" || echo "No changes to commit"
+        git commit -m "docs: update compatibility test report" || echo "No changes to commit"
         
         # Push changes to main branch
         git push origin main
