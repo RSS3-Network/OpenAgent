@@ -103,6 +103,9 @@ jobs:
         # Create commit with timestamp
         git commit -m "docs: update compatibility test report" || echo "No changes to commit"
         
+        # Pull latest changes from remote to avoid non-fast-forward error
+        git pull --rebase origin docs
+        
         # Push changes to docs branch
         git push origin docs
 
