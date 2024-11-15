@@ -22,7 +22,7 @@ OPENSOURCE_MODELS = [
     # {"name": "mistral-nemo", "function_call_support": True},
 ]
 
-from test_first_token_latency import measure_first_token_latency
+from test_first_token_latency import measure_model_metrics
 
 
 class TestStats:
@@ -74,18 +74,19 @@ def generate_benchmark_report(proprietary_results, opensource_results):
     """Generate HTML benchmark report for model performance results.
 
     Args:
-        proprietary_results (dict): Results for proprietary models containing tuples of (score, first_token_latency)
-        opensource_results (dict): Results for open source models containing tuples of (score, first_token_latency)
+        proprietary_results (dict): Results for proprietary models containing tuples of (score, first_token_latency, token_rate)
+        opensource_results (dict): Results for open source models containing tuples of (score, first_token_latency, token_rate)
     """
     # Convert results format and sort by score
     proprietary_models = []
     for model in PROPRIETARY_MODELS:
         if model['name'] in proprietary_results:
-            score, latency = proprietary_results[model['name']]
+            score, latency, token_rate = proprietary_results[model['name']]
             proprietary_models.append({
                 'name': model['name'],
                 'score': score,
                 'first_token_latency': f"{latency:.2f}ms",
+                'token_rate': f"{token_rate:.1f} tokens/sec",
                 'function_call_support': bool_to_emoji(model['function_call_support'])
             })
     proprietary_models.sort(key=lambda x: x['score'], reverse=True)
@@ -93,11 +94,12 @@ def generate_benchmark_report(proprietary_results, opensource_results):
     open_source_models = []
     for model in OPENSOURCE_MODELS:
         if model['name'] in opensource_results:
-            score, latency = opensource_results[model['name']]
+            score, latency, token_rate = opensource_results[model['name']]
             open_source_models.append({
                 'name': model['name'],
                 'score': score,
                 'first_token_latency': f"{latency:.2f}ms",
+                'token_rate': f"{token_rate:.1f} tokens/sec",
                 'function_call_support': bool_to_emoji(model['function_call_support'])
             })
     open_source_models.sort(key=lambda x: x['score'], reverse=True)
@@ -126,14 +128,17 @@ def main():
 
     for model in PROPRIETARY_MODELS:
         score = run_model_tests(model['name'])
-        latency = measure_first_token_latency(model['name'])
+        latency, token_rate = measure_model_metrics(model['name'])
         logger.info(f"First token latency for {model['name']}: {latency:.2f}ms")
-        proprietary_results[model['name']] = (score, latency)
+        logger.info(f"Token output rate for {model['name']}: {token_rate:.1f} tokens/sec")
+        proprietary_results[model['name']] = (score, latency, token_rate)
 
     for model in OPENSOURCE_MODELS:
         score = run_model_tests(model['name'])
-        latency = measure_first_token_latency(model['name'])
-        opensource_results[model['name']] = (score, latency)
+        latency, token_rate = measure_model_metrics(model['name'])
+        logger.info(f"First token latency for {model['name']}: {latency:.2f}ms")
+        logger.info(f"Token output rate for {model['name']}: {token_rate:.1f} tokens/sec")
+        opensource_results[model['name']] = (score, latency, token_rate)
 
     generate_benchmark_report(proprietary_results, opensource_results)
     print("Benchmark report generated successfully at reports/benchmark.html")
