@@ -3,6 +3,7 @@ import sys
 
 import pytest
 from jinja2 import Environment, FileSystemLoader
+from loguru import logger
 
 # Global model configurations
 PROPRIETARY_MODELS = [
@@ -20,6 +21,8 @@ OPENSOURCE_MODELS = [
     # {"name": "llama3.2", "function_call_support": True},
     # {"name": "mistral-nemo", "function_call_support": True},
 ]
+
+from test_first_token_latency import measure_first_token_latency
 
 
 class TestStats:
@@ -122,10 +125,15 @@ def main():
     opensource_results = {}
 
     for model in PROPRIETARY_MODELS:
-        proprietary_results[model['name']] = run_model_tests(model['name'])
+        score = run_model_tests(model['name'])
+        latency = measure_first_token_latency(model['name'])
+        logger.info(f"First token latency for {model['name']}: {latency:.2f}ms")
+        proprietary_results[model['name']] = (score, latency)
 
     for model in OPENSOURCE_MODELS:
-        opensource_results[model['name']] = run_model_tests(model['name'])
+        score = run_model_tests(model['name'])
+        latency = measure_first_token_latency(model['name'])
+        opensource_results[model['name']] = (score, latency)
 
     generate_benchmark_report(proprietary_results, opensource_results)
     print("Benchmark report generated successfully at reports/benchmark.html")

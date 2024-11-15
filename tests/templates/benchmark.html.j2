@@ -33,6 +33,13 @@
                     {{ proprietary_models|length + open_source_models|length }}
                 </p>
             </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Fastest Response</h3>
+                <p class="text-2xl font-bold text-indigo-600">
+                    {% set fastest_model = (proprietary_models + open_source_models)|sort(attribute='first_token_latency')|first %}
+                    {{ fastest_model.name }} ({{ fastest_model.first_token_latency }})
+                </p>
+            </div>
         </div>
 
         <!-- Performance Chart -->
@@ -54,6 +61,7 @@
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Token Latency</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Function Call Support</th>
                             </tr>
                         </thead>
@@ -62,6 +70,7 @@
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ model.name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ model.score }}%</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ model.first_token_latency }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ model.function_call_support|safe }}</td>
                             </tr>
                             {% endfor %}
@@ -81,6 +90,7 @@
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Token Latency</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Function Call Support</th>
                             </tr>
                         </thead>
@@ -89,6 +99,7 @@
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ model.name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ model.score }}%</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ model.first_token_latency }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ model.function_call_support|safe }}</td>
                             </tr>
                             {% endfor %}
