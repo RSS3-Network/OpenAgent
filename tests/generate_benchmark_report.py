@@ -9,20 +9,20 @@ from loguru import logger
 PROPRIETARY_MODELS = [
     {"name": "gpt-4o-mini", "function_call_support": True},
     {"name": "gpt-4o", "function_call_support": True},
-    # {"name": "gemini-1.5-flash", "function_call_support": True},
-    # {"name": "gemini-1.5-pro", "function_call_support": True},
+    {"name": "gemini-1.5-flash", "function_call_support": True},
+    {"name": "gemini-1.5-pro", "function_call_support": True},
 ]
 
 OPENSOURCE_MODELS = [
-    # {"name": "qwen2", "function_call_support": True},
-    # {"name": "mistral", "function_call_support": True},
-    # {"name": "qwen2.5", "function_call_support": True},
-    # {"name": "llama3.1", "function_call_support": True},
-    # {"name": "llama3.2", "function_call_support": True},
-    # {"name": "mistral-nemo", "function_call_support": True},
+    {"name": "qwen2", "function_call_support": True},
+    {"name": "mistral", "function_call_support": True},
+    {"name": "qwen2.5", "function_call_support": True},
+    {"name": "llama3.1", "function_call_support": True},
+    {"name": "llama3.2", "function_call_support": True},
+    {"name": "mistral-nemo", "function_call_support": True},
 ]
 
-from test_first_token_latency import measure_model_metrics
+from gen_benchmark_html_report import measure_proprietary_models_metrics, measure_opensource_models_metrics
 
 
 class TestStats:
@@ -128,14 +128,14 @@ def main():
 
     for model in PROPRIETARY_MODELS:
         score = run_model_tests(model['name'])
-        latency, token_rate = measure_model_metrics(model['name'])
+        latency, token_rate = measure_proprietary_models_metrics(model['name'])
         logger.info(f"First token latency for {model['name']}: {latency:.2f}ms")
         logger.info(f"Token output rate for {model['name']}: {token_rate:.1f} tokens/sec")
         proprietary_results[model['name']] = (score, latency, token_rate)
 
     for model in OPENSOURCE_MODELS:
         score = run_model_tests(model['name'])
-        latency, token_rate = measure_model_metrics(model['name'])
+        latency, token_rate = measure_opensource_models_metrics(model['name'])
         logger.info(f"First token latency for {model['name']}: {latency:.2f}ms")
         logger.info(f"Token output rate for {model['name']}: {token_rate:.1f} tokens/sec")
         opensource_results[model['name']] = (score, latency, token_rate)
