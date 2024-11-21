@@ -19,7 +19,10 @@ OPENSOURCE_MODELS = [
     {"name": "llama3.1", "function_call_support": True},
     {"name": "llama3.2", "function_call_support": True},
     {"name": "mistral-nemo", "function_call_support": True},
-    # {"name": "darkmoon/olmo:7B-instruct-q6-k", "function_call_support": False}
+    {"name": "olmo", "function_call_support": False},
+    {"name": "gemma", "function_call_support": False},
+    {"name": "llava", "function_call_support": False},
+    {"name": "deepseek-coder-v2", "function_call_support": False}
 ]
 
 
@@ -68,7 +71,11 @@ def generate_model_report(proprietary_results, opensource_results):
                 'score': proprietary_results[model['name']],
                 'function_call_support': bool_to_emoji(model['function_call_support'])
             })
-    proprietary_models.sort(key=lambda x: x['score'], reverse=True)
+    # Sort models, putting '-' scores at the end
+    proprietary_models.sort(
+        key=lambda x: float('-inf') if x['score'] == '-' else x['score'], 
+        reverse=True
+    )
 
     open_source_models = []
     for model in OPENSOURCE_MODELS:
@@ -78,7 +85,11 @@ def generate_model_report(proprietary_results, opensource_results):
                 'score': opensource_results[model['name']],
                 'function_call_support': bool_to_emoji(model['function_call_support'])
             })
-    open_source_models.sort(key=lambda x: x['score'], reverse=True)
+    # Sort models, putting '-' scores at the end
+    open_source_models.sort(
+        key=lambda x: float('-inf') if x['score'] == '-' else x['score'], 
+        reverse=True
+    )
 
     # Set up template environment
     env = Environment(loader=FileSystemLoader('templates'))
@@ -110,11 +121,17 @@ def run_all_tests():
 
     # Test proprietary models
     for model in PROPRIETARY_MODELS:
-        proprietary_results[model['name']] = run_model_tests(model['name'])
+        if model['function_call_support']:
+            proprietary_results[model['name']] = run_model_tests(model['name'])
+        else:
+            proprietary_results[model['name']] = '-'
 
     # Test open source models
     for model in OPENSOURCE_MODELS:
-        opensource_results[model['name']] = run_model_tests(model['name'])
+        if model['function_call_support']:
+            opensource_results[model['name']] = run_model_tests(model['name'])
+        else:
+            opensource_results[model['name']] = '-'
 
     # Generate report
     generate_model_report(proprietary_results, opensource_results)
