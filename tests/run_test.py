@@ -10,6 +10,7 @@ PROPRIETARY_MODELS = [
     {"name": "gpt-4o", "function_call_support": True},
     {"name": "gemini-1.5-flash", "function_call_support": True},
     {"name": "gemini-1.5-pro", "function_call_support": True},
+    {"name": "sonnet", "function_call_support": True},
 ]
 
 OPENSOURCE_MODELS = [
