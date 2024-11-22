@@ -15,6 +15,7 @@ class Settings(BaseSettings):
         default=None, description="Google Cloud Vertex project ID. Info: https://cloud.google.com/vertex-ai/docs/reference"
     )
     OPENAI_API_KEY: Optional[str] = Field(default=None, description="OpenAI API Key. Info: https://platform.openai.com")
+    ANTHROPIC_API_KEY: Optional[str] = Field(default=None, description="Anthropic API Key. Info: https://www.anthropic.com")
     GOOGLE_GEMINI_API_KEY: Optional[str] = Field(default=None, description="Google Gemini API Key. Info: https://ai.google.dev")
     OLLAMA_HOST: Optional[str] = Field(default=None, description="OLLAMA API Base URL. Info: https://github.com/ollama/ollama")
 

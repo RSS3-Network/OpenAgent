@@ -23,6 +23,11 @@ provider_key_to_profile_info = {
         "markdown_description": "Using **Gemini 1.5 Flash**.",
         "icon": "https://custom.typingmind.com/assets/models/gemini.png",
     },
+    "sonnet": {
+        "name": "Sonnet",
+        "markdown_description": "Using **Sonnet**.",
+        "icon": "public/claude.png",
+    }
 }
 
 for model_key, model_info in SUPPORTED_OLLAMA_MODELS.items():
