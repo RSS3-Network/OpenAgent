@@ -128,7 +128,14 @@ async def on_message(message: cl.Message):  # noqa
                 if event["metadata"]["langgraph_node"] in agent_names:
                     content = event["data"]["chunk"].content
                     if content:
-                        await msg.stream_token(content)
+                        if isinstance(event["data"]["chunk"].content ,list):
+                            for chunk in content:
+                                if chunk['type'] == 'text':
+                                    await msg.stream_token(chunk['text'])
+                                else:
+                                    print(chunk)
+                        else:
+                            await msg.stream_token(content)
     else:
         # simple conversation handling logic
         async for chunk in runnable.astream(
