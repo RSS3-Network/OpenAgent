@@ -62,6 +62,7 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
         OLLAMA_HOST: ${{ secrets.OLLAMA_HOST }}
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
         # Optional API keys
         TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
