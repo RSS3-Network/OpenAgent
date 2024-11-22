@@ -111,7 +111,7 @@ def run_model_tests(model_name):
     stats = TestStats()
     test_files = ["supervisor_chain.py"] \
                  + glob.glob("agent_trajectory/*.py")
-    pytest.main(["--count=1", "-n", "11"] + test_files + [f"--model={model_name}"] + sys.argv[1:], plugins=[stats])
+    pytest.main(["--count=3", "-n", "11"] + test_files + [f"--model={model_name}"] + sys.argv[1:], plugins=[stats])
     return stats.calculate_model_score()
 
 
