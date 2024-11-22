@@ -23,9 +23,9 @@ provider_key_to_profile_info = {
         "markdown_description": "Using **Gemini 1.5 Flash**.",
         "icon": "https://custom.typingmind.com/assets/models/gemini.png",
     },
-    "sonnet": {
-        "name": "Sonnet",
-        "markdown_description": "Using **Sonnet**.",
+    "claude-3-5-sonnet": {
+        "name": "Claude 3.5 Sonnet",
+        "markdown_description": "Using **Claude 3.5 Sonnet**.",
         "icon": "public/claude.png",
     }
 }
