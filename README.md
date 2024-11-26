@@ -1,10 +1,9 @@
 <!-- markdownlint-disable -->
 <p align="center">
-  <img width="180" src="./OpenAgent.svg" alt="OpenAgent logo">
+  <img width="180" src="https://raw.githubusercontent.com/webisopen/.github/main/assets/logo-round.png" alt="Open logo">
 </p>
 <p align="center">
-  <a href="https://link.rss3.io/x"><img src="https://img.shields.io/twitter/follow/rss3_?color=%230072ff" alt="follow RSS3 on X"></a>
-  <a href="https://link.rss3.io/discord"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord&color=%230072ff" alt="Join RSS3 Discord"></a>
+  <a href="https://x.com/intent/follow?screen_name=webisopen"><img src="https://img.shields.io/twitter/follow/webisopen?style=social&logoColor=%23ff4307" alt="follow Open on X"></a>
   <!-- add NPM and other badges when needed -->
 </p>
 <!-- markdownlint-enable -->
@@ -13,4 +12,7 @@
 
 OpenAgent is a framework for building AI applications leveraging the power of blockchains and RSS3 Network.
 
-For more information, please visit the [OpenAgent docs](https://docs.rss3.io/guide/artificial-intelligence/openagent).
+OpenAgent was originally developed by RSS3, an Open project.
+It has been transferred to Open to further expand its potential.
+
+For more information, please visit the [OpenAgent docs](https://docs.open.network/guide/openstack/openagent).
