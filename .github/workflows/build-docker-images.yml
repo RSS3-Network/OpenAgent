@@ -10,9 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on:
-      - self-hosted
-      - ${{ matrix.platform }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
