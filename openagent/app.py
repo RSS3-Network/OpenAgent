@@ -1,24 +1,16 @@
-import json
 import os
-
 import vertexai
 from chainlit.utils import mount_chainlit
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from langchain_core.messages import HumanMessage
 from loguru import logger
-from pydantic import BaseModel, Field
-from sse_starlette import EventSourceResponse
-from starlette import status
-from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 import traceback
+from starlette.responses import JSONResponse
 
 from openagent.conf.env import settings
-from openagent.conf.llm_provider import get_available_providers
-from openagent.router import openai
-from openagent.workflows.workflow import build_workflow
+from openagent.router import openai_router, widget_router, health_router
 
 load_dotenv()
 app = FastAPI(title="OpenAgent", description="")
@@ -31,48 +23,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.get("/health", status_code=status.HTTP_200_OK, include_in_schema=False)
-async def health_check():
-    return JSONResponse(content={"status": "ok"})
-
-
-@app.get("/widget/swap", include_in_schema=False)
-async def swap_root():
-    return FileResponse(os.path.join("dist", "index.html"))
-
-
-@app.get("/widget/price-chart", include_in_schema=False)
-async def chart_price_root():
-    return FileResponse(os.path.join("dist", "index.html"))
-
-
-@app.get("/widget/transfer", include_in_schema=False)
-async def transfer_root():
-    return FileResponse(os.path.join("dist", "index.html"))
-
-
-class Input(BaseModel):
-    text: str
-    model: str = Field("gpt-4o-mini", title="Model name", description="The name of the model to use.")
-
-
-@app.post("/api/stream_chat", description="streaming chat api for openagent")
-async def stream_chat(req: Input):
-    model = req.model
-    llm = get_available_providers()[model]
-    agent = build_workflow(llm)
-
-    async def stream():
-        async for event in agent.astream_events({"messages": [HumanMessage(content=req.text)]}, version="v1"):
-            kind = event["event"]
-            if kind == "on_chat_model_stream":
-                yield json.dumps(event["data"]["chunk"].dict(), ensure_ascii=False)
-
-    return EventSourceResponse(stream(), media_type="text/event-stream")
-
-
-app.include_router(openai.router)
+# Add routers
+app.include_router(openai_router)
+app.include_router(widget_router)
+app.include_router(health_router)
 
 # Check and create static files directory
 static_dir = os.path.join("dist", "static")
@@ -89,6 +43,7 @@ mount_chainlit(app=app, target="openagent/ui/app.py", path="")
 
 if settings.VERTEX_PROJECT_ID:
     vertexai.init(project=settings.VERTEX_PROJECT_ID)
+
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
