@@ -16,6 +16,7 @@ from starlette.staticfiles import StaticFiles
 
 from openagent.conf.env import settings
 from openagent.conf.llm_provider import get_available_providers
+from openagent.router import openai
 from openagent.workflows.workflow import build_workflow
 
 load_dotenv()
@@ -56,7 +57,7 @@ class Input(BaseModel):
 
 
 @app.post("/api/stream_chat", description="streaming chat api for openagent")
-async def outline_creation(req: Input):
+async def stream_chat(req: Input):
     model = req.model
     llm = get_available_providers()[model]
     agent = build_workflow(llm)
@@ -69,6 +70,8 @@ async def outline_creation(req: Input):
 
     return EventSourceResponse(stream(), media_type="text/event-stream")
 
+
+app.include_router(openai.router)
 
 # Check and create static files directory
 static_dir = os.path.join("dist", "static")
