@@ -4,7 +4,7 @@ import os
 import vertexai
 from chainlit.utils import mount_chainlit
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.messages import HumanMessage
 from loguru import logger
@@ -13,6 +13,7 @@ from sse_starlette import EventSourceResponse
 from starlette import status
 from starlette.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
+import traceback
 
 from openagent.conf.env import settings
 from openagent.conf.llm_provider import get_available_providers
@@ -88,3 +89,15 @@ mount_chainlit(app=app, target="openagent/ui/app.py", path="")
 
 if settings.VERTEX_PROJECT_ID:
     vertexai.init(project=settings.VERTEX_PROJECT_ID)
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    error_msg = f"Global error: {str(exc)}\nTraceback:\n{traceback.format_exc()}"
+    logger.error(error_msg)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": str(exc),
+            "traceback": traceback.format_exc()
+        }
+    )
