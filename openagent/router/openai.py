@@ -1,7 +1,8 @@
 import time
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import traceback
+import json
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
@@ -15,20 +16,29 @@ from openagent.workflows.workflow import build_workflow
 router = APIRouter(tags=["openai"])
 
 
+class ToolCall(BaseModel):
+    id: str = Field(default_factory=lambda: f"call_{str(uuid.uuid4())}")
+    type: str = "function"  # OpenAI currently only supports "function"
+    function: Dict[str, Any]
+
+
+class ChatFunctionCall(BaseModel):
+    name: str
+    arguments: str
+
+
 class ChatMessage(BaseModel):
     role: str = Field(example="user")
-    content: str = Field(example="What's the current market situation for Bitcoin?")
+    content: Optional[str] = Field(example="What's the current market situation for Bitcoin?")
     name: Optional[str] = Field(default=None, example=None)
+    tool_calls: Optional[List[ToolCall]] = None
+    function_call: Optional[ChatFunctionCall] = None
 
 
 class ChatCompletionRequest(BaseModel):
     model: str = Field(example="gpt-4o-mini")
     messages: List[ChatMessage] = Field(
         example=[
-            {
-                "role": "system",
-                "content": "You are a helpful assistant."
-            },
             {
                 "role": "user",
                 "content": "What's the current market situation for Bitcoin?"
@@ -153,41 +163,51 @@ async def create_chat_completion(request: ChatCompletionRequest):
                 media_type='text/event-stream'
             )
 
-        # Get LLM instance
         llm = get_available_providers()[request.model]
-        # Build workflow agent
         agent = build_workflow(llm)
 
-        # Convert messages to a single text
         combined_message = "\n".join([f"{msg.role}: {msg.content}" for msg in request.messages])
-
-        # Generate response using agent
-        response = await agent.ainvoke({"messages": [HumanMessage(content=combined_message)]})
-
-        logger.debug(f"Agent response: {response}")  # Add debug log
-
-        # Extract the last assistant message from the response
+        
+        tool_calls = []
         assistant_message = None
-        if isinstance(response, dict) and "messages" in response:
-            for msg in reversed(response["messages"]):
-                if isinstance(msg, HumanMessage) and msg.name:  # agent replies have a name
-                    assistant_message = msg.content
-                    break
 
-        if not assistant_message:
-            logger.error(f"No assistant message found in response: {response}")
-            raise ValueError(f"No assistant message found in response: {response}")
+        async for event in agent.astream_events(
+            {"messages": [HumanMessage(content=combined_message)]},
+            version="v1"
+        ):
+            if event["event"] == "on_tool_end":
+                tool_name = event["name"]
+                tool_output = event["data"]["output"]
+                
+                tool_call = ToolCall(
+                    function={
+                        "name": tool_name,
+                        "arguments": json.dumps(tool_output)
+                    }
+                )
+                tool_calls.append(tool_call)
+            
+            elif event["event"] == "on_chat_model_stream":
+                if isinstance(event["data"]["chunk"].content, str):
+                    assistant_message = (assistant_message or "") + event["data"]["chunk"].content
+
+        if not assistant_message and not tool_calls:
+            raise ValueError("No response generated from the agent")
 
         # Construct OpenAI format response
         choice = ChatChoice(
             index=0,
-            message=ChatMessage(role="assistant", content=assistant_message),
+            message=ChatMessage(
+                role="assistant", 
+                content=assistant_message,
+                tool_calls=tool_calls if tool_calls else None
+            ),
             finish_reason="stop"
         )
 
         # Estimate token usage
         prompt_tokens = sum(len(msg.content.split()) * 1.3 for msg in request.messages)
-        completion_tokens = len(assistant_message.split()) * 1.3
+        completion_tokens = len(assistant_message.split()) * 1.3 if assistant_message else 0
         
         usage = Usage(
             prompt_tokens=int(prompt_tokens),
@@ -215,9 +235,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
 
 async def stream_chat_completion(request: ChatCompletionRequest):
     try:
-        # Get LLM instance
         llm = get_available_providers()[request.model]
-        # Build workflow agent
         agent = build_workflow(llm)
 
         # Send role information
@@ -230,10 +248,8 @@ async def stream_chat_completion(request: ChatCompletionRequest):
         )
         yield f"data: {chunk.json()}\n\n"
 
-        # Convert messages to a single text
         combined_message = "\n".join([f"{msg.role}: {msg.content}" for msg in request.messages])
 
-        # Stream generation using agent
         async for event in agent.astream_events(
                 {"messages": [HumanMessage(content=combined_message)]},
                 version="v1"
@@ -249,6 +265,29 @@ async def stream_chat_completion(request: ChatCompletionRequest):
                         )]
                     )
                     yield f"data: {chunk.json()}\n\n"
+            elif event["event"] == "on_tool_end":
+                # Handle tool responses
+                tool_name = event["name"]
+                tool_output = event["data"]["output"]
+                
+                # Create a tool call response
+                tool_call = ToolCall(
+                    function={
+                        "name": tool_name,
+                        "arguments": json.dumps(tool_output)
+                    }
+                )
+                
+                chunk = ChatCompletionStreamResponse(
+                    model=request.model,
+                    choices=[StreamChoice(
+                        index=0,
+                        delta=DeltaMessage(
+                            tool_calls=[tool_call]
+                        ),
+                    )]
+                )
+                yield f"data: {chunk.json()}\n\n"
 
         # Send end markers
         chunk = ChatCompletionStreamResponse(
