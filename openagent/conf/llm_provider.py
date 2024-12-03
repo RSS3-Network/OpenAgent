@@ -64,7 +64,7 @@ def get_available_providers() -> Dict[str, BaseChatModel]:
     providers = {}
 
     provider_configs = [
-        (["gpt-4o-mini", "gpt-4o"], get_openai_provider),
+        (["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo"], get_openai_provider),
         (["claude-3-5-sonnet"], get_anthropic_provider),
         (["gemini-1.5-pro", "gemini-1.5-flash"], get_gemini_provider),
     ]
@@ -84,8 +84,10 @@ def get_available_providers() -> Dict[str, BaseChatModel]:
 def get_openai_provider(model: str) -> BaseChatModel | None:
     return ChatOpenAI(model=model) if settings.OPENAI_API_KEY else None
 
+
 def get_anthropic_provider(model: str) -> BaseChatModel | None:
-    return ChatAnthropic(model="claude-3-5-sonnet-20240620",) if settings.ANTHROPIC_API_KEY else None
+    return ChatAnthropic(model="claude-3-5-sonnet-20240620", ) if settings.ANTHROPIC_API_KEY else None
+
 
 def get_gemini_provider(model: str) -> BaseChatModel | None:
     if settings.VERTEX_PROJECT_ID:
