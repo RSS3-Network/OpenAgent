@@ -168,18 +168,18 @@ async def create_chat_completion(request: ChatCompletionRequest):
         agent = build_workflow(llm)
 
         combined_message = "\n".join([f"{msg.role}: {msg.content}" for msg in request.messages])
-        
+
         tool_calls = []
         assistant_message = None
 
         async for event in agent.astream_events(
-            {"messages": [HumanMessage(content=combined_message)]},
-            version="v1"
+                {"messages": [HumanMessage(content=combined_message)]},
+                version="v1"
         ):
             if event["event"] == "on_tool_end":
                 tool_name = event["name"]
                 tool_input = event["data"]["input"]
-                
+
                 tool_call = ToolCall(
                     function={
                         "name": tool_name,
@@ -187,7 +187,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
                     }
                 )
                 tool_calls.append(tool_call)
-            
+
             elif event["event"] == "on_chat_model_stream":
                 if isinstance(event["data"]["chunk"].content, str):
                     assistant_message = (assistant_message or "") + event["data"]["chunk"].content
@@ -199,7 +199,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
         choice = ChatChoice(
             index=0,
             message=ChatMessage(
-                role="assistant", 
+                role="assistant",
                 content=assistant_message,
                 tool_calls=tool_calls if tool_calls else None
             ),
@@ -209,7 +209,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
         # Estimate token usage
         prompt_tokens = sum(len(msg.content.split()) * 1.3 for msg in request.messages)
         completion_tokens = len(assistant_message.split()) * 1.3 if assistant_message else 0
-        
+
         usage = Usage(
             prompt_tokens=int(prompt_tokens),
             completion_tokens=int(completion_tokens),
@@ -244,7 +244,7 @@ async def stream_chat_completion(request: ChatCompletionRequest):
             model=request.model,
             choices=[StreamChoice(
                 index=0,
-                delta=DeltaMessage(role="assistant"),
+                delta=DeltaMessage(role="assistant", content=""),
             )]
         )
         yield f"data: {chunk.json()}\n\n"
@@ -270,7 +270,7 @@ async def stream_chat_completion(request: ChatCompletionRequest):
                 # Handle tool responses
                 tool_name = event["name"]
                 tool_input = event["data"]["input"]
-                
+
                 # Create a tool call response
                 tool_call = ToolCall(
                     function={
@@ -278,7 +278,7 @@ async def stream_chat_completion(request: ChatCompletionRequest):
                         "arguments": json.dumps(tool_input)
                     }
                 )
-                
+
                 chunk = ChatCompletionStreamResponse(
                     model=request.model,
                     choices=[StreamChoice(
