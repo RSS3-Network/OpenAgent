@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 from openagent.conf.llm_provider import get_available_providers
 from openagent.workflows.workflow import build_workflow
 
-router = APIRouter(tags=["openai"])
+router = APIRouter(tags=["Completion"])
 
 
 class ToolCall(BaseModel):
@@ -101,8 +101,8 @@ class ChatCompletionStreamResponse(BaseModel):
     "/v1/chat/completions",
     summary="Create a chat completion",
     description="""Create a model response for the given chat conversation.
-    The endpoint first processes the chat through a workflow agent that can utilize various tools
-    and capabilities to provide comprehensive responses.""",
+    This endpoint is compatible with OpenAI's API and processes the chat through a workflow agent 
+    that can utilize various tools and capabilities to provide comprehensive responses.""",
     response_model=ChatCompletionResponse,
     responses={
         200: {
