@@ -36,7 +36,7 @@ class ChatMessage(BaseModel):
 
 
 class ChatCompletionRequest(BaseModel):
-    model: str = Field(example="gpt-4o-mini")
+    model: str = Field(example="llama3.2")
     messages: List[ChatMessage] = Field(
         example=[
             {
