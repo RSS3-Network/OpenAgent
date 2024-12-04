@@ -41,19 +41,19 @@ class ChatCompletionRequest(BaseModel):
         example=[
             {
                 "role": "user",
-                "content": "What's the current market situation for Bitcoin?"
+                "content": "What's the current price of Ethereum and its market trend?"
             }
         ]
     )
-    temperature: Optional[float] = Field(default=1.0, example=0.7)
-    top_p: Optional[float] = Field(default=1.0, example=1.0)
-    n: Optional[int] = Field(default=1, example=1)
+    temperature: Optional[float] = Field(default=None, example=0.7)
+    top_p: Optional[float] = Field(default=None, example=1.0)
+    n: Optional[int] = Field(default=None, example=1)
     stream: Optional[bool] = Field(default=False, example=False)
-    stop: Optional[List[str]] = Field(default=None, example=None)
+    stop: Optional[List[str]] = Field(default=None, example=[])
     max_tokens: Optional[int] = Field(default=None, example=None)
-    presence_penalty: Optional[float] = Field(default=0, example=0)
-    frequency_penalty: Optional[float] = Field(default=0, example=0)
-    user: Optional[str] = Field(default=None, example=None)
+    presence_penalty: Optional[float] = Field(default=None, example=0)
+    frequency_penalty: Optional[float] = Field(default=None, example=0)
+    user: Optional[str] = Field(default=None, example='oa')
 
 
 class ChatChoice(BaseModel):
@@ -178,12 +178,12 @@ async def create_chat_completion(request: ChatCompletionRequest):
         ):
             if event["event"] == "on_tool_end":
                 tool_name = event["name"]
-                tool_output = event["data"]["output"]
+                tool_input = event["data"]["input"]
                 
                 tool_call = ToolCall(
                     function={
                         "name": tool_name,
-                        "arguments": json.dumps(tool_output)
+                        "arguments": json.dumps(tool_input)
                     }
                 )
                 tool_calls.append(tool_call)
@@ -269,13 +269,13 @@ async def stream_chat_completion(request: ChatCompletionRequest):
             elif event["event"] == "on_tool_end":
                 # Handle tool responses
                 tool_name = event["name"]
-                tool_output = event["data"]["output"]
+                tool_input = event["data"]["input"]
                 
                 # Create a tool call response
                 tool_call = ToolCall(
                     function={
                         "name": tool_name,
-                        "arguments": json.dumps(tool_output)
+                        "arguments": json.dumps(tool_input)
                     }
                 )
                 

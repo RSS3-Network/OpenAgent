@@ -13,7 +13,7 @@ load_dotenv()
 
 
 def build_market_analysis_agent(llm: BaseChatModel):
-    executors = [search_executor, FundingRateExecutor()]
+    executors = [search_executor]
     if settings.COINGECKO_API_KEY:
         executors.extend([PriceExecutor(), CoinMarketExecutor()])
     if settings.MORALIS_API_KEY:
