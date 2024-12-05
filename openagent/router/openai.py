@@ -36,7 +36,7 @@ class ChatMessage(BaseModel):
 
 
 class ChatCompletionRequest(BaseModel):
-    model: str = Field(example="llama3.2")
+    model: str = Field(example="llama3.2",description="The language model to use for the chat completion, e.g. 'qwen2', 'mistral', 'qwen2.5', 'llama3.1', 'llama3.2', 'mistral-nemo'")
     messages: List[ChatMessage] = Field(
         example=[
             {
