@@ -21,7 +21,7 @@ curl http://localhost:8000/v1/chat/completions \
     "messages": [
       {
         "role": "user",
-        "content": "Hello!"
+        "content": "btc price?"
       }
     ]
   }'

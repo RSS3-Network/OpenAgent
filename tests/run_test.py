@@ -14,16 +14,16 @@ PROPRIETARY_MODELS = [
 ]
 
 OPENSOURCE_MODELS = [
-    {"name": "qwen2", "function_call_support": True},
-    {"name": "mistral", "function_call_support": True},
-    {"name": "qwen2.5", "function_call_support": True},
-    {"name": "llama3.1", "function_call_support": True},
-    {"name": "llama3.2", "function_call_support": True},
-    {"name": "mistral-nemo", "function_call_support": True},
-    {"name": "olmo", "function_call_support": False},
-    {"name": "gemma", "function_call_support": False},
-    {"name": "llava", "function_call_support": False},
-    {"name": "deepseek-coder-v2", "function_call_support": False}
+    {"name": "qwen2", "function_call_support": True, "parameters": "7B"},
+    {"name": "mistral", "function_call_support": True, "parameters": "7B"},
+    {"name": "qwen2.5", "function_call_support": True, "parameters": "7B"},
+    {"name": "llama3.1", "function_call_support": True, "parameters": "8B"},
+    {"name": "llama3.2", "function_call_support": True, "parameters": "3B"},
+    {"name": "mistral-nemo", "function_call_support": True, "parameters": "12B"},
+    {"name": "olmo", "function_call_support": False, "parameters": "7B"},
+    {"name": "gemma", "function_call_support": False, "parameters": "7B"},
+    {"name": "llava", "function_call_support": False, "parameters": "13B"},
+    {"name": "deepseek-coder-v2", "function_call_support": False, "parameters": "16B"}
 ]
 
 
@@ -72,21 +72,22 @@ def generate_model_report(proprietary_results, opensource_results):
                 'score': proprietary_results[model['name']],
                 'function_call_support': bool_to_emoji(model['function_call_support'])
             })
-    # Sort models, putting '-' scores at the end
-    proprietary_models.sort(
-        key=lambda x: float('-inf') if x['score'] == '-' else x['score'], 
-        reverse=True
-    )
-
+    
     open_source_models = []
     for model in OPENSOURCE_MODELS:
         if model['name'] in opensource_results:
             open_source_models.append({
                 'name': model['name'],
                 'score': opensource_results[model['name']],
-                'function_call_support': bool_to_emoji(model['function_call_support'])
+                'function_call_support': bool_to_emoji(model['function_call_support']),
+                'parameters': model['parameters']
             })
+    
     # Sort models, putting '-' scores at the end
+    proprietary_models.sort(
+        key=lambda x: float('-inf') if x['score'] == '-' else x['score'], 
+        reverse=True
+    )
     open_source_models.sort(
         key=lambda x: float('-inf') if x['score'] == '-' else x['score'], 
         reverse=True
