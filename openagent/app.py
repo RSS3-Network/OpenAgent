@@ -13,7 +13,14 @@ from openagent.conf.env import settings
 from openagent.router import openai_router, widget_router, health_router
 
 load_dotenv()
-app = FastAPI(title="OpenAgent", description="")
+app = FastAPI(
+    title="OpenAgent API",
+    description="OpenAgent is a framework for building AI applications leveraging the power of blockchains.",
+    license_info={
+        "name": "MIT",
+        "url": "https://github.com/webisopen/OpenAgent/blob/main/LICENSE",
+    },
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -51,8 +58,5 @@ async def global_exception_handler(request: Request, exc: Exception):
     logger.error(error_msg)
     return JSONResponse(
         status_code=500,
-        content={
-            "error": str(exc),
-            "traceback": traceback.format_exc()
-        }
+        content={"error": str(exc), "traceback": traceback.format_exc()},
     )
