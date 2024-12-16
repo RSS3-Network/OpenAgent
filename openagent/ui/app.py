@@ -14,6 +14,7 @@ from loguru import logger
 from openagent.conf.env import settings
 from openagent.conf.llm_provider import SUPPORTED_OLLAMA_MODELS, get_available_providers
 from openagent.ui.profile import profile_name_to_provider_key, provider_to_profile
+from openagent.utils.task import create_task, submit_result
 from openagent.workflows.member import members
 from openagent.workflows.workflow import build_workflow
 
@@ -109,11 +110,21 @@ async def on_message(message: cl.Message):  # noqa
     msg = cl.Message(content="")
     agent_names = [member["name"] for member in members]
 
+
+    user_message = message.content
+    task_response = None
+    try:
+        task_response = await create_task([{"role": "user", "content": user_message}])
+    except Exception as e:
+        logger.warning(f"Failed to create task: {e}")
+
     if hasattr(llm, "model") and isinstance(llm,ChatOllama):
         model_name = llm.model
         supports_tools = SUPPORTED_OLLAMA_MODELS.get(model_name, {}).get("supports_tools", False)
     else:
         supports_tools = True
+    answer = ""
+    await msg.stream_token("")
 
     if supports_tools:
         async for event in runnable.astream_events(
@@ -131,10 +142,12 @@ async def on_message(message: cl.Message):  # noqa
                         if isinstance(event["data"]["chunk"].content ,list):
                             for chunk in content:
                                 if chunk['type'] == 'text':
+                                    answer += chunk['text']
                                     await msg.stream_token(chunk['text'])
                                 else:
                                     print(chunk)
                         else:
+                            answer += content
                             await msg.stream_token(content)
     else:
         # simple conversation handling logic
@@ -143,7 +156,18 @@ async def on_message(message: cl.Message):  # noqa
             config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler(stream_final_answer=True)]),
         ):
             if chunk.content:
+                answer += chunk.content
                 await msg.stream_token(chunk.content)
+
+    if task_response:
+        try:
+            task_id = task_response["task_id"]
+            result_response = await submit_result(task_id, answer)
+            tx_hash = result_response["transaction_hash"]
+            tx_hash_btn = f"""\n\n<a class="ovm-scan-url" href="https://sepolia.arbiscan.io/tx/{tx_hash}" target="_blank">Verify On Chain</a>"""
+            await msg.stream_token(tx_hash_btn)
+        except Exception as e:
+            logger.warning(f"Failed to submit result: {e}")
 
     await msg.send()
     memory.chat_memory.add_user_message(message.content)

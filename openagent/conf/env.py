@@ -33,5 +33,12 @@ class Settings(BaseSettings):
     OAUTH_AUTH0_CLIENT_SECRET: Optional[str] = Field(default=None, description="OAuth Auth0 Client Secret")
     OAUTH_AUTH0_DOMAIN: Optional[str] = Field(default=None, description="OAuth Auth0 Domain")
 
+    # Record proof on chain settings
+    OVM_API_BASE_URL: Optional[str] = Field(default=None, description="OVM API Base URL")
+    # Contract Address
+    CONTRACT_ADDRESS: str = Field(
+        default="0x1943044F0bf72219A1c4B1D5e10BA185D8dFeC78", description="Contract address for the task"
+    )
+
 
 settings = Settings()

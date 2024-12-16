@@ -14,3 +14,21 @@ div.MuiStack-root.message-content .markdown-body {
 div.MuiBox-root div.MuiStack-root.watermark{
     display: none;
 }
+
+
+.ovm-scan-url {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #F80061;
+    color: white !important;
+    text-decoration: none !important;
+    font-weight: 500;
+    margin-top: 12px;
+    transition: background-color 0.3s ease;
+    border-radius: 10px;
+}
+
+.ovm-scan-url:hover {
+    background-color: #8C1E3A;
+    text-decoration: none !important;
+}
